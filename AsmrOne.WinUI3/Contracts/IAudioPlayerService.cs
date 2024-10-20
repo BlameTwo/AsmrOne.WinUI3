@@ -1,16 +1,29 @@
 ﻿using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AsmrOne.WinUI3.Contracts;
 
 public interface IAudioPlayerService
 {
+    public void RegisterElement(MediaPlayerPresenter element);
+
+    public bool IsDrag { get; set; }
+    public MediaPlayerPresenter Element { get; }
     #region Event
     event MediaPlayerStatusChanged MediaPlayerStatus;
 
     event MediaPlayerSetDataChanged SetDataChanged;
+
+    event MediaPlayerOpenedChanged PlayerOpened;
+
+    event MediaPlayerPostionChanged PlayerPostionChanged;
     #endregion
-    string StartGlyph { get; set; }
+
+    public RidDetily RidDetily { get; }
+
+    public Child ChildData { get; }
+    public string NowFileName { get; }
 
     public void SetPostion(double postion);
 
@@ -22,5 +35,6 @@ public interface IAudioPlayerService
 
     public void Stop();
 
-    public void SetVolumn();
+    public void SetVolumn(double value);
+    void Switch();
 }

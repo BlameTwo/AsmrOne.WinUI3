@@ -19,5 +19,26 @@ namespace AsmrOne.WinUI3.Contracts.Services
             add => setDataHandler += value;
             remove => setDataHandler -= value;
         }
+        private MediaPlayerOpenedChanged openedHandler;
+
+        public event MediaPlayerOpenedChanged PlayerOpened
+        {
+            add => openedHandler += value;
+            remove => openedHandler -= value;
+        }
+
+        private MediaPlayerPostionChanged playerPostion;
+        public event MediaPlayerPostionChanged PlayerPostionChanged
+        {
+            add => playerPostion += value;
+            remove => playerPostion -= value;
+        }
+
+        private PlayerProgressChangedDelegate PlayerProgressHandler;
+        public event PlayerProgressChangedDelegate PlayerProgressChanged
+        {
+            add { PlayerProgressHandler += value; }
+            remove { PlayerProgressHandler -= value; }
+        }
     }
 }

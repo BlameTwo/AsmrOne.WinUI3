@@ -84,13 +84,13 @@
                     Grid.Column="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-                    <Button Command="{x:Bind PlayCommand}" Style="{ThemeResource TransparentButtonStyle}">
+                    <Button Style="{ThemeResource TransparentButtonStyle}">
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="15"
                             Glyph="&#xE896;" />
                     </Button>
-                    <Button Style="{ThemeResource TransparentButtonStyle}">
+                    <Button Command="{x:Bind PlayCommand}" Style="{ThemeResource TransparentButtonStyle}">
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="15"
@@ -273,7 +273,11 @@
                 <BrushTransition />
             </Grid.BackgroundTransition>
 
-            <TreeView ItemTemplateSelector="{StaticResource AudioSelector}" ItemsSource="{x:Bind ViewModel.AudioDatas, Mode=OneWay}">
+            <TreeView
+                AllowDrop="False"
+                DragItemsStarting="TreeView_DragItemsStarting"
+                ItemTemplateSelector="{StaticResource AudioSelector}"
+                ItemsSource="{x:Bind ViewModel.AudioDatas, Mode=OneWay}">
                 <TreeView.ItemContainerTransitions>
                     <TransitionCollection>
                         <AddDeleteThemeTransition />

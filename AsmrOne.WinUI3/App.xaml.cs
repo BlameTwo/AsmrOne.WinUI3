@@ -22,7 +22,7 @@ public partial class App : Application
         MainWindow.Content = page;
         MainWindow.SystemBackdrop = new MicaBackdrop()
         {
-            Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.Base,
+            Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt,
         };
         MainWindow.Activate();
     }

@@ -23,4 +23,12 @@ public sealed partial class RidDetilyPage : Page
         }
         base.OnNavigatedFrom(e);
     }
+
+    private void TreeView_DragItemsStarting(
+        TreeView sender,
+        TreeViewDragItemsStartingEventArgs args
+    )
+    {
+        args.Cancel = true;
+    }
 }

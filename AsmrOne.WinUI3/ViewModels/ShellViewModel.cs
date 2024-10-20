@@ -1,9 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Contracts.Services;
 using AsmrOne.WinUI3.Models;
+using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Messagers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -33,7 +36,25 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
         AudioPlayerService = audioPlayerService;
         AudioPlayerService.MediaPlayerStatus += AudioPlayerService_MediaPlayerStatus;
         AudioPlayerService.SetDataChanged += AudioPlayerService_SetDataChanged;
+        AudioPlayerService.PlayerOpened += AudioPlayerService_PlayerOpened;
+        RegisterMessager();
     }
+
+    private void RegisterMessager()
+    {
+        this.Messenger.Register<RefreshAudio>(this, RefreshAudioMethod);
+    }
+
+    private void RefreshAudioMethod(object recipient, RefreshAudio message)
+    {
+        Child = message.Child;
+        Detily = message.Detily;
+    }
+
+    private void AudioPlayerService_PlayerOpened(object sender, MediaPlaybackSession data) { }
+
+    [ObservableProperty]
+    double maxDuration;
 
     private void AudioPlayerService_SetDataChanged(object sender, Models.AsmrOne.RidDetily child)
     {
@@ -41,22 +62,40 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
     }
 
     [ObservableProperty]
+    Child child;
+
+    [ObservableProperty]
+    RidDetily detily;
+
+    [ObservableProperty]
     BitmapImage cover;
 
     [ObservableProperty]
     string _StartGlyph;
+
+    [ObservableProperty]
+    string maxDurationString;
+
+    [ObservableProperty]
+    bool loading;
 
     private void AudioPlayerService_MediaPlayerStatus(
         Windows.Media.Playback.MediaPlayer player,
         Windows.Media.Playback.MediaPlaybackState status
     )
     {
-        this.StartGlyph = status
-            is MediaPlaybackState.None
-                or MediaPlaybackState.Opening
-                or MediaPlaybackState.Paused
-            ? "\uE102"
-            : "\uE103";
+        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        {
+            this.StartGlyph = status
+                is MediaPlaybackState.None
+                    or MediaPlaybackState.Opening
+                    or MediaPlaybackState.Paused
+                ? "\uE102"
+                : "\uE103";
+            this.Loading = status == MediaPlaybackState.Buffering ? true : false;
+            MaxDuration = player.NaturalDuration.TotalSeconds;
+            MaxDurationString = player.NaturalDuration.ToString("hh\\:mm\\:ss");
+        });
     }
 
     [ObservableProperty]
@@ -100,6 +139,12 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
             this.DisPlayName = token.User.Name.Substring(0, 1);
         }
         this.Ips = await AsmrOne.WinUI3.Contracts.Services.AsmrClient.GetPingAsync();
+    }
+
+    [RelayCommand]
+    void Switch()
+    {
+        AudioPlayerService.Switch();
     }
 
     public void Receive(RefreshToken message)
