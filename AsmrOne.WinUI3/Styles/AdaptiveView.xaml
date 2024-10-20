@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AsmrOne.WinUI3.Controls">
+    <Style TargetType="local:AdaptiveView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:AdaptiveView">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <ContentControl
+                            Margin="10,10,0,0"
+                            Content="{TemplateBinding Header}"
+                            FontSize="25" />
+                        <ScrollView
+                            x:Name="PART_ScrollView"
+                            Grid.Row="1"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            HorizontalAnchorRatio="NaN">
+                            <ItemsRepeater
+                                x:Name="PART_ItemsRepeater"
+                                VerticalAlignment="Top"
+                                HorizontalCacheLength="0"
+                                ItemTemplate="{TemplateBinding ItemTemplate}"
+                                ItemsSource="{TemplateBinding ItemsSource}"
+                                Layout="{TemplateBinding Layout}" />
+                        </ScrollView>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

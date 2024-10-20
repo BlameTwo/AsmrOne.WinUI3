@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AsmrOne.WinUI3 (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "AsmrOne.WinUI3 (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
