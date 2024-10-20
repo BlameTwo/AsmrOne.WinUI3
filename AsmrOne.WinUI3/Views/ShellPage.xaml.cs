@@ -31,6 +31,8 @@ namespace AsmrOne.WinUI3.Views
 
         private void PlaybackSession_PositionChanged(MediaPlaybackSession sender, object args)
         {
+            if (this.DispatcherQueue == null)
+                return;
             this.DispatcherQueue.TryEnqueue(() =>
             {
                 if (ViewModel.AudioPlayerService.IsDrag)

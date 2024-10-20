@@ -37,7 +37,17 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
         AudioPlayerService.MediaPlayerStatus += AudioPlayerService_MediaPlayerStatus;
         AudioPlayerService.SetDataChanged += AudioPlayerService_SetDataChanged;
         AudioPlayerService.PlayerOpened += AudioPlayerService_PlayerOpened;
+        shellNavigationService.Navigated += ShellNavigationService_Navigated;
         RegisterMessager();
+    }
+
+    private void ShellNavigationService_Navigated(
+        object sender,
+        Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
+    )
+    {
+        this.IsBack = ShellNavigationService.CanGoBack;
+        this.NavigtiaonSelectItem = ShellNavigationViewService.GetSelectItem(e.SourcePageType);
     }
 
     private void RegisterMessager()
@@ -55,6 +65,18 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
 
     [ObservableProperty]
     double maxDuration;
+
+    [ObservableProperty]
+    bool isBack = false;
+
+    [RelayCommand]
+    void Back()
+    {
+        ShellNavigationService.GoBack();
+    }
+
+    [ObservableProperty]
+    object navigtiaonSelectItem;
 
     private void AudioPlayerService_SetDataChanged(object sender, Models.AsmrOne.RidDetily child)
     {

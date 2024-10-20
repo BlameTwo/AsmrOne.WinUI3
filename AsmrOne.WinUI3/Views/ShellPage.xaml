@@ -55,6 +55,8 @@
                         Width="35"
                         Height="35"
                         Padding="10"
+                        Command="{x:Bind ViewModel.BackCommand}"
+                        IsEnabled="{x:Bind ViewModel.IsBack, Mode=OneWay}"
                         Style="{ThemeResource TransparentButtonStyle}">
                         <AnimatedIcon>
                             <AnimatedIcon.Source>
@@ -122,7 +124,8 @@
             DisplayModeChanged="view_DisplayModeChanged"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
-            OpenPaneLength="150">
+            OpenPaneLength="150"
+            SelectedItem="{x:Bind ViewModel.NavigtiaonSelectItem, Mode=OneWay}">
             <NavigationView.MenuItems>
                 <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.HomeViewModel" Content="Home">
                     <NavigationViewItem.Icon>
