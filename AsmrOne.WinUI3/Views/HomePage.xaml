@@ -8,9 +8,11 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:itemViews="using:AsmrOne.WinUI3.Views.Items"
     xmlns:local="using:AsmrOne.WinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:AsmrOne.WinUI3.Models"
+    xmlns:wrapper="using:AsmrOne.WinUI3.ViewModels.ItemViewModels"
     Margin="25"
     mc:Ignorable="d">
     <Page.Resources>
@@ -45,64 +47,20 @@
             AddDataCommand="{x:Bind ViewModel.AddItemsCommand}"
             ItemsSource="{x:Bind ViewModel.Works, Mode=OneWay}">
             <controls:AdaptiveView.ItemTemplate>
-                <DataTemplate x:DataType="model:WorkWrapper">
-                    <controls:TileCard
-                        Margin="4"
-                        Padding="0"
-                        Command="{x:Bind InvokeCommand}"
-                        CornerRadius="5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="3*" />
-                            </Grid.RowDefinitions>
-                            <Image
-                                x:Name="cover"
-                                Source="{x:Bind Data.MainCoverUrl, Mode=OneWay}"
-                                Stretch="Uniform" />
-                            <StackPanel
-                                Grid.Row="1"
-                                Margin="5"
-                                Orientation="Vertical">
-                                <TextBlock
-                                    VerticalAlignment="Top"
-                                    Text="{x:Bind Data.Title, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="{x:Bind Data.Name, Mode=OneWay}" />
-                                <StackPanel Orientation="Horizontal">
-                                    <RatingControl
-                                        HorizontalAlignment="Left"
-                                        IsReadOnly="True"
-                                        PlaceholderValue="{x:Bind Data.RateAverage2dp, Mode=OneWay}" />
-                                </StackPanel>
-                                <TextBlock Margin="0,0,0,0">
-                                    <Run Text="售价：" />
-                                    <Run Text="{x:Bind Data.Price, Mode=OneWay}" />
-                                    <Run Text="JPY" />
-                                </TextBlock>
-                                <TextBlock Margin="0,10,0,0">
-                                    <Run Text="销量：" />
-                                    <Run Text="{x:Bind Data.DlCount, Mode=OneWay}" />
-                                </TextBlock>
-                                <TextBlock Margin="0,10,0,0">
-                                    <Run Text="发布时间：" />
-                                    <Run Text="{x:Bind Data.Release, Mode=OneWay}" />
-                                </TextBlock>
-                                <TextBlock Margin="0,10,0,0">
-                                    <Run Text="RJ：" />
-                                    <Run Text="{x:Bind Data.Id, Mode=OneWay}" />
-                                </TextBlock>
-                            </StackPanel>
-                        </Grid>
-                    </controls:TileCard>
+                <DataTemplate x:DataType="wrapper:DetilyItemViewModel">
+                    <itemViews:DetilyItem ViewModel="{x:Bind}" />
                 </DataTemplate>
             </controls:AdaptiveView.ItemTemplate>
+            <controls:AdaptiveView.ItemTransitionProvider>
+                <LinedFlowLayoutItemCollectionTransitionProvider />
+            </controls:AdaptiveView.ItemTransitionProvider>
             <controls:AdaptiveView.Layout>
                 <UniformGridLayout
                     ItemsJustification="Start"
                     ItemsStretch="Uniform"
-                    MinItemHeight="330"
-                    MinItemWidth="180" />
+                    MinColumnSpacing="2"
+                    MinItemHeight="180"
+                    MinItemWidth="280" />
             </controls:AdaptiveView.Layout>
         </controls:AdaptiveView>
     </Grid>

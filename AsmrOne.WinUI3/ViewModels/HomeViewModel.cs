@@ -1,9 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Runtime.InteropServices.Marshalling;
 using System.Threading.Tasks;
+using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
+using AsmrOne.WinUI3.ViewModels.ItemViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,9 +14,10 @@ namespace AsmrOne.WinUI3.ViewModels;
 
 public sealed partial class HomeViewModel : ObservableObject
 {
-    public HomeViewModel(IDataAdaptiveService dataAdaptiveService)
+    public HomeViewModel(IDataAdaptiveService dataAdaptiveService, IDataFactory dataFactory)
     {
         DataAdaptiveService = dataAdaptiveService;
+        DataFactory = dataFactory;
         this.Orders = WorkOrderExtensions.GetWorkOrders();
         SelectOrder = Orders[0];
     }
@@ -43,6 +46,10 @@ public sealed partial class HomeViewModel : ObservableObject
     }
 
     public IDataAdaptiveService DataAdaptiveService { get; }
+    public IDataFactory DataFactory { get; }
+
+    [ObservableProperty]
+    ObservableCollection<DetilyItemViewModel> works = new();
 
     [ObservableProperty]
     int index = 1;
@@ -57,9 +64,9 @@ public sealed partial class HomeViewModel : ObservableObject
                 Index,
                 this.IsSubtitle == null ? false : (bool)IsSubtitle
             );
-        foreach (var item in result.Works)
+        foreach (var item in DataFactory.CreateDetilyItemViewModels(result.Works))
         {
-            this.Works.Add(new WorkWrapper() { Data = item });
+            this.Works.Add(item);
         }
         this.Index++;
     }
@@ -74,9 +81,9 @@ public sealed partial class HomeViewModel : ObservableObject
                 Index,
                 IsSubtitle == null ? false : (bool)IsSubtitle
             );
-        foreach (var item in result.Works)
+        foreach (var item in DataFactory.CreateDetilyItemViewModels(result.Works))
         {
-            this.Works.Add(new WorkWrapper() { Data = item });
+            this.Works.Add(item);
         }
         this.Index++;
     }
@@ -92,13 +99,10 @@ public sealed partial class HomeViewModel : ObservableObject
                 Index,
                 IsSubtitle == null ? false : (bool)IsSubtitle
             );
-        foreach (var item in result.Works)
+        foreach (var item in DataFactory.CreateDetilyItemViewModels(result.Works))
         {
-            this.Works.Add(new WorkWrapper() { Data = item });
+            this.Works.Add(item);
         }
         this.Index++;
     }
-
-    [ObservableProperty]
-    ObservableCollection<WorkWrapper> works = new();
 }

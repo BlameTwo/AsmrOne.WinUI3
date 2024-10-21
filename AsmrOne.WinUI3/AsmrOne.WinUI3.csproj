@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>AsmrOne.WinUI3</RootNamespace>
 	  <ApplicationManifest>app.manifest</ApplicationManifest>
 	  <Platforms>x86;x64</Platforms>
 	  <UseWinUI>true</UseWinUI>
-	  <PublishAot>true</PublishAot>
+	  <PublishAot>false</PublishAot>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x64</RuntimeIdentifier>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x64</RuntimeIdentifier>
-	  <WindowsSdkPackageVersion>10.0.19041.38</WindowsSdkPackageVersion>
+	  <WindowsSdkPackageVersion>10.0.26100.38</WindowsSdkPackageVersion>
 	  <EnableMsixTooling>true</EnableMsixTooling>
 	  <PackageCertificateKeyFile>AsmrOne.WinUI3_TemporaryKey.pfx</PackageCertificateKeyFile>
 	  <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
@@ -23,12 +23,14 @@
 	  <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\DetiyItem.xaml" />
     <None Remove="Styles\AdaptiveView.xaml" />
     <None Remove="Styles\Button.xaml" />
     <None Remove="Styles\HeaderTileStyle.xaml" />
     <None Remove="Styles\Titlebar.xaml" />
     <None Remove="Views\Dialogs\RegisterDialog.xaml" />
     <None Remove="Views\HomePage.xaml" />
+    <None Remove="Views\Items\DetilyItem.xaml" />
     <None Remove="Views\RidDetilyPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
   </ItemGroup>
@@ -45,16 +47,24 @@
 
    <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.1.240916" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-rc.1.24431.7" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\DetiyItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
@@ -97,6 +107,16 @@
 
   <ItemGroup>
     <Page Update="Views\Dialogs\RegisterDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controls\DetilyItem\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Items\DetilyItem.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
