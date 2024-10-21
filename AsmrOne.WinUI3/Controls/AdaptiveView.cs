@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AsmrOne.WinUI3.Common.Bases;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Xaml.Interactivity;
 
 namespace AsmrOne.WinUI3.Controls
 {

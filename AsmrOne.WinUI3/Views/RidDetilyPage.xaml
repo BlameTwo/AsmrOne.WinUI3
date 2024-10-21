@@ -174,41 +174,45 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition />
+            <RowDefinition x:Name="row1" />
+            <RowDefinition x:Name="row2" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="column1" />
             <ColumnDefinition x:Name="column2" />
         </Grid.ColumnDefinitions>
-        <Grid x:Name="leftControl">
+        <Grid
+            x:Name="sessionControl"
+            Padding="10"
+            Canvas.ZIndex="5">
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
                     <RepositionThemeTransition />
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="7*" />
-                <RowDefinition Height="3*" />
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition x:Name="sessionRow1" />
+                <ColumnDefinition x:Name="sessionRow2" />
             </Grid.ColumnDefinitions>
-            <Image
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Border
                 x:Name="cover"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Source="{x:Bind ViewModel.Detily.MainCoverUrl, Mode=OneWay}"
-                Stretch="Uniform">
-                <Image.ScaleTransition>
-                    <Vector3Transition />
-                </Image.ScaleTransition>
-            </Image>
+                CornerRadius="10">
+                <Image Source="{x:Bind ViewModel.Detily.MainCoverUrl, Mode=OneWay}" Stretch="Uniform">
+                    <Image.ScaleTransition>
+                        <Vector3Transition />
+                    </Image.ScaleTransition>
+                </Image>
+            </Border>
             <StackPanel
-                x:Name="coverRight"
-                Grid.Row="1"
+                x:Name="coverSession"
                 Margin="40,0"
+                VerticalAlignment="Center"
                 Orientation="Vertical">
                 <TextBlock
                     HorizontalAlignment="Center"
@@ -266,13 +270,13 @@
             </StackPanel>
         </Grid>
         <Grid
-            x:Name="rightControl"
+            x:Name="treeViewControl"
             Padding="20"
-            CornerRadius="5">
+            CornerRadius="5"
+            Visibility="Visible">
             <Grid.BackgroundTransition>
                 <BrushTransition />
             </Grid.BackgroundTransition>
-
             <TreeView
                 AllowDrop="False"
                 DragItemsStarting="TreeView_DragItemsStarting"
@@ -293,19 +297,12 @@
                         <AdaptiveTrigger MinWindowWidth="900" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="cover.Margin" Value="20" />
-                        <Setter Target="cover.Width" Value="400" />
-                        <Setter Target="cover.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="sessionControl.(Grid.RowSpan)" Value="2" />
                         <Setter Target="cover.(Grid.ColumnSpan)" Value="2" />
-                        <Setter Target="coverRight.(Grid.Column)" Value="0" />
-                        <Setter Target="coverRight.(Grid.ColumnSpan)" Value="2" />
-                        <Setter Target="coverRight.(Grid.RowSpan)" Value="2" />
-                        <Setter Target="leftControl.(Grid.Column)" Value="0" />
-                        <Setter Target="rightControl.(Grid.Column)" Value="1" />
-                        <Setter Target="leftControl.(Grid.RowSpan)" Value="2" />
-                        <Setter Target="rightControl.(Grid.RowSpan)" Value="2" />
-                        <Setter Target="column1.Width" Value="5*" />
-                        <Setter Target="column2.Width" Value="5*" />
+                        <Setter Target="coverSession.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="coverSession.(Grid.Row)" Value="1" />
+                        <Setter Target="treeViewControl.(Grid.Column)" Value="1" />
+                        <Setter Target="treeViewControl.(Grid.RowSpan)" Value="2" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MinState">
@@ -313,19 +310,22 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="cover.Width" Value="200" />
+                        <Setter Target="sessionControl.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="sessionControl.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="cover.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="cover.(Grid.RowSpan)" Value="2" />
-                        <Setter Target="coverRight.(Grid.Column)" Value="1" />
-                        <Setter Target="leftControl.(Grid.ColumnSpan)" Value="2" />
-                        <Setter Target="rightControl.(Grid.ColumnSpan)" Value="2" />
-                        <Setter Target="rightControl.(Grid.Row)" Value="1" />
-                        <Setter Target="rightControl.Margin" Value="0 10 0 0" />
-                        <Setter Target="rightControl.Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                        <Setter Target="rightControl.BorderBrush" Value="{ThemeResource CardStrokeColorDefaultSolid}" />
-                        <Setter Target="rightControl.BorderThickness" Value="1" />
+                        <Setter Target="coverSession.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="coverSession.(Grid.Row)" Value="0" />
+                        <Setter Target="coverSession.(Grid.Column)" Value="1" />
+                        <Setter Target="coverSession.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="treeViewControl.(Grid.Row)" Value="1" />
+                        <Setter Target="treeViewControl.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="sessionRow1.Width" Value="3*" />
+                        <Setter Target="sessionRow2.Width" Value="7*" />
+                        <Setter Target="treeViewControl.Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                        <Setter Target="treeViewControl.BorderBrush" Value="{ThemeResource CardStrokeColorDefaultSolid}" />
+                        <Setter Target="treeViewControl.BorderThickness" Value="1" />
 
-                        <Setter Target="column1.Width" Value="3*" />
-                        <Setter Target="column2.Width" Value="7*" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
