@@ -16,6 +16,7 @@ public sealed partial class PageService : IPageService
         _pages = new();
         RegisterView<HomePage, HomeViewModel>();
         RegisterView<RidDetilyPage, RidDetilyViewModel>();
+        RegisterView<SettingPage, SettingViewModel>();
     }
 
     public Type GetPage(string key)

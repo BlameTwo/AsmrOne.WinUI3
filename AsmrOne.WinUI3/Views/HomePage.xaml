@@ -59,8 +59,8 @@
                     ItemsJustification="Start"
                     ItemsStretch="Uniform"
                     MinColumnSpacing="2"
-                    MinItemHeight="180"
-                    MinItemWidth="280" />
+                    MinItemHeight="200"
+                    MinItemWidth="300" />
             </controls:AdaptiveView.Layout>
         </controls:AdaptiveView>
     </Grid>

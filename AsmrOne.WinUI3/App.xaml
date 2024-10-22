@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Styles/Button.xaml" />
                 <ResourceDictionary Source="Styles/HeaderTileStyle.xaml" />
                 <ResourceDictionary Source="Styles/AdaptiveView.xaml" />
+                <ResourceDictionary Source="Styles/ImageControl.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
             <!--  Other app resources here  -->

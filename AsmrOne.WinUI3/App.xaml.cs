@@ -1,4 +1,6 @@
-﻿using AsmrOne.WinUI3.Contracts;
+﻿using System;
+using System.Collections.Generic;
+using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -16,16 +18,16 @@ public partial class App : Application
 
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
+        InitSetting();
         MainWindow = new Window();
         var page = ProgramLife.ServiceProvider.GetService<ShellPage>();
         page.titlebar.Window = MainWindow;
         MainWindow.Content = page;
-        MainWindow.SystemBackdrop = new MicaBackdrop()
-        {
-            Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt,
-        };
+        MainWindow.SystemBackdrop = new MicaBackdrop();
         MainWindow.Activate();
     }
+
+    private void InitSetting() { }
 
     public static Window MainWindow { get; private set; }
 }

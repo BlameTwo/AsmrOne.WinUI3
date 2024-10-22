@@ -129,8 +129,10 @@
             DisplayModeChanged="view_DisplayModeChanged"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
+            IsSettingsVisible="False"
             OpenPaneLength="150"
             SelectedItem="{x:Bind ViewModel.NavigtiaonSelectItem, Mode=OneWay}">
+
             <NavigationView.MenuItems>
                 <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.HomeViewModel" Content="Home">
                     <NavigationViewItem.Icon>
@@ -138,6 +140,17 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.SettingViewModel" Content="Settings">
+                    <NavigationViewItem.Icon>
+                        <AnimatedIcon>
+                            <AnimatedIcon.Source>
+                                <visual:AnimatedSettingsVisualSource />
+                            </AnimatedIcon.Source>
+                        </AnimatedIcon>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.FooterMenuItems>
             <Frame x:Name="frame" />
         </NavigationView>
         <Grid

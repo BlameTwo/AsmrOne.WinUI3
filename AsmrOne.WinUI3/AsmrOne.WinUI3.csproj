@@ -27,11 +27,13 @@
     <None Remove="Styles\AdaptiveView.xaml" />
     <None Remove="Styles\Button.xaml" />
     <None Remove="Styles\HeaderTileStyle.xaml" />
+    <None Remove="Styles\ImageControl.xaml" />
     <None Remove="Styles\Titlebar.xaml" />
     <None Remove="Views\Dialogs\RegisterDialog.xaml" />
     <None Remove="Views\HomePage.xaml" />
     <None Remove="Views\Items\DetilyItem.xaml" />
     <None Remove="Views\RidDetilyPage.xaml" />
+    <None Remove="Views\SettingPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
   </ItemGroup>
 
@@ -113,6 +115,18 @@
 
   <ItemGroup>
     <Folder Include="Controls\DetilyItem\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Styles\ImageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\SettingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

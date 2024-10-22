@@ -3,96 +3,128 @@
     x:Class="AsmrOne.WinUI3.Views.Items.DetilyItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:aModel="using:AsmrOne.WinUI3.Models.AsmrOne"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:b="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:common="using:AsmrOne.WinUI3.Common.Bases.ItemsBase"
+    xmlns:control="using:AsmrOne.WinUI3.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:AsmrOne.WinUI3.Views.Items"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:media="using:CommunityToolkit.WinUI.Media"
-    xmlns:uie="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
-    <Grid
-        Margin="5"
-        uie:UIElementExtensions.ClipToBounds="True"
-        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-        CornerRadius="5">
+    <Grid Margin="5" CornerRadius="5">
         <Grid PointerEntered="Grid_PointerEntered" PointerExited="Grid_PointerExited">
-
-            <i:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="PointerEntered">
-                    <b:StartAnimationAction Animation="{x:Bind BlurAnimation}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="PointerExited">
-                    <b:StartAnimationAction Animation="{x:Bind OutBlurAnimation}" />
-                </core:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-
-            <Image
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="row1" Height="4*" />
+                <RowDefinition x:Name="row2" Height="6*" />
+            </Grid.RowDefinitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            <control:ImageControl
+                Grid.RowSpan="2"
                 VerticalAlignment="Center"
+                IsHideCover="{x:Bind ViewModel.IsHideCover, Mode=OneWay}"
                 Source="{x:Bind ViewModel.Cover, Mode=OneWay}"
-                Stretch="UniformToFill">
-                <media:UIElementExtensions.VisualFactory>
-                    <media:PipelineVisualFactory>
-                        <media:BlurEffect x:Name="ImageBlurEffect" IsAnimatable="True" />
-                    </media:PipelineVisualFactory>
-                </media:UIElementExtensions.VisualFactory>
-            </Image>
+                Stretch="UniformToFill" />
             <Grid
                 x:Name="session"
-                Background="Transparent"
-                Opacity="0">
+                Grid.Row="1"
+                Margin="2"
+                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="5"
+                Opacity="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
                 <TextBlock
+                    Grid.ColumnSpan="2"
                     Margin="15"
                     Text="{x:Bind ViewModel.Title, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Margin="15,0,0,15"
+                    Foreground="{ThemeResource SystemColorGrayTextBrush}"
+                    Text="{x:Bind ViewModel.Name, Mode=OneWay}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Margin="15,0,0,0"
+                    FontSize="17">
+                    <Run Text="{x:Bind ViewModel.Money, Mode=OneWay}" />
+                    <Run Text="JPY" />
+                </TextBlock>
+
                 <Button
+                    x:Name="playbth"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="0,0,10,10"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{x:Bind ViewModel.InvokeCommand}"
                     Style="{ThemeResource TransparentButtonStyle}">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" />
                 </Button>
+                <ItemsControl
+                    x:Name="tags"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="10"
+                    VerticalAlignment="Bottom"
+                    ItemsSource="{x:Bind ViewModel.Tags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="aModel:Tag">
+                            <Button
+                                Margin="3"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                FontSize="10"
+                                ToolTipService.ToolTip="{x:Bind Name, Mode=OneWay}">
+                                <TextBlock Text="{x:Bind Name, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
-
-            <animations:Explicit.Animations>
-                <animations:AnimationSet x:Name="BlurAnimation" IsSequential="True">
-                    <animations:BlurEffectAnimation
-                        EasingMode="EaseOut"
-                        EasingType="Linear"
-                        Target="{x:Bind ImageBlurEffect}"
-                        From="0"
-                        To="25"
-                        Duration="0:0:0.2" />
-
-                </animations:AnimationSet>
-                <animations:AnimationSet x:Name="OutBlurAnimation" IsSequential="True">
-                    <animations:BlurEffectAnimation
-                        EasingMode="EaseOut"
-                        EasingType="Linear"
-                        Target="{x:Bind ImageBlurEffect}"
-                        From="25"
-                        To="0"
-                        Duration="0:0:0.2" />
-
-
-                </animations:AnimationSet>
-            </animations:Explicit.Animations>
-
         </Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">
-                <VisualState x:Name="Normal" />
+                <VisualState x:Name="Normal">
+                    <VisualState.Setters>
+                        <Setter Target="row1.Height" Value="4*" />
+                        <Setter Target="playbth.Visibility" Value="Collapsed" />
+                        <Setter Target="tags.Visibility" Value="Collapsed" />
+                        <Setter Target="row2.Height" Value="6*" />
+                    </VisualState.Setters>
+                </VisualState>
                 <VisualState x:Name="PointerOver">
-                    <Storyboard>
-                        <DoubleAnimation
-                            Storyboard.TargetName="session"
-                            Storyboard.TargetProperty="Opacity"
-                            To="1"
-                            Duration="0:0:0.2" />
-                    </Storyboard>
+                    <VisualState.Setters>
+                        <Setter Target="row1.Height" Value="0*" />
+                        <Setter Target="row2.Height" Value="10*" />
+                        <Setter Target="playbth.Visibility" Value="Visible" />
+                        <Setter Target="tags.Visibility" Value="Visible" />
+                    </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
