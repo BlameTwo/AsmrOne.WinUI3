@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using AsmrOne.WinUI3.Common;
+using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AsmrOne.WinUI3.ViewModels.ItemViewModels;
 
-public sealed partial class DetilyItemViewModel : ObservableObject, IItemViewModel<RidDetily>
+public sealed partial class DetilyItemViewModel : ViewModelBase, IItemViewModel<RidDetily>
 {
     [ObservableProperty]
     string cover;
@@ -29,12 +30,8 @@ public sealed partial class DetilyItemViewModel : ObservableObject, IItemViewMod
     [ObservableProperty]
     ObservableCollection<Tag> tags;
 
-    [ObservableProperty]
-    bool? isHideCover;
-
     public void SetData(RidDetily value)
     {
-        this.IsHideCover = GlobalUsing.IsHideCover;
         this.Cover = value.MainCoverUrl;
         this.Id = value.Id;
         this.Title = value.Title;

@@ -243,8 +243,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Border CornerRadius="5">
-
-                        <Image Source="{x:Bind ViewModel.Cover, Mode=OneWay}" />
+                        <control:ImageControl IsHideCover="{x:Bind ViewModel.HideCover, Mode=OneWay}" Source="{x:Bind ViewModel.Cover, Mode=OneWay}" />
                     </Border>
                     <StackPanel
                         Grid.Column="1"

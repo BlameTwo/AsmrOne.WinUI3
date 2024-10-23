@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
@@ -8,7 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
-public sealed partial class RidDetilyViewModel : ObservableRecipient
+public sealed partial class RidDetilyViewModel : ViewModelBase
 {
     public RidDetilyViewModel(IAsmrClient asmrClient, IDataAdaptiveService dataAdaptiveService)
     {

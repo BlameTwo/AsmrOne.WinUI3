@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AsmrOne.WinUI3.Common;
+using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Contracts.Services;
 using AsmrOne.WinUI3.Models;
@@ -18,7 +19,7 @@ using Windows.Media.Playback;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
-public sealed partial class ShellViewModel : ObservableRecipient
+public sealed partial class ShellViewModel : ViewModelBase
 {
     public ShellViewModel(
         IAsmrClient asmrClient,

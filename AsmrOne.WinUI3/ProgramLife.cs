@@ -36,6 +36,7 @@ namespace AsmrOne.WinUI3
                 .AddTransient<IDataFactory, DataFactory>()
                 .AddTransient<IDataAdaptiveService, DataAdaptiveService>()
                 .AddSingleton<IAudioPlayerService, AudioPlayerService>()
+                .AddSingleton<ISubtitleService, SubtitleService>()
                 #endregion
                 #region View And ViewModel
                 .AddTransient<ShellPage>()

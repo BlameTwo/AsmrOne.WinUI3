@@ -6,8 +6,11 @@ namespace AsmrOne.WinUI3.Contracts;
 
 public interface IAudioPlayerService
 {
+    public bool OpenSubtitle { get; set; }
+
     public void RegisterElement(MediaPlayerPresenter element);
 
+    public ISubtitleService SubtitleService { get; }
     public bool IsDrag { get; set; }
     public MediaPlayerPresenter Element { get; }
     #region Event
@@ -27,7 +30,7 @@ public interface IAudioPlayerService
 
     public void SetPostion(double postion);
 
-    public void Player(Child url, RidDetily data);
+    public void Player(Child url, RidDetily data, string subUrl = null);
 
     public void Pause();
 

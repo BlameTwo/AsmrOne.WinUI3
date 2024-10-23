@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AsmrOne.WinUI3.Models.AsmrOne;
 
@@ -8,6 +9,7 @@ public interface IAsmrClient
 {
     public bool IsLogin { get; }
 
+    public HttpClient Client { get; set; }
     public string UserName { get; set; }
     Task<(RegisterReponse, string)> RegisterAsync(string userName, string password);
 

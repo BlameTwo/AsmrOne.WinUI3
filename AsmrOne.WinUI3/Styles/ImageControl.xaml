@@ -16,37 +16,47 @@
                             Stretch="{TemplateBinding Stretch}" />
                         <Border
                             x:Name="border"
-                            Height="300"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             BorderThickness="1"
                             CornerRadius="5">
-                            <StackPanel Orientation="Vertical">
-                                <FontIcon
-                                    Margin="0,25,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    FontFamily="Segoe Fluent Icons"
-                                    FontSize="30"
-                                    Glyph="&#xE8B9;" />
-                                <TextBlock HorizontalAlignment="Center" Text="图片已隐藏" />
-                            </StackPanel>
+                            <StackPanel Orientation="Vertical" />
                         </Border>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="HideStates">
-                                    <VisualState.Setters>
-                                        <Setter Target="border.Visibility" Value="Visible" />
-                                        <Setter Target="PRPA_Image.Visibility" Value="Collapsed" />
-                                    </VisualState.Setters>
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="Opacity"
+                                                To="1"
+                                                Duration="0:0:0.2" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="PRPA_Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                To="0"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="ShowStates">
-                                    <VisualState.Setters>
-                                        <Setter Target="border.Visibility" Value="Collapsed" />
-                                        <Setter Target="PRPA_Image.Visibility" Value="Visible" />
-                                    </VisualState.Setters>
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="border"
+                                                Storyboard.TargetProperty="Opacity"
+                                                To="0"
+                                                Duration="0:0:0.2" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="PRPA_Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                To="1"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>

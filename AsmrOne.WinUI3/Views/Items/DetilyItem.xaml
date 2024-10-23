@@ -29,7 +29,7 @@
                 x:Name="image"
                 Grid.RowSpan="2"
                 VerticalAlignment="Center"
-                IsHideCover="{x:Bind ViewModel.IsHideCover, Mode=OneWay}"
+                IsHideCover="{x:Bind ViewModel.HideCover, Mode=OneWay}"
                 Source="{x:Bind ViewModel.Cover, Mode=OneWay}"
                 Stretch="UniformToFill" />
             <Grid
@@ -67,10 +67,9 @@
                     Grid.ColumnSpan="2"
                     Margin="15,0,0,0"
                     FontSize="17">
-                    <Run Text="{x:Bind ViewModel.Money, Mode=OneWay}" />
-                    <Run Text="JPY" />
+                    <Run Text="ID:" />
+                    <Run Text="{x:Bind ViewModel.Id, Mode=OneWay}" />
                 </TextBlock>
-
                 <Button
                     x:Name="playbth"
                     Grid.Row="3"

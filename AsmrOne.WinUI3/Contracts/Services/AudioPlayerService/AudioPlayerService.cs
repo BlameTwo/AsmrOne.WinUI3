@@ -1,21 +1,58 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Timers;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Messagers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Media.Playback;
 
 namespace AsmrOne.WinUI3.Contracts.Services;
 
-public partial class AudioPlayerService : ObservableObject, IAudioPlayerService
+public partial class AudioPlayerService : IAudioPlayerService
 {
+    public AudioPlayerService(ISubtitleService subtitleService)
+    {
+        SubtitleService = subtitleService;
+        timer = new Timer();
+        timer.Interval = 100;
+        timer.Elapsed += Timer_Elapsed;
+        timer.Start();
+    }
+
+    private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+        try
+        {
+            if (OpenSubtitle == false)
+                return;
+            if (Element == null || Element.MediaPlayer == null)
+                return;
+            var subItem = SubtitleService.GetSubtitle(this.Element.MediaPlayer.Position);
+            if (subItem == default)
+                return;
+            WeakReferenceMessenger.Default.Send<RefreshSubtitle>(new(subItem));
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+    }
+
+    public bool OpenSubtitle { get; set; } = true;
+
+    Timer timer = null;
+
     public bool IsDrag { get; set; }
 
     public RidDetily RidDetily { get; private set; }
     public Child ChildData { get; private set; }
     public string NowFileName { get; private set; }
     public MediaPlayerPresenter Element { get; private set; }
+
+    public ISubtitleService SubtitleService { get; }
 
     public void Pause()
     {
@@ -31,7 +68,7 @@ public partial class AudioPlayerService : ObservableObject, IAudioPlayerService
         this.Element.MediaPlayer.Play();
     }
 
-    public void Player(Child url, RidDetily data)
+    public void Player(Child url, RidDetily data, string subUrl = null)
     {
         if (url.Title == NowFileName)
             return;
@@ -42,9 +79,10 @@ public partial class AudioPlayerService : ObservableObject, IAudioPlayerService
         Stop();
         this.Element.MediaPlayer.SetUriSource(new Uri(url.MediaStreamUrl));
         Register();
-        Play();
         this.setDataHandler?.Invoke(this, data);
         WeakReferenceMessenger.Default.Send(new RefreshAudio(data, url));
+        //var subTitle = ProgramLife.ServiceProvider.GetService<IAsmrClient>().Client.GetStringAsync();
+        Play();
     }
 
     private void Player_MediaOpened(MediaPlayer sender, object args)

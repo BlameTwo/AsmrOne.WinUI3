@@ -16,7 +16,7 @@ namespace AsmrOne.WinUI3.Contracts.Services;
 
 public class AsmrClient : IAsmrClient
 {
-    HttpClient _client = null;
+    public HttpClient Client { get; set; }
     private string token;
     private string userName;
 
@@ -81,7 +81,7 @@ public class AsmrClient : IAsmrClient
         );
         var request = new HttpRequestMessage(HttpMethod.Post, $"{HostName}/api/auth/reg");
         request.Content = new StringContent(content, Encoding.UTF8, "application/json");
-        var result = await _client.SendAsync(request);
+        var result = await Client.SendAsync(request);
         var str = await result.Content.ReadAsStringAsync();
         var jsonObj = JsonObject.Parse(str);
         if (jsonObj["error"] != null)
@@ -98,7 +98,7 @@ public class AsmrClient : IAsmrClient
         var content = JsonSerializer.Serialize(requestModel, JsonContext.Default.LoginUser);
         var request = new HttpRequestMessage(HttpMethod.Post, $"{HostName}/api/auth/me");
         request.Content = new StringContent(content, Encoding.UTF8, "application/json");
-        var result = await _client.SendAsync(request);
+        var result = await Client.SendAsync(request);
         var str = await result.Content.ReadAsStringAsync();
         var jsonObj = JsonObject.Parse(str);
         if (jsonObj["error"] != null)
@@ -116,8 +116,8 @@ public class AsmrClient : IAsmrClient
 
     private void BuildClient(string hostName)
     {
-        this._client = new HttpClient();
-        _client.DefaultRequestHeaders.Add(
+        this.Client = new HttpClient();
+        Client.DefaultRequestHeaders.Add(
             "User-Accept",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0"
         );
@@ -155,7 +155,7 @@ public class AsmrClient : IAsmrClient
             true
         );
 
-        var response = await _client.SendAsync(request);
+        var response = await Client.SendAsync(request);
         var result = await CheckDataAsync<WorksResponse>(
             response,
             JsonContext.Default.WorksResponse
@@ -171,7 +171,7 @@ public class AsmrClient : IAsmrClient
     {
         //https://api.asmr-300.com/api/workInfo/01249781
         var request = this.BuildRequest($"{HostName}/api/workInfo/{rj}", HttpMethod.Get);
-        var response = await _client.SendAsync(request);
+        var response = await Client.SendAsync(request);
         var result = await CheckDataAsync<RidDetily>(response, JsonContext.Default.RidDetily);
         if (result.Item1 == null)
         {
@@ -183,7 +183,7 @@ public class AsmrClient : IAsmrClient
     public async Task<(List<Child>, string)> GetWorkAudioAsync(string rj)
     {
         var request = this.BuildRequest($"{HostName}/api/tracks/{rj}?v=1", HttpMethod.Get);
-        var response = await _client.SendAsync(request);
+        var response = await Client.SendAsync(request);
         var result = await CheckDataAsync<List<Child>>(response, JsonContext.Default.ListChild);
         if (result.Item1 == null)
         {

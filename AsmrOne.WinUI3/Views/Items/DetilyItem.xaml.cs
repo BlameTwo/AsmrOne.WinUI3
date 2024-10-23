@@ -10,6 +10,12 @@ namespace AsmrOne.WinUI3.Views.Items
         {
             this.InitializeComponent();
             VisualStateManager.GoToState(this, "Normal", true);
+            this.Unloaded += DetilyItem_Unloaded;
+        }
+
+        private void DetilyItem_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.ViewModel = null;
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)

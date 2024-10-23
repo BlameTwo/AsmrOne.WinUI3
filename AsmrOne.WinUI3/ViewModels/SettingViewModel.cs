@@ -1,4 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using AsmrOne.WinUI3.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Windows.Storage;
 
 namespace AsmrOne.WinUI3.ViewModels;
@@ -20,6 +23,12 @@ public sealed partial class SettingViewModel : ObservableRecipient
     partial void OnIsConverChanged(bool value)
     {
         GlobalUsing.IsHideCover = value;
+        SendConfig();
+    }
+
+    private void SendConfig()
+    {
+        WeakReferenceMessenger.Default.Send<RefreshSetting>(new() { HideCover = this.IsConver });
     }
 
     partial void OnIsTagChanged(bool value)
