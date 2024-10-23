@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Contracts;
@@ -17,7 +18,7 @@ using Windows.Media.Playback;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
-public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<RefreshToken>
+public sealed partial class ShellViewModel : ObservableRecipient
 {
     public ShellViewModel(
         IAsmrClient asmrClient,
@@ -53,6 +54,28 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
     private void RegisterMessager()
     {
         this.Messenger.Register<RefreshAudio>(this, RefreshAudioMethod);
+        this.Messenger.Register<RefreshToken>(this, RefreshTokenMethod);
+        this.Messenger.Register<Loginout>(this, LoginoutMethod);
+    }
+
+    private void LoginoutMethod(object recipient, Loginout message)
+    {
+        if (message.IsRefresh)
+        {
+            ShellNavigationService.NavigationTo<HomeViewModel>(nameof(HomeViewModel));
+            this.ShellNavigationService.ClearHistory();
+            this.IsLogin = AsmrClient.IsLogin;
+            this.IsBack = ShellNavigationService.CanGoBack;
+        }
+    }
+
+    private void RefreshTokenMethod(object recipient, RefreshToken message)
+    {
+        if (message.IsRefresh && AsmrClient.IsLogin)
+        {
+            this.IsLogin = true;
+            this.DisPlayName = "账户：" + AsmrClient.UserName.Substring(0, 1);
+        }
     }
 
     private void RefreshAudioMethod(object recipient, RefreshAudio message)
@@ -68,6 +91,9 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
 
     [ObservableProperty]
     bool isBack = false;
+
+    [ObservableProperty]
+    bool isLogin = false;
 
     [RelayCommand]
     void Back()
@@ -127,7 +153,7 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
     PingResult selectPing;
 
     [ObservableProperty]
-    string disPlayName = "登录";
+    string disPlayName = "Login";
 
     public IAsmrClient AsmrClient { get; }
     public IDialogManager DialogManager { get; }
@@ -143,6 +169,14 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
     }
 
     [RelayCommand]
+    void Loginout()
+    {
+        AsmrClient.Loginout();
+        this.LoginoutMethod(this, new(true));
+        this.DisPlayName = "Login";
+    }
+
+    [RelayCommand()]
     async Task ShowRegister()
     {
         if (!AsmrClient.IsLogin)
@@ -158,19 +192,22 @@ public sealed partial class ShellViewModel : ObservableRecipient, IRecipient<Ref
         if (token != null)
         {
             AsmrClient.SetToken(token);
-            this.DisPlayName = token.User.Name.Substring(0, 1);
+            this.AsmrClient.UserName = token.User.Name;
+            this.DisPlayName = "账户：" + token.User.Name.Substring(0, 1);
+            this.IsLogin = true;
         }
         this.Ips = await AsmrOne.WinUI3.Contracts.Services.AsmrClient.GetPingAsync();
+        this.SelectPing = Ips.Where(x => x.Time > 0).First();
+        if (SelectPing == null) { }
+        else
+        {
+            this.ShellNavigationService.NavigationTo<HomeViewModel>(nameof(HomeViewModel));
+        }
     }
 
     [RelayCommand]
     void Switch()
     {
         AudioPlayerService.Switch();
-    }
-
-    public void Receive(RefreshToken message)
-    {
-        if (message.IsRefresh) { }
     }
 }

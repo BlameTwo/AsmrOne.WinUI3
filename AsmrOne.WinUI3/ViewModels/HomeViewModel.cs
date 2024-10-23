@@ -31,6 +31,9 @@ public sealed partial class HomeViewModel : ObservableObject
     [ObservableProperty]
     bool? isSubtitle = false;
 
+    [ObservableProperty]
+    bool isLoading = false;
+
     async partial void OnIsSubtitleChanged(bool? value)
     {
         if (value == null)
@@ -57,23 +60,13 @@ public sealed partial class HomeViewModel : ObservableObject
     [RelayCommand]
     async Task Loaded()
     {
-        var result = await ProgramLife
-            .ServiceProvider.GetService<IAsmrClient>()
-            .GetWorksAsync(
-                this.SelectOrder.WordOrder,
-                Index,
-                this.IsSubtitle == null ? false : (bool)IsSubtitle
-            );
-        foreach (var item in DataFactory.CreateDetilyItemViewModels(result.Works))
-        {
-            this.Works.Add(item);
-        }
-        this.Index++;
+        await this.AddItems();
     }
 
     [RelayCommand]
     async Task AddItems()
     {
+        IsLoading = true;
         var result = await ProgramLife
             .ServiceProvider.GetService<IAsmrClient>()
             .GetWorksAsync(
@@ -86,10 +79,12 @@ public sealed partial class HomeViewModel : ObservableObject
             this.Works.Add(item);
         }
         this.Index++;
+        IsLoading = false;
     }
 
     async Task RefreshAsync()
     {
+        IsLoading = true;
         Index = 1;
         Works.Clear();
         var result = await ProgramLife
@@ -104,5 +99,6 @@ public sealed partial class HomeViewModel : ObservableObject
             this.Works.Add(item);
         }
         this.Index++;
+        IsLoading = false;
     }
 }

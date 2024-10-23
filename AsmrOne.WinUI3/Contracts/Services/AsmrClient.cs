@@ -18,8 +18,9 @@ public class AsmrClient : IAsmrClient
 {
     HttpClient _client = null;
     private string token;
+    private string userName;
 
-    public bool IsLogin { get; set; } = false;
+    public bool IsLogin { get; private set; }
     public string HostName { get; private set; }
     public string Token
     {
@@ -31,6 +32,11 @@ public class AsmrClient : IAsmrClient
         }
     }
     public string CurrentId { get; private set; }
+    public string UserName
+    {
+        get => userName;
+        set => userName = value;
+    }
 
     private static async Task<long> Ping(string host)
     {
@@ -122,6 +128,7 @@ public class AsmrClient : IAsmrClient
     {
         this.Token = item1.Token;
         this.CurrentId = item1.User.RecommenderUuid;
+        this.UserName = item1.User.Name;
     }
 
     public async Task<WorksResponse> GetWorksAsync(WorkOrder order, int page, bool isSubtitle)
@@ -131,8 +138,11 @@ public class AsmrClient : IAsmrClient
         {
             { "page", page },
             { "subtitle", isSubtitle ? 1 : 0 },
-            { "withPlaylistStatus[]", this.CurrentId },
         };
+        if (this.IsLogin)
+        {
+            queryValues.Add("withPlaylistStatus[]", this.CurrentId);
+        }
         foreach (var item in orderDict)
         {
             queryValues.Add(item.Key, item.Value);
@@ -235,5 +245,12 @@ public class AsmrClient : IAsmrClient
         }
         var value = (T)JsonSerializer.Deserialize(jsonObj, info);
         return (value, "请求成功");
+    }
+
+    public void Loginout()
+    {
+        this.Token = null;
+        this.IsLogin = false;
+        GlobalUsing.Token = null;
     }
 }

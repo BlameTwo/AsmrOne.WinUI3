@@ -37,8 +37,8 @@ public sealed partial class RegisterViewModel : DialogViewModelBase
         if (result.Item1 != null)
         {
             ProgramLife.ServiceProvider.GetService<IAsmrClient>().SetToken(result.Item1);
-            WeakReferenceMessenger.Default.Send<RefreshToken>(new(true));
             TokenInstance.SaveToken(result.Item1);
+            WeakReferenceMessenger.Default.Send<RefreshToken>(new(true));
             this.Close();
         }
         else
@@ -47,8 +47,8 @@ public sealed partial class RegisterViewModel : DialogViewModelBase
                 .ServiceProvider.GetService<IAsmrClient>()
                 .LoginAsync(HostName, Password);
             ProgramLife.ServiceProvider.GetService<IAsmrClient>().SetToken(result.Item1);
-            WeakReferenceMessenger.Default.Send<RefreshToken>(new(true));
             TokenInstance.SaveToken(result.Item1);
+            WeakReferenceMessenger.Default.Send<RefreshToken>(new(true));
             this.Close();
         }
     }

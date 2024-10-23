@@ -18,6 +18,8 @@ public interface INavigationService
 
     public bool GoForward();
 
+    public void ClearHistory();
+
     public bool NavigationTo(string key, object args);
 
     public bool NavigationTo<ViewModel>(object args)

@@ -26,6 +26,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
@@ -42,8 +43,13 @@
                 Content="字幕"
                 IsChecked="{x:Bind ViewModel.IsSubtitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
-        <controls:AdaptiveView
+        <ProgressBar
             Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            Background="Transparent"
+            IsIndeterminate="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+        <controls:AdaptiveView
+            Grid.Row="2"
             AddDataCommand="{x:Bind ViewModel.AddItemsCommand}"
             ItemsSource="{x:Bind ViewModel.Works, Mode=OneWay}">
             <controls:AdaptiveView.ItemTemplate>

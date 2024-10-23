@@ -15,6 +15,8 @@ namespace AsmrOne.WinUI3.Common
         public static RegisterReponse GetToken()
         {
             var localSettings = GlobalUsing.Token;
+            if (string.IsNullOrWhiteSpace(localSettings))
+                return null;
             return JsonSerializer.Deserialize(localSettings, JsonContext.Default.RegisterReponse);
         }
     }

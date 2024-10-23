@@ -84,17 +84,26 @@
                         </AnimatedIcon>
                     </Button>
                     <Button
-                        Width="30"
-                        Height="30"
+                        Width="35"
+                        Height="35"
                         Margin="10,0,0,0"
                         Padding="0"
-                        Command="{x:Bind ViewModel.ShowRegisterCommand}"
-                        CornerRadius="50">
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontWeight="Bold"
-                            Text="{x:Bind ViewModel.DisPlayName, Mode=OneWay}" />
+                        CornerRadius="35">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="13"
+                            Glyph="&#xE7EE;" />
+                        <Button.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Command="{x:Bind ViewModel.ShowRegisterCommand}" Text="{x:Bind ViewModel.DisPlayName, Mode=OneWay}" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem
+                                    Command="{x:Bind ViewModel.LoginoutCommand}"
+                                    IsEnabled="{x:Bind ViewModel.IsLogin, Mode=OneWay}"
+                                    Text="Login Exit" />
+                                <MenuFlyoutItem Text="Exit App" />
+                            </MenuFlyout>
+                        </Button.Flyout>
                     </Button>
                 </StackPanel>
             </control:TitleBar.Header>
@@ -134,10 +143,38 @@
             SelectedItem="{x:Bind ViewModel.NavigtiaonSelectItem, Mode=OneWay}">
 
             <NavigationView.MenuItems>
-                <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.HomeViewModel" Content="Home">
+                <NavigationViewItem
+                    p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.HomeViewModel"
+                    p:NavigationItemClickHelper.Paramter="HomeViewModel"
+                    Content="Home">
                     <NavigationViewItem.Icon>
                         <SymbolIcon Symbol="Home" />
                     </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Tag">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Tag" />
+                    </NavigationViewItem.Icon>
+
+                </NavigationViewItem>
+                <NavigationViewItem Content="Circles">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="People" />
+                    </NavigationViewItem.Icon>
+
+                </NavigationViewItem>
+                <NavigationViewItem Content="Vas">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE95B;" />
+                    </NavigationViewItem.Icon>
+
+                </NavigationViewItem>
+                <NavigationViewItemSeparator />
+                <NavigationViewItem Content="Favourites" IsEnabled="{x:Bind ViewModel.IsLogin, Mode=OneWay}">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEB52;" />
+                    </NavigationViewItem.Icon>
+
                 </NavigationViewItem>
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>

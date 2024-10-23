@@ -44,7 +44,7 @@ public static class GlobalUsing
                 return "";
             return (string)result;
         }
-        set => LocalSettings.Values[nameof(IsHideR18Tag)] = value;
+        set => LocalSettings.Values[nameof(Token)] = value;
     }
 
     public static ApplicationDataContainer LocalSettings =>

@@ -6,7 +6,9 @@ namespace AsmrOne.WinUI3.Contracts;
 
 public interface IAsmrClient
 {
-    public bool IsLogin { get; set; }
+    public bool IsLogin { get; }
+
+    public string UserName { get; set; }
     Task<(RegisterReponse, string)> RegisterAsync(string userName, string password);
 
     Task<(RegisterReponse, string)> LoginAsync(string userName, string password);
@@ -19,4 +21,5 @@ public interface IAsmrClient
 
     void RegisterClient(string hostName);
     void SetToken(RegisterReponse token);
+    void Loginout();
 }

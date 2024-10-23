@@ -9,6 +9,7 @@ namespace AsmrOne.WinUI3.Views.Items
         public DetilyItem()
         {
             this.InitializeComponent();
+            VisualStateManager.GoToState(this, "Normal", true);
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)

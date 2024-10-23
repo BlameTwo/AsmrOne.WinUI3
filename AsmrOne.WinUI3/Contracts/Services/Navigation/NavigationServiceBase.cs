@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using AsmrOne.WinUI3.Common;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -52,10 +53,22 @@ public class NavigationServiceBase : INavigationService
         var pageType = PageService.GetPage(key);
         if (pageType == null)
             return false;
-        if (
-            RootFrame != null && RootFrame.Content?.GetType() != pageType
-            || args != null && !args.Equals(_parameter)
-        )
+        if (RootFrame.Content is IPage OrginpageType)
+        {
+            if (
+                RootFrame != null
+                && (OrginpageType.PageType != pageType || args != null && !args.Equals(_parameter))
+            )
+            {
+                _parameter = args;
+                return RootFrame.Navigate(
+                    pageType,
+                    _parameter,
+                    new DrillInNavigationTransitionInfo()
+                );
+            }
+        }
+        else if (RootFrame.Content == null)
         {
             _parameter = args;
             return RootFrame.Navigate(pageType, _parameter, new DrillInNavigationTransitionInfo());
@@ -79,4 +92,10 @@ public class NavigationServiceBase : INavigationService
 
     public bool NavigationTo<ViewModel>(object args)
         where ViewModel : ObservableObject => NavigationTo(typeof(ViewModel).FullName, args);
+
+    public void ClearHistory()
+    {
+        RootFrame.BackStack.Clear();
+        RootFrame.ForwardStack.Clear();
+    }
 }

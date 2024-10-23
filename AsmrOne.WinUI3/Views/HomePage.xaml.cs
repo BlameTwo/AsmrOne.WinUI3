@@ -1,10 +1,12 @@
+using System;
+using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AsmrOne.WinUI3.Views;
 
-public sealed partial class HomePage : Page
+public sealed partial class HomePage : Page, IPage
 {
     public HomePage()
     {
@@ -13,4 +15,6 @@ public sealed partial class HomePage : Page
     }
 
     public HomeViewModel ViewModel { get; }
+
+    public Type PageType => typeof(HomePage);
 }

@@ -26,6 +26,7 @@
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
             <control:ImageControl
+                x:Name="image"
                 Grid.RowSpan="2"
                 VerticalAlignment="Center"
                 IsHideCover="{x:Bind ViewModel.IsHideCover, Mode=OneWay}"
