@@ -5,16 +5,35 @@ using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
+using AsmrOne.WinUI3.Models.Messagers.ItemMessangers;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
 public sealed partial class RidDetilyViewModel : ViewModelBase
 {
-    public RidDetilyViewModel(IAsmrClient asmrClient, IDataAdaptiveService dataAdaptiveService)
+    public RidDetilyViewModel(
+        IAsmrClient asmrClient,
+        IDataAdaptiveService dataAdaptiveService,
+        IAudioPlayerService audioPlayerService
+    )
     {
         AsmrClient = asmrClient;
         DataAdaptiveService = dataAdaptiveService;
+        AudioPlayerService = audioPlayerService;
+        RegisterMessager();
+    }
+
+    private void RegisterMessager()
+    {
+        this.Messenger.Register<RidDetilySendPlayAudio>(this, RidDetilySendPlayAudioMethod);
+    }
+
+    private void RidDetilySendPlayAudioMethod(object recipient, RidDetilySendPlayAudio message)
+    {
+        AudioPlayerService.Player(message.Audio, this.Detily);
     }
 
     [ObservableProperty]
@@ -28,6 +47,7 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
 
     public IAsmrClient AsmrClient { get; }
     public IDataAdaptiveService DataAdaptiveService { get; }
+    public IAudioPlayerService AudioPlayerService { get; }
 
     internal async Task SetDataAsync(string str)
     {

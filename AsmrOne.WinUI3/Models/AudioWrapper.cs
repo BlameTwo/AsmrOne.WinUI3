@@ -6,8 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Models.AsmrOne;
+using AsmrOne.WinUI3.Models.Messagers.ItemMessangers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AsmrOne.WinUI3.Models
@@ -110,9 +112,9 @@ namespace AsmrOne.WinUI3.Models
         List<IAudioDataWrapper> subTitles;
 
         [RelayCommand]
-        async Task Play()
+        void Play()
         {
-            await ProgramLife.GetService<IAudioPlayerService>().PlayerAsync(this, Work);
+            WeakReferenceMessenger.Default.Send<RidDetilySendPlayAudio>(new(this));
         }
 
         public void Dispose()

@@ -80,7 +80,7 @@ public partial class AudioPlayerService : IAudioPlayerService
         this.Element.MediaPlayer.Play();
     }
 
-    public async Task PlayerAsync(AudioWrapper url, RidDetily data, string subUrl = null)
+    public void Player(AudioWrapper url, RidDetily data)
     {
         if (url.Child.Title == NowFileName)
             return;
@@ -93,39 +93,6 @@ public partial class AudioPlayerService : IAudioPlayerService
         Register();
         this.setDataHandler?.Invoke(this, data);
         WeakReferenceMessenger.Default.Send(new RefreshAudio(data, url.Child, url));
-        if (url.SubTitles != null && url.SubTitles.Count > 0)
-        {
-            foreach (var item in url.SubTitles)
-            {
-                if (item is TextWrapper text)
-                {
-                    var FN1 = Path.GetFileNameWithoutExtension(url.FileName);
-                    var FN2 = Path.GetFileNameWithoutExtension(text.FileName);
-                    if (FN1 == FN2)
-                    {
-                        var subTitle = await ProgramLife
-                            .ServiceProvider.GetService<IAsmrClient>()
-                            .Client.GetStringAsync(text.DownloadPath);
-                        SubtitleService.SetSubtitle(subTitle);
-                    }
-                }
-                else if (item is SubtitleWrapper subtitleWrapper)
-                {
-                    var FN1 = url.FileName.Substring(0, url.FileName.IndexOf('.'));
-                    var FN2 = subtitleWrapper.FileName.Substring(
-                        0,
-                        subtitleWrapper.FileName.IndexOf('.')
-                    );
-                    if (FN1 == FN2)
-                    {
-                        var subTitle = await ProgramLife
-                            .ServiceProvider.GetService<IAsmrClient>()
-                            .Client.GetStringAsync(subtitleWrapper.DownloadPath);
-                        SubtitleService.SetSubtitle(subTitle);
-                    }
-                }
-            }
-        }
         Play();
     }
 

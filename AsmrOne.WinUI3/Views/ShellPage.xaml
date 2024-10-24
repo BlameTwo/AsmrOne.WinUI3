@@ -12,6 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="using:AsmrOne.WinUI3.Controls.Propertys"
     xmlns:uim="using:AsmrOne.WinUI3.Models"
+    xmlns:um="using:AsmrOne.WinUI3.Models.UI"
     xmlns:visual="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     Loaded="ShellPage_Loaded"
     mc:Ignorable="d">
@@ -109,6 +110,7 @@
             </control:TitleBar.Header>
             <control:TitleBar.Footer>
                 <ComboBox
+                    x:Name="hostCombox"
                     VerticalAlignment="Center"
                     ItemsSource="{x:Bind ViewModel.Ips, Mode=OneWay}"
                     SelectedItem="{x:Bind ViewModel.SelectPing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -261,7 +263,8 @@
                             Margin="0,5,0,0"
                             FontSize="12"
                             Foreground="{ThemeResource SystemColorGrayTextBrush}"
-                            Text="{x:Bind ViewModel.Subtitle, Mode=OneWay}" />
+                            Text="{x:Bind ViewModel.Subtitle, Mode=OneWay}"
+                            TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                 </Grid>
             </Button>
@@ -342,12 +345,34 @@
                         </Flyout>
                     </Button.Flyout>
                 </Button>
-                <ToggleButton Margin="5,0,0,0" VerticalAlignment="Center">
+                <Button
+                    Margin="5,0,0,0"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource TransparentButtonStyle}">
                     <FontIcon
                         FontFamily="Segoe Fluent Icons"
                         FontSize="15"
                         Glyph="&#xED1E;" />
-                </ToggleButton>
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                                <CheckBox Content="Auto Subtitle" IsChecked="{x:Bind ViewModel.IsAutosubtitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <ToggleButton Margin="0,10,0,0" Content="Open Subtitle" />
+                                <ComboBox
+                                    Margin="0,10,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    ItemsSource="{x:Bind ViewModel.Subtitles, Mode=OneWay}"
+                                    SelectedItem="{x:Bind ViewModel.SelectSubtitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="um:ShellSubtitleItem">
+                                            <TextBlock Text="{x:Bind FileName}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
                 <Button
                     Margin="5,0,0,0"
                     VerticalAlignment="Center"
@@ -366,6 +391,10 @@
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="hostCombox.Visibility" Value="Visible" />
+                    </VisualState.Setters>
                     <VisualState.Storyboard>
                         <Storyboard>
                             <DoubleAnimation
@@ -385,6 +414,9 @@
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="10" />
                     </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="hostCombox.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
                     <VisualState.Storyboard>
                         <Storyboard>
                             <DoubleAnimation
@@ -397,6 +429,7 @@
                                 Storyboard.TargetProperty="Opacity"
                                 To="0"
                                 Duration="0:0:0.3" />
+
                         </Storyboard>
                     </VisualState.Storyboard>
 

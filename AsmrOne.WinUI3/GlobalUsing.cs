@@ -35,6 +35,18 @@ public static class GlobalUsing
         set => LocalSettings.Values[nameof(IsHideR18Tag)] = value;
     }
 
+    public static bool IsAutoSubtitle
+    {
+        get
+        {
+            var result = LocalSettings.Values[nameof(IsAutoSubtitle)];
+            if (result == null)
+                return true;
+            return (bool)result;
+        }
+        set => LocalSettings.Values[nameof(IsAutoSubtitle)] = value;
+    }
+
     public static string Token
     {
         get

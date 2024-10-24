@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ABI.System;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
+using AsmrOne.WinUI3.Contracts.Services;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Messagers;
+using AsmrOne.WinUI3.Models.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.VisualBasic;
 using Windows.Media.Playback;
 
 namespace AsmrOne.WinUI3.ViewModels;
@@ -48,6 +53,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     {
         this.IsBack = ShellNavigationService.CanGoBack;
         this.NavigtiaonSelectItem = ShellNavigationViewService.GetSelectItem(e.SourcePageType);
+        this.IsAutosubtitle = GlobalUsing.IsAutoSubtitle;
     }
 
     private void RegisterMessager()
@@ -93,12 +99,19 @@ public sealed partial class ShellViewModel : ViewModelBase
     {
         Child = message.Child;
         Detily = message.Detily;
+        SetSubtitle(message);
     }
 
     private void AudioPlayerService_PlayerOpened(object sender, MediaPlaybackSession data) { }
 
     [ObservableProperty]
     double maxDuration;
+
+    [ObservableProperty]
+    ObservableCollection<ShellSubtitleItem> subtitles = new();
+
+    [ObservableProperty]
+    ShellSubtitleItem selectSubtitle;
 
     [ObservableProperty]
     bool isBack = false;
@@ -114,11 +127,6 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     object navigtiaonSelectItem;
-
-    private void AudioPlayerService_SetDataChanged(object sender, Models.AsmrOne.RidDetily child)
-    {
-        this.Cover = new BitmapImage(new System.Uri(child.ThumbnailCoverUrl));
-    }
 
     [ObservableProperty]
     Child child;
@@ -137,6 +145,75 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     bool loading;
+
+    [ObservableProperty]
+    bool isAutosubtitle;
+
+    async partial void OnSelectSubtitleChanged(ShellSubtitleItem value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+        var subTitle = await AsmrClient.Client.GetStringAsync(value.DownloadUrl);
+        AudioPlayerService.SubtitleService.SetSubtitle(subTitle);
+    }
+
+    partial void OnIsAutosubtitleChanged(bool value)
+    {
+        GlobalUsing.IsAutoSubtitle = value;
+    }
+
+    private void SetSubtitle(RefreshAudio message)
+    {
+        Subtitles.Clear();
+        foreach (var item in message.AudioWrapper.SubTitles)
+        {
+            if (item is TextWrapper text)
+            {
+                this.Subtitles.Add(
+                    new()
+                    {
+                        DownloadUrl = text.DownloadPath,
+                        FileName = text.FileName,
+                        Name = text.FileName.Substring(0, text.FileName.IndexOf('.')),
+                    }
+                );
+            }
+            if (item is SubtitleWrapper subtitle)
+            {
+                this.Subtitles.Add(
+                    new()
+                    {
+                        DownloadUrl = subtitle.DownloadPath,
+                        FileName = subtitle.FileName,
+                        Name = subtitle.FileName.Substring(0, subtitle.FileName.IndexOf('.')),
+                    }
+                );
+            }
+        }
+        if (GlobalUsing.IsAutoSubtitle)
+        {
+            foreach (var item in this.Subtitles)
+            {
+                if (
+                    item.Name
+                    == message.AudioWrapper.FileName.Substring(
+                        0,
+                        message.AudioWrapper.FileName.IndexOf('.')
+                    )
+                )
+                {
+                    this.SelectSubtitle = item;
+                }
+            }
+        }
+    }
+
+    private void AudioPlayerService_SetDataChanged(object sender, Models.AsmrOne.RidDetily child)
+    {
+        this.Cover = new BitmapImage(new System.Uri(child.ThumbnailCoverUrl));
+    }
 
     private void AudioPlayerService_MediaPlayerStatus(
         Windows.Media.Playback.MediaPlayer player,
