@@ -10,7 +10,7 @@
 	  <PublishAot>true</PublishAot>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x64</RuntimeIdentifier>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x64</RuntimeIdentifier>
-	  <WindowsSdkPackageVersion>10.0.26100.38</WindowsSdkPackageVersion>
+	  <WindowsSdkPackageVersion>10.0.26100.53</WindowsSdkPackageVersion>
 	  <EnableMsixTooling>true</EnableMsixTooling>
 	  <PackageCertificateKeyFile>AsmrOne.WinUI3_TemporaryKey.pfx</PackageCertificateKeyFile>
 	  <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
@@ -29,6 +29,7 @@
     <None Remove="Styles\HeaderTileStyle.xaml" />
     <None Remove="Styles\ImageControl.xaml" />
     <None Remove="Styles\Titlebar.xaml" />
+    <None Remove="SubtitleWindowBase.xaml" />
     <None Remove="Views\Dialogs\RegisterDialog.xaml" />
     <None Remove="Views\HomePage.xaml" />
     <None Remove="Views\Items\DetilyItem.xaml" />
@@ -51,7 +52,7 @@
    <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-rc.1.24431.7" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
@@ -115,6 +116,12 @@
 
   <ItemGroup>
     <Folder Include="Controls\DetilyItem\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="SubtitleWindowBase.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

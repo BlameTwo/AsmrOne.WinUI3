@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -24,26 +25,11 @@ public static class WindowExtension
     public const int GWL_EXSTYLE = (-20);
     public const int LWA_ALPHA = 0;
 
-    public static Window CreateTransparentWindow(CreateType type)
+    public static void CreateTransparentWindow(CreateType type, UIElement content)
     {
-        var window = new Window();
-        var dpi = WindowExtension.GetScaleAdjustment(window);
+        var window = new SubtitleWindowBase();
+        var dpi = WindowExtension.GetScaleAdjustment(App.MainWindow);
         var workArea = WindowExtension.GetWorkarea();
-        //window.SystemBackdrop = new TransparentTintBackdrop();
-        window.SystemBackdrop = new MicaBackdrop()
-        {
-            Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt,
-        };
-        window.AppWindow.IsShownInSwitchers = false;
-        window.AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
-        if (window.AppWindow.Presenter is OverlappedPresenter presenter)
-        {
-            presenter.IsMaximizable = false;
-            presenter.IsMinimizable = false;
-            presenter.IsResizable = false;
-            presenter.IsAlwaysOnTop = true;
-            presenter.SetBorderAndTitleBar(true, false);
-        }
         if (type == CreateType.Subtitle)
         {
             double height = 100;
@@ -55,8 +41,8 @@ public static class WindowExtension
             window.SetWindowSize(width / dpi, height / dpi);
             window.AppWindow.Move(new Windows.Graphics.PointInt32() { X = left, Y = top });
         }
-
-        return window;
+        window.Content = content;
+        window.Activate();
     }
 
     public static double GetScaleAdjustment(Window window)
@@ -87,6 +73,15 @@ public static class WindowExtension
         IntPtr hWnd = WindowNative.GetWindowHandle(window);
         GetWindowLong(hWnd, GWL_EXSTYLE);
         SetWindowLong(hWnd, GWL_EXSTYLE, (WS_EX_TRANSPARENT | WS_EX_LAYERED));
+        SetLayeredWindowAttributes(hWnd, 0, 100, LWA_ALPHA);
+    }
+
+    public static void UnPenetrate(Window window)
+    {
+        IntPtr hWnd = WindowNative.GetWindowHandle(window);
+        uint currentExStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
+        uint newExStyle = currentExStyle & ~WS_EX_TRANSPARENT;
+        SetWindowLong(hWnd, GWL_EXSTYLE, newExStyle);
         SetLayeredWindowAttributes(hWnd, 0, 100, LWA_ALPHA);
     }
 
@@ -128,5 +123,31 @@ public static class WindowExtension
             return workArea;
         }
         return null;
+    }
+}
+
+public static partial class LayerWindowHelper
+{
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("CodeQuality", "IDE0079:请删除不必要的忽略")]
+    private const int WS_EX_LAYERED = 0x80000;
+
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "IdentifierTypo")]
+    [SuppressMessage("CodeQuality", "IDE0079:请删除不必要的忽略")]
+    private const int GWL_EXSTYLE = -20;
+
+    [LibraryImport("user32.dll", SetLastError = true)]
+    public static partial int GetWindowLongA(nint hWnd, int nIndex);
+
+    [LibraryImport("user32.dll")]
+    public static partial int SetWindowLongA(nint hWnd, int nIndex, int dwNewLong);
+
+    public static void SetLayerWindow(Window window)
+    {
+        var hWnd = (nint)window.AppWindow.Id.Value;
+        var exStyle = GetWindowLongA(hWnd, GWL_EXSTYLE);
+        if ((exStyle & WS_EX_LAYERED) is 0)
+            _ = SetWindowLongA(hWnd, GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
     }
 }

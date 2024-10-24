@@ -28,11 +28,10 @@ public partial class App : Application
         MainWindow.Content = page;
         MainWindow.SystemBackdrop = new MicaBackdrop();
         MainWindow.Activate();
-        SubtitleWindow = WindowExtension.CreateTransparentWindow(
-            WindowExtension.CreateType.Subtitle
+        WindowExtension.CreateTransparentWindow(
+            WindowExtension.CreateType.Subtitle,
+            ProgramLife.ServiceProvider.GetService<SubtitleWindow>()
         );
-        SubtitleWindow.Content = ProgramLife.ServiceProvider.GetService<SubtitleWindow>();
-        SubtitleWindow.Activate();
     }
 
     private void InitSetting() { }
