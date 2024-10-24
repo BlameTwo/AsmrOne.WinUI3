@@ -66,20 +66,22 @@ public sealed partial class HomeViewModel : ObservableObject
     [RelayCommand]
     async Task AddItems()
     {
-        //IsLoading = true;
-        //var result = await ProgramLife
-        //    .ServiceProvider.GetService<IAsmrClient>()
-        //    .GetWorksAsync(
-        //        this.SelectOrder.WordOrder,
-        //        Index,
-        //        IsSubtitle == null ? false : (bool)IsSubtitle
-        //    );
-        //foreach (var item in DataFactory.CreateDetilyItemViewModels(result.Works))
-        //{
-        //    this.Works.Add(item);
-        //}
-        //this.Index++;
-        //IsLoading = false;
+        if (IsLoading)
+            return;
+        IsLoading = true;
+        var result = await ProgramLife
+            .ServiceProvider.GetService<IAsmrClient>()
+            .GetWorksAsync(
+                this.SelectOrder.WordOrder,
+                Index,
+                IsSubtitle == null ? false : (bool)IsSubtitle
+            );
+        foreach (var item in DataFactory.CreateDetilyItemViewModels(result.Works))
+        {
+            this.Works.Add(item);
+        }
+        this.Index++;
+        IsLoading = false;
     }
 
     async Task RefreshAsync()

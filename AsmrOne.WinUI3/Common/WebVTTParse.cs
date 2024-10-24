@@ -11,7 +11,7 @@ public static class WebVTTParse
     {
         List<SubtitleItem> subtitles = new List<SubtitleItem>();
 
-        string[] lines = File.ReadAllLines(filePath);
+        string[] lines = filePath.Split("\n\n");
         string timePattern = @"\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}";
 
         for (int i = 0; i < lines.Length; i++)

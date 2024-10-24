@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Timers;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Messagers;
@@ -68,7 +69,7 @@ public partial class AudioPlayerService : IAudioPlayerService
         this.Element.MediaPlayer.Play();
     }
 
-    public void Player(Child url, RidDetily data, string subUrl = null)
+    public async Task PlayerAsync(Child url, RidDetily data, string subUrl = null)
     {
         if (url.Title == NowFileName)
             return;
@@ -81,7 +82,13 @@ public partial class AudioPlayerService : IAudioPlayerService
         Register();
         this.setDataHandler?.Invoke(this, data);
         WeakReferenceMessenger.Default.Send(new RefreshAudio(data, url));
-        //var subTitle = ProgramLife.ServiceProvider.GetService<IAsmrClient>().Client.GetStringAsync();
+        if (!string.IsNullOrWhiteSpace(subUrl))
+        {
+            var subTitle = await ProgramLife
+                .ServiceProvider.GetService<IAsmrClient>()
+                .Client.GetStringAsync(subUrl);
+            SubtitleService.SetSubtitle(subTitle);
+        }
         Play();
     }
 

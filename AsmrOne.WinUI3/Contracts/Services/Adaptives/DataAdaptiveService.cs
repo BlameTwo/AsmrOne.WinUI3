@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
+using Microsoft.UI.Xaml.Controls;
+using Windows.Devices.Radios;
 
 namespace AsmrOne.WinUI3.Contracts.Services.Adaptives;
 
@@ -15,12 +18,54 @@ public class DataAdaptiveService : IDataAdaptiveService
         {
             workWrapper.Add(new() { Data = item });
         }
+
         return workWrapper;
+    }
+
+    public List<IAudioDataWrapper> GetSubTitle(ObservableCollection<IAudioDataWrapper> list)
+    {
+        foreach (var item in list)
+        {
+            var subTitle = FindSubtitle(list);
+            return subTitle;
+        }
+        return null;
+    }
+
+    public List<IAudioDataWrapper> FindSubtitle(ObservableCollection<IAudioDataWrapper> list)
+    {
+        List<IAudioDataWrapper> result = new();
+        foreach (var item in list)
+        {
+            if (item is FolderWrapper folders)
+            {
+                foreach (var folder in folders.Datas)
+                {
+                    if (folder is FolderWrapper folderWrapper)
+                    {
+                        return FindSubtitle(list);
+                    }
+                    if (folder.Type == "Text" || folder.Type == "Subtitle")
+                    {
+                        result.Add(folder);
+                    }
+                }
+            }
+            if (item is TextWrapper text)
+            {
+                result.Add(item);
+            }
+            if (item is SubtitleWrapper subtitle)
+            {
+                result.Add(item);
+            }
+        }
+        return result;
     }
 
     public ObservableCollection<IAudioDataWrapper> GetAudioData(List<Child> video, RidDetily work)
     {
-        List<IAudioDataWrapper> wrappers = new();
+        ObservableCollection<IAudioDataWrapper> wrappers = new();
         foreach (var item in video)
         {
             if (item.Type == "folder")
@@ -47,7 +92,23 @@ public class DataAdaptiveService : IDataAdaptiveService
                 wrappers.Add(GetImage(item));
             }
         }
-        return wrappers.ToObservable();
+        AssignSubTitlesToAudioWrappers(wrappers);
+        return wrappers;
+    }
+
+    private void AssignSubTitlesToAudioWrappers(ObservableCollection<IAudioDataWrapper> wrappers)
+    {
+        foreach (var wrapper in wrappers)
+        {
+            if (wrapper is FolderWrapper folder)
+            {
+                AssignSubTitlesToAudioWrappers(folder.Datas);
+            }
+            else if (wrapper is AudioWrapper audio)
+            {
+                audio.SubTitles = GetSubTitle(wrappers);
+            }
+        }
     }
 
     public IAudioDataWrapper GetAudio(Child child, RidDetily work)

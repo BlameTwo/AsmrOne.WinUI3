@@ -12,7 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AsmrOne.WinUI3.Models
 {
-    public interface IAudioDataWrapper { }
+    public interface IAudioDataWrapper
+    {
+        public string Type { get; }
+    }
 
     public partial class FileWrapper : ObservableObject
     {
@@ -92,15 +95,22 @@ namespace AsmrOne.WinUI3.Models
         [ObservableProperty]
         RidDetily work;
 
+        [ObservableProperty]
+        List<IAudioDataWrapper> subTitles;
+
         [RelayCommand]
-        void Play()
+        async Task Play()
         {
-            ProgramLife.ServiceProvider.GetService<IAudioPlayerService>().Player(this.Child, Work);
+            await ProgramLife
+                .ServiceProvider.GetService<IAudioPlayerService>()
+                .PlayerAsync(this.Child, Work);
         }
     }
 
     public partial class FolderWrapper : ObservableObject, IAudioDataWrapper
     {
+        public string Type => "Folder";
+
         [ObservableProperty]
         string name;
 

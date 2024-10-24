@@ -1,4 +1,5 @@
-﻿using AsmrOne.WinUI3.Models;
+﻿using System.Threading.Tasks;
+using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using Microsoft.UI.Xaml.Controls;
 
@@ -30,7 +31,7 @@ public interface IAudioPlayerService
 
     public void SetPostion(double postion);
 
-    public void Player(Child url, RidDetily data, string subUrl = null);
+    public Task PlayerAsync(Child url, RidDetily data, string subUrl = null);
 
     public void Pause();
 
