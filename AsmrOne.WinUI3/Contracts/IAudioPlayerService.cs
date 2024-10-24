@@ -31,7 +31,7 @@ public interface IAudioPlayerService
 
     public void SetPostion(double postion);
 
-    public Task PlayerAsync(Child url, RidDetily data, string subUrl = null);
+    public Task PlayerAsync(AudioWrapper url, RidDetily data, string subUrl = null);
 
     public void Pause();
 

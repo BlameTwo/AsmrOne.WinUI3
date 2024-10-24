@@ -15,6 +15,8 @@ namespace AsmrOne.WinUI3.Models
     public interface IAudioDataWrapper
     {
         public string Type { get; }
+
+        public Child Child { get; set; }
     }
 
     public partial class FileWrapper : ObservableObject
@@ -103,7 +105,7 @@ namespace AsmrOne.WinUI3.Models
         {
             await ProgramLife
                 .ServiceProvider.GetService<IAudioPlayerService>()
-                .PlayerAsync(this.Child, Work);
+                .PlayerAsync(this, Work);
         }
     }
 

@@ -257,6 +257,11 @@
                             FontSize="12"
                             Foreground="{ThemeResource SystemColorGrayTextBrush}"
                             Text="{x:Bind ViewModel.Detily.Name, Mode=OneWay}" />
+                        <TextBlock
+                            Margin="0,5,0,0"
+                            FontSize="12"
+                            Foreground="{ThemeResource SystemColorGrayTextBrush}"
+                            Text="{x:Bind ViewModel.Subtitle, Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
             </Button>

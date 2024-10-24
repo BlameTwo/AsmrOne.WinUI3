@@ -57,7 +57,19 @@ public sealed partial class ShellViewModel : ViewModelBase
         this.Messenger.Register<RefreshAudio>(this, RefreshAudioMethod);
         this.Messenger.Register<RefreshToken>(this, RefreshTokenMethod);
         this.Messenger.Register<Loginout>(this, LoginoutMethod);
+        this.Messenger.Register<RefreshSubtitle>(this, RefreshSubtitleMethod);
     }
+
+    private void RefreshSubtitleMethod(object recipient, RefreshSubtitle message)
+    {
+        if (Subtitle != message.Item.Text)
+        {
+            this.Subtitle = message.Item.Text;
+        }
+    }
+
+    [ObservableProperty]
+    string subtitle = "字幕";
 
     private void LoginoutMethod(object recipient, Loginout message)
     {

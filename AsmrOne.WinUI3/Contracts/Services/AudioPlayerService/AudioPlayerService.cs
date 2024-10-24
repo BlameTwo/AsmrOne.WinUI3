@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Timers;
+using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Messagers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Windows.AI.MachineLearning;
 using Windows.Media.Playback;
 
 namespace AsmrOne.WinUI3.Contracts.Services;
@@ -25,21 +28,29 @@ public partial class AudioPlayerService : IAudioPlayerService
 
     private void Timer_Elapsed(object sender, ElapsedEventArgs e)
     {
-        try
-        {
-            if (OpenSubtitle == false)
-                return;
-            if (Element == null || Element.MediaPlayer == null)
-                return;
-            var subItem = SubtitleService.GetSubtitle(this.Element.MediaPlayer.Position);
-            if (subItem == default)
-                return;
-            WeakReferenceMessenger.Default.Send<RefreshSubtitle>(new(subItem));
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex.Message);
-        }
+        if (App.MainWindow.DispatcherQueue == null)
+            return;
+        App.MainWindow.DispatcherQueue.TryEnqueue(
+            Microsoft.UI.Dispatching.DispatcherQueuePriority.High,
+            () =>
+            {
+                try
+                {
+                    if (OpenSubtitle == false)
+                        return;
+                    if (Element == null || Element.MediaPlayer == null)
+                        return;
+                    var subItem = SubtitleService.GetSubtitle(this.Element.MediaPlayer.Position);
+                    if (subItem == default)
+                        return;
+                    WeakReferenceMessenger.Default.Send<RefreshSubtitle>(new(subItem));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+        );
     }
 
     public bool OpenSubtitle { get; set; } = true;
@@ -69,25 +80,51 @@ public partial class AudioPlayerService : IAudioPlayerService
         this.Element.MediaPlayer.Play();
     }
 
-    public async Task PlayerAsync(Child url, RidDetily data, string subUrl = null)
+    public async Task PlayerAsync(AudioWrapper url, RidDetily data, string subUrl = null)
     {
-        if (url.Title == NowFileName)
+        if (url.Child.Title == NowFileName)
             return;
-        this.NowFileName = url.Title;
+        this.NowFileName = url.Child.Title;
         this.RidDetily = data;
-        this.ChildData = url;
+        this.ChildData = url.Child;
         UnRegister();
         Stop();
         this.Element.MediaPlayer.SetUriSource(new Uri(url.MediaStreamUrl));
         Register();
         this.setDataHandler?.Invoke(this, data);
-        WeakReferenceMessenger.Default.Send(new RefreshAudio(data, url));
-        if (!string.IsNullOrWhiteSpace(subUrl))
+        WeakReferenceMessenger.Default.Send(new RefreshAudio(data, url.Child, url));
+        if (url.SubTitles != null && url.SubTitles.Count > 0)
         {
-            var subTitle = await ProgramLife
-                .ServiceProvider.GetService<IAsmrClient>()
-                .Client.GetStringAsync(subUrl);
-            SubtitleService.SetSubtitle(subTitle);
+            foreach (var item in url.SubTitles)
+            {
+                if (item is TextWrapper text)
+                {
+                    var FN1 = Path.GetFileNameWithoutExtension(url.FileName);
+                    var FN2 = Path.GetFileNameWithoutExtension(text.FileName);
+                    if (FN1 == FN2)
+                    {
+                        var subTitle = await ProgramLife
+                            .ServiceProvider.GetService<IAsmrClient>()
+                            .Client.GetStringAsync(text.DownloadPath);
+                        SubtitleService.SetSubtitle(subTitle);
+                    }
+                }
+                else if (item is SubtitleWrapper subtitleWrapper)
+                {
+                    var FN1 = url.FileName.Substring(0, url.FileName.IndexOf('.'));
+                    var FN2 = subtitleWrapper.FileName.Substring(
+                        0,
+                        subtitleWrapper.FileName.IndexOf('.')
+                    );
+                    if (FN1 == FN2)
+                    {
+                        var subTitle = await ProgramLife
+                            .ServiceProvider.GetService<IAsmrClient>()
+                            .Client.GetStringAsync(subtitleWrapper.DownloadPath);
+                        SubtitleService.SetSubtitle(subTitle);
+                    }
+                }
+            }
         }
         Play();
     }
