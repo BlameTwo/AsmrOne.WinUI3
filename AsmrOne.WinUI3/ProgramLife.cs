@@ -39,8 +39,10 @@ namespace AsmrOne.WinUI3
                 .AddSingleton<ISubtitleService, SubtitleService>()
                 #endregion
                 #region View And ViewModel
-                .AddTransient<ShellPage>()
-                .AddTransient<ShellViewModel>()
+                .AddSingleton<ShellPage>()
+                .AddSingleton<ShellViewModel>()
+                .AddSingleton<SubtitleWindow>()
+                .AddSingleton<SubtitleViewModel>()
                 .AddTransient<HomeViewModel>()
                 .AddTransient<RidDetilyViewModel>()
                 .AddTransient<SettingViewModel>()

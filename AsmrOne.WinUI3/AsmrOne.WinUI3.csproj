@@ -35,6 +35,7 @@
     <None Remove="Views\RidDetilyPage.xaml" />
     <None Remove="Views\SettingPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
+    <None Remove="Views\SubtitleWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,6 +55,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+    <PackageReference Include="WinUIEx" Version="2.4.2" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -113,6 +115,12 @@
 
   <ItemGroup>
     <Folder Include="Controls\DetilyItem\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\SubtitleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

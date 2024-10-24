@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using static AsmrOne.WinUI3.Common.Win32;
 
 namespace AsmrOne.WinUI3;
 
@@ -26,9 +28,16 @@ public partial class App : Application
         MainWindow.Content = page;
         MainWindow.SystemBackdrop = new MicaBackdrop();
         MainWindow.Activate();
+        SubtitleWindow = WindowExtension.CreateTransparentWindow(
+            WindowExtension.CreateType.Subtitle
+        );
+        SubtitleWindow.Content = ProgramLife.ServiceProvider.GetService<SubtitleWindow>();
+        SubtitleWindow.Activate();
     }
 
     private void InitSetting() { }
 
     public static Window MainWindow { get; private set; }
+
+    public static Window SubtitleWindow { get; private set; }
 }
