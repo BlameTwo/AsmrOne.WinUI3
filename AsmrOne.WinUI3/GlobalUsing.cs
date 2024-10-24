@@ -14,7 +14,7 @@ public static class GlobalUsing
         {
             var result = LocalSettings.Values[nameof(IsHideCover)];
             if (result == null)
-                return false;
+                return true;
             return (bool)result;
         }
         set => LocalSettings.Values[nameof(IsHideCover)] = value;

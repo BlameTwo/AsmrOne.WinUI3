@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization.Metadata;
+using System.Threading;
 using System.Threading.Tasks;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
@@ -67,46 +68,68 @@ public class AsmrClient : IAsmrClient
         "asmr.one",
     };
 
-    public async Task<(RegisterReponse, string)> RegisterAsync(string userName, string password)
+    public async Task<(RegisterReponse, string)> RegisterAsync(
+        string userName,
+        string password,
+        CancellationToken token = default
+    )
     {
-        var requestModel = new RegisterUserRequest()
+        try
         {
-            Name = userName,
-            Password = password,
-            RecommenderUuid = Guid.NewGuid().ToString().ToLower(),
-        };
-        var content = JsonSerializer.Serialize(
-            requestModel,
-            JsonContext.Default.RegisterUserRequest
-        );
-        var request = new HttpRequestMessage(HttpMethod.Post, $"{HostName}/api/auth/reg");
-        request.Content = new StringContent(content, Encoding.UTF8, "application/json");
-        var result = await Client.SendAsync(request);
-        var str = await result.Content.ReadAsStringAsync();
-        var jsonObj = JsonObject.Parse(str);
-        if (jsonObj["error"] != null)
-        {
-            return new(null, jsonObj["error"].GetValue<string>());
+            var requestModel = new RegisterUserRequest()
+            {
+                Name = userName,
+                Password = password,
+                RecommenderUuid = Guid.NewGuid().ToString().ToLower(),
+            };
+            var content = JsonSerializer.Serialize(
+                requestModel,
+                JsonContext.Default.RegisterUserRequest
+            );
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{HostName}/api/auth/reg");
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+            var result = await Client.SendAsync(request);
+            var str = await result.Content.ReadAsStringAsync();
+            var jsonObj = JsonObject.Parse(str);
+            if (jsonObj["error"] != null)
+            {
+                return new(null, jsonObj["error"].GetValue<string>());
+            }
+            var value = JsonSerializer.Deserialize(jsonObj, JsonContext.Default.RegisterReponse);
+            return new(value, "注册成功");
         }
-        var value = JsonSerializer.Deserialize(jsonObj, JsonContext.Default.RegisterReponse);
-        return new(value, "注册成功");
+        catch (TaskCanceledException)
+        {
+            return (null, "错误");
+        }
     }
 
-    public async Task<(RegisterReponse, string)> LoginAsync(string userName, string password)
+    public async Task<(RegisterReponse, string)> LoginAsync(
+        string userName,
+        string password,
+        CancellationToken token = default
+    )
     {
-        var requestModel = new LoginUser() { Name = userName, Password = password };
-        var content = JsonSerializer.Serialize(requestModel, JsonContext.Default.LoginUser);
-        var request = new HttpRequestMessage(HttpMethod.Post, $"{HostName}/api/auth/me");
-        request.Content = new StringContent(content, Encoding.UTF8, "application/json");
-        var result = await Client.SendAsync(request);
-        var str = await result.Content.ReadAsStringAsync();
-        var jsonObj = JsonObject.Parse(str);
-        if (jsonObj["error"] != null)
+        try
         {
-            return new(null, jsonObj["error"].GetValue<string>());
+            var requestModel = new LoginUser() { Name = userName, Password = password };
+            var content = JsonSerializer.Serialize(requestModel, JsonContext.Default.LoginUser);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{HostName}/api/auth/me");
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+            var result = await Client.SendAsync(request, token);
+            var str = await result.Content.ReadAsStringAsync();
+            var jsonObj = JsonObject.Parse(str);
+            if (jsonObj["error"] != null)
+            {
+                return new(null, jsonObj["error"].GetValue<string>());
+            }
+            var value = JsonSerializer.Deserialize(jsonObj, JsonContext.Default.RegisterReponse);
+            return new(value, "登录成功");
         }
-        var value = JsonSerializer.Deserialize(jsonObj, JsonContext.Default.RegisterReponse);
-        return new(value, "登录成功");
+        catch (TaskCanceledException)
+        {
+            return (null, "错误");
+        }
     }
 
     public void RegisterClient(string hostName)
@@ -131,7 +154,12 @@ public class AsmrClient : IAsmrClient
         this.UserName = item1.User.Name;
     }
 
-    public async Task<WorksResponse> GetWorksAsync(WorkOrder order, int page, bool isSubtitle)
+    public async Task<WorksResponse> GetWorksAsync(
+        WorkOrder order,
+        int page,
+        bool isSubtitle,
+        CancellationToken token = default
+    )
     {
         var orderDict = order.GetValue();
         var queryValues = new Dictionary<string, object>()
@@ -154,11 +182,11 @@ public class AsmrClient : IAsmrClient
             null,
             true
         );
-
-        var response = await Client.SendAsync(request);
+        var response = await Client.SendAsync(request, token);
         var result = await CheckDataAsync<WorksResponse>(
             response,
-            JsonContext.Default.WorksResponse
+            JsonContext.Default.WorksResponse,
+            token
         );
         if (result.Item1 == null)
         {
@@ -167,29 +195,56 @@ public class AsmrClient : IAsmrClient
         return result.Item1;
     }
 
-    public async Task<(RidDetily, string)> GetWorkAsync(string rj)
+    public async Task<(RidDetily, string)> GetWorkAsync(
+        string rj,
+        CancellationToken token = default
+    )
     {
-        //https://api.asmr-300.com/api/workInfo/01249781
-        var request = this.BuildRequest($"{HostName}/api/workInfo/{rj}", HttpMethod.Get);
-        var response = await Client.SendAsync(request);
-        var result = await CheckDataAsync<RidDetily>(response, JsonContext.Default.RidDetily);
-        if (result.Item1 == null)
+        try
         {
-            throw new Exception("错误！");
+            var request = this.BuildRequest($"{HostName}/api/workInfo/{rj}", HttpMethod.Get);
+            var response = await Client.SendAsync(request);
+            var result = await CheckDataAsync<RidDetily>(
+                response,
+                JsonContext.Default.RidDetily,
+                token
+            );
+            if (result.Item1 == null)
+            {
+                return (null, "错误");
+            }
+            return result;
         }
-        return result;
+        catch (TaskCanceledException)
+        {
+            return (null, "错误");
+        }
     }
 
-    public async Task<(List<Child>, string)> GetWorkAudioAsync(string rj)
+    public async Task<(List<Child>, string)> GetWorkAudioAsync(
+        string rj,
+        CancellationToken token = default
+    )
     {
-        var request = this.BuildRequest($"{HostName}/api/tracks/{rj}?v=1", HttpMethod.Get);
-        var response = await Client.SendAsync(request);
-        var result = await CheckDataAsync<List<Child>>(response, JsonContext.Default.ListChild);
-        if (result.Item1 == null)
+        try
         {
-            throw new Exception("错误！");
+            var request = this.BuildRequest($"{HostName}/api/tracks/{rj}?v=1", HttpMethod.Get);
+            var response = await Client.SendAsync(request);
+            var result = await CheckDataAsync<List<Child>>(
+                response,
+                JsonContext.Default.ListChild,
+                token
+            );
+            if (result.Item1 == null)
+            {
+                return (null, "错误");
+            }
+            return result;
         }
-        return result;
+        catch (TaskCanceledException)
+        {
+            return (null, "错误");
+        }
     }
 
     public HttpRequestMessage BuildRequest(
@@ -226,25 +281,33 @@ public class AsmrClient : IAsmrClient
 
     public async Task<(T?, string)> CheckDataAsync<T>(
         HttpResponseMessage message,
-        JsonTypeInfo info
+        JsonTypeInfo info,
+        CancellationToken token
     )
         where T : class, new()
     {
-        var str = await message.Content.ReadAsStringAsync();
-        if (string.IsNullOrWhiteSpace(str))
-            return new(null, "错误的请求");
-        var jsonObj = JsonNode.Parse(str);
-        if (jsonObj is JsonArray js)
+        try
         {
-            var obj = (T)js.Deserialize(info);
-            return (obj, "请求成功");
+            var str = await message.Content.ReadAsStringAsync(token);
+            if (string.IsNullOrWhiteSpace(str))
+                return new(null, "错误的请求");
+            var jsonObj = JsonNode.Parse(str);
+            if (jsonObj is JsonArray js)
+            {
+                var obj = (T)js.Deserialize(info);
+                return (obj, "请求成功");
+            }
+            if (jsonObj["error"] != null)
+            {
+                return new(null, jsonObj["error"].GetValue<string>());
+            }
+            var value = (T)JsonSerializer.Deserialize(jsonObj, info);
+            return (value, "请求成功");
         }
-        if (jsonObj["error"] != null)
+        catch (TaskCanceledException)
         {
-            return new(null, jsonObj["error"].GetValue<string>());
+            throw new TaskCanceledException();
         }
-        var value = (T)JsonSerializer.Deserialize(jsonObj, info);
-        return (value, "请求成功");
     }
 
     public void Loginout()

@@ -31,11 +31,21 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
 
     internal async Task SetDataAsync(string str)
     {
-        var data = await AsmrClient.GetWorkAsync(str);
+        var data = await AsmrClient.GetWorkAsync(str, this.CTS.Token);
         this.Detily = data.Item1;
-        var track = await AsmrClient.GetWorkAudioAsync(str);
+        var track = await AsmrClient.GetWorkAudioAsync(str, this.CTS.Token);
         var result = DataAdaptiveService.GetAudioData(track.Item1, data.Item1);
         this.AudioDatas = result;
         this.Duration = TimeSpan.FromSeconds(Detily.Duration).ToString();
+    }
+
+    public override void Dispose()
+    {
+        foreach (var item in AudioDatas)
+        {
+            item.Dispose();
+        }
+        this.AudioDatas.Clear();
+        base.Dispose();
     }
 }

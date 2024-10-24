@@ -56,5 +56,14 @@ namespace AsmrOne.WinUI3
                 #endregion
                 .BuildServiceProvider();
         }
+
+        public static T GetService<T>()
+        {
+            if (ServiceProvider.GetRequiredService(typeof(T)) is not T service)
+            {
+                throw new ArgumentException($"{typeof(T)} 不存在于注册主机内。");
+            }
+            return service;
+        }
     }
 }

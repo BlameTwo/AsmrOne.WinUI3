@@ -25,19 +25,21 @@ namespace AsmrOne.WinUI3.Common.Bases
 
         public object Paramter { get; private set; }
 
-        public ICommand AddDataCommand
-        {
-            get { return (ICommand)GetValue(AddDataCommandProperty); }
-            set { SetValue(AddDataCommandProperty, value); }
-        }
+        public ICommand AddDataCommand { get; set; }
 
-        public static readonly DependencyProperty AddDataCommandProperty =
-            DependencyProperty.Register(
-                "AddDataCommand",
-                typeof(ICommand),
-                typeof(ItemControlBase),
-                new PropertyMetadata(default(ICommand))
-            );
+        //public ICommand AddDataCommand
+        //{
+        //    get { return (ICommand)GetValue(AddDataCommandProperty); }
+        //    set { SetValue(AddDataCommandProperty, value); }
+        //}
+
+        //public static readonly DependencyProperty AddDataCommandProperty =
+        //    DependencyProperty.Register(
+        //        "AddDataCommand",
+        //        typeof(ICommand),
+        //        typeof(ItemControlBase),
+        //        new PropertyMetadata(default(ICommand))
+        //    );
 
         protected override void OnApplyTemplate()
         {

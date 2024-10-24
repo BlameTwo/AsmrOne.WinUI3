@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Common.Bases;
@@ -30,6 +31,11 @@ public sealed partial class DetilyItemViewModel : ViewModelBase, IItemViewModel<
     [ObservableProperty]
     ObservableCollection<Tag> tags;
 
+    public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
+
     public void SetData(RidDetily value)
     {
         this.Cover = value.MainCoverUrl;
@@ -45,6 +51,11 @@ public sealed partial class DetilyItemViewModel : ViewModelBase, IItemViewModel<
         {
             this.Tags = value.Tags.Take(4).ToObservable();
         }
+    }
+
+    internal void Disponse()
+    {
+        this.Tags.Clear();
     }
 
     [RelayCommand]

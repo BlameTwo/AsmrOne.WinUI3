@@ -17,4 +17,6 @@ public sealed partial class SettingPage : Page, IPage
     public SettingViewModel ViewModel { get; }
 
     public Type PageType => typeof(SettingPage);
+
+    public void Dispose() { }
 }

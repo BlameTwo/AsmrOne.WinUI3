@@ -282,8 +282,8 @@
                 <BrushTransition />
             </Grid.BackgroundTransition>
             <TreeView
+                x:Name="treeView"
                 AllowDrop="False"
-                DragItemsStarting="TreeView_DragItemsStarting"
                 ItemTemplateSelector="{StaticResource AudioSelector}"
                 ItemsSource="{x:Bind ViewModel.AudioDatas, Mode=OneWay}">
                 <TreeView.ItemContainerTransitions>

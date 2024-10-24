@@ -15,7 +15,8 @@ namespace AsmrOne.WinUI3.Views.Items
 
         private void DetilyItem_Unloaded(object sender, RoutedEventArgs e)
         {
-            this.ViewModel = null;
+            ViewModel.Disponse();
+            this.Unloaded -= DetilyItem_Unloaded;
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)

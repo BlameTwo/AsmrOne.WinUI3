@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AsmrOne.WinUI3.Models
 {
-    public interface IAudioDataWrapper
+    public interface IAudioDataWrapper : IDisposable
     {
         public string Type { get; }
 
@@ -28,10 +28,10 @@ namespace AsmrOne.WinUI3.Models
         string fileName;
 
         [ObservableProperty]
-        Child child;
+        double size;
 
         [ObservableProperty]
-        double size;
+        Child child;
     }
 
     public sealed partial class ImageWrapper : FileWrapper, IAudioDataWrapper
@@ -42,10 +42,14 @@ namespace AsmrOne.WinUI3.Models
         string mediaDownloadUrl;
 
         [ObservableProperty]
-        Child child;
-
-        [ObservableProperty]
         string mediaStreamUrl;
+
+        public void Dispose()
+        {
+            this.Child = null;
+            this.MediaDownloadUrl = null;
+            this.MediaStreamUrl = null;
+        }
     }
 
     public partial class SubtitleWrapper : FileWrapper, IAudioDataWrapper
@@ -58,10 +62,14 @@ namespace AsmrOne.WinUI3.Models
         string mediaStreamUrl;
 
         [ObservableProperty]
-        Child child;
-
-        [ObservableProperty]
         string mediaTitlemediaDownloadUrl;
+
+        public void Dispose()
+        {
+            this.Child = null;
+            this.MediaStreamUrl = null;
+            this.MediaTitlemediaDownloadUrl = null;
+        }
     }
 
     public partial class TextWrapper : FileWrapper, IAudioDataWrapper
@@ -72,10 +80,14 @@ namespace AsmrOne.WinUI3.Models
         string mediaStreamUrl;
 
         [ObservableProperty]
-        Child child;
-
-        [ObservableProperty]
         string mediaTitlemediaDownloadUrl;
+
+        public void Dispose()
+        {
+            this.Child = null;
+            this.MediaStreamUrl = null;
+            this.MediaTitlemediaDownloadUrl = null;
+        }
     }
 
     public partial class AudioWrapper : FileWrapper, IAudioDataWrapper
@@ -89,9 +101,6 @@ namespace AsmrOne.WinUI3.Models
         string streamLowQualityUrl;
 
         [ObservableProperty]
-        Child child;
-
-        [ObservableProperty]
         double duration;
 
         [ObservableProperty]
@@ -103,9 +112,16 @@ namespace AsmrOne.WinUI3.Models
         [RelayCommand]
         async Task Play()
         {
-            await ProgramLife
-                .ServiceProvider.GetService<IAudioPlayerService>()
-                .PlayerAsync(this, Work);
+            await ProgramLife.GetService<IAudioPlayerService>().PlayerAsync(this, Work);
+        }
+
+        public void Dispose()
+        {
+            this.SubTitles.Clear();
+            this.Work = null;
+            this.Duration = 0;
+            this.StreamLowQualityUrl = null;
+            this.MediaStreamUrl = null;
         }
     }
 
@@ -121,5 +137,10 @@ namespace AsmrOne.WinUI3.Models
 
         [ObservableProperty]
         ObservableCollection<IAudioDataWrapper> datas;
+
+        public void Dispose()
+        {
+            this.Datas.Clear();
+        }
     }
 }
