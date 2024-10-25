@@ -1,31 +1,42 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using AsmrOne.WinUI3.Common;
+using AsmrOne.WinUI3.Views;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using WinUIEx;
 
 namespace AsmrOne.WinUI3;
 
-public sealed partial class SubtitleWindowBase : Window
+public sealed partial class SubtitleWindowBase : Window, IDisposable
 {
     public OverlappedPresenter OverlappedPresenter => (OverlappedPresenter)AppWindow.Presenter;
 
     public SubtitleWindowBase()
     {
         this.InitializeComponent();
-        SystemBackdrop = new TransparentTintBackdrop();
-        LayerWindowHelper.SetLayerWindow(this);
-        var overlappedPresenter = OverlappedPresenter;
-        overlappedPresenter.IsResizable = false;
+        //SystemBackdrop = new TransparentTintBackdrop();
+        //LayerWindowHelper.SetLayerWindow(this);
+        //var overlappedPresenter = OverlappedPresenter;
+        //overlappedPresenter.IsResizable = false;
 
-        this.AppWindow.IsShownInSwitchers = false;
-        overlappedPresenter.IsMaximizable = false;
-        overlappedPresenter.IsMinimizable = false;
-        overlappedPresenter.SetBorderAndTitleBar(true, true);
-        ExtendsContentIntoTitleBar = true;
-        WindowExtension.Penetrate(this);
-        WindowExtension.UnPenetrate(this);
+        //this.AppWindow.IsShownInSwitchers = false;
+        //overlappedPresenter.IsMaximizable = false;
+        //overlappedPresenter.IsMinimizable = false;
+        //overlappedPresenter.SetBorderAndTitleBar(true, true);
+        //ExtendsContentIntoTitleBar = true;
+        //WindowExtension.Penetrate(this);
+        //WindowExtension.UnPenetrate(this);
+    }
+
+    public void Dispose()
+    {
+        if (this.Content is SubtitleWindow subtitle)
+        {
+            subtitle.Dispose();
+        }
+        this.Content = null;
     }
 }
 

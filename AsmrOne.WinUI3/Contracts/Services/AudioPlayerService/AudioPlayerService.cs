@@ -11,15 +11,18 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Windows.AI.MachineLearning;
+using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Media.Streaming.Adaptive;
 
 namespace AsmrOne.WinUI3.Contracts.Services;
 
 public partial class AudioPlayerService : IAudioPlayerService
 {
-    public AudioPlayerService(ISubtitleService subtitleService)
+    public AudioPlayerService(ISubtitleService subtitleService, IAppSetup<App> appSetup)
     {
         SubtitleService = subtitleService;
+        AppSetup = appSetup;
         timer = new Timer();
         timer.Interval = 100;
         timer.Elapsed += Timer_Elapsed;
@@ -28,9 +31,9 @@ public partial class AudioPlayerService : IAudioPlayerService
 
     private void Timer_Elapsed(object sender, ElapsedEventArgs e)
     {
-        if (App.MainWindow.DispatcherQueue == null)
+        if (AppSetup.MainWindow.DispatcherQueue == null)
             return;
-        App.MainWindow.DispatcherQueue.TryEnqueue(
+        AppSetup.MainWindow.DispatcherQueue.TryEnqueue(
             Microsoft.UI.Dispatching.DispatcherQueuePriority.High,
             () =>
             {
@@ -64,7 +67,9 @@ public partial class AudioPlayerService : IAudioPlayerService
     public string NowFileName { get; private set; }
     public MediaPlayerPresenter Element { get; private set; }
 
+    private AdaptiveMediaSource msource;
     public ISubtitleService SubtitleService { get; }
+    public IAppSetup<App> AppSetup { get; }
 
     public void Pause()
     {
@@ -89,11 +94,11 @@ public partial class AudioPlayerService : IAudioPlayerService
         this.ChildData = url.Child;
         UnRegister();
         Stop();
-        this.Element.MediaPlayer.SetUriSource(new Uri(url.MediaStreamUrl));
+        //var medSource = MediaSource.CreateFromUri(new Uri(url.MediaStreamUrl));
+        this.Element.MediaPlayer.SetUriSource(new(url.MediaStreamUrl));
         Register();
         this.setDataHandler?.Invoke(this, data);
         WeakReferenceMessenger.Default.Send(new RefreshAudio(data, url.Child, url));
-        Play();
     }
 
     private void Player_MediaOpened(MediaPlayer sender, object args)
@@ -103,7 +108,7 @@ public partial class AudioPlayerService : IAudioPlayerService
 
     private void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
     {
-        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        AppSetup.MainWindow.DispatcherQueue.TryEnqueue(() =>
         {
             this.mediaplayerStatus?.Invoke(this.Element.MediaPlayer, sender.PlaybackState);
         });
@@ -154,11 +159,12 @@ public partial class AudioPlayerService : IAudioPlayerService
     {
         this.Element = element;
         this.Element.MediaPlayer = new();
+        Element.MediaPlayer.AutoPlay = true;
     }
 
     public void Switch()
     {
-        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        AppSetup.MainWindow.DispatcherQueue.TryEnqueue(() =>
         {
             if (
                 this.Element.MediaPlayer.PlaybackSession.PlaybackState == MediaPlaybackState.Playing

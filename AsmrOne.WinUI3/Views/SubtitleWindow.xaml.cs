@@ -1,3 +1,4 @@
+using System;
 using AsmrOne.WinUI3.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
@@ -6,21 +7,17 @@ namespace AsmrOne.WinUI3.Views;
 
 public sealed partial class SubtitleWindow : Page
 {
-    public SubtitleWindow()
+    public SubtitleWindow(SubtitleViewModel viewModel)
     {
         this.InitializeComponent();
-        this.ViewModel = ProgramLife.ServiceProvider.GetService<SubtitleViewModel>();
+        this.ViewModel = viewModel;
     }
 
-    public SubtitleViewModel ViewModel { get; }
+    public SubtitleViewModel ViewModel { get; private set; }
 
-    private void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) { }
-
-    private void titleBar_DoubleTapped(
-        object sender,
-        Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e
-    )
+    internal void Dispose()
     {
-        e.Handled = true;
+        this.ViewModel.Dispose();
+        this.ViewModel = null;
     }
 }

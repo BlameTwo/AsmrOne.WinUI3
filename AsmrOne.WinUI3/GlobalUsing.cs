@@ -47,6 +47,18 @@ public static class GlobalUsing
         set => LocalSettings.Values[nameof(IsAutoSubtitle)] = value;
     }
 
+    public static bool IsOpenDesktopSubtitle
+    {
+        get
+        {
+            var result = LocalSettings.Values[nameof(IsOpenDesktopSubtitle)];
+            if (result == null)
+                return true;
+            return (bool)result;
+        }
+        set => LocalSettings.Values[nameof(IsOpenDesktopSubtitle)] = value;
+    }
+
     public static string Token
     {
         get

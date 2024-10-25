@@ -357,7 +357,10 @@
                         <Flyout>
                             <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
                                 <CheckBox Content="Auto Subtitle" IsChecked="{x:Bind ViewModel.IsAutosubtitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <ToggleButton Margin="0,10,0,0" Content="Open Subtitle" />
+                                <ToggleButton
+                                    Margin="0,10,0,0"
+                                    Content="Open Subtitle"
+                                    IsChecked="{x:Bind ViewModel.IsOpensubtitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <ComboBox
                                     Margin="0,10,0,0"
                                     HorizontalAlignment="Stretch"

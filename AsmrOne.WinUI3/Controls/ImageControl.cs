@@ -69,16 +69,13 @@ namespace AsmrOne.WinUI3.Controls
         private void Update()
         {
             var state = IsHideCover == true ? "HideStates" : "ShowStates";
-            Debug.WriteLine($"Going to state: {state}");
 
             if (this.IsLoaded)
             {
                 bool result = VisualStateManager.GoToState(this, state, true);
-                Debug.WriteLine($"GoToState result: {result}");
             }
             else
             {
-                Debug.WriteLine("Control is not loaded yet.");
                 this.Loaded += (sender, args) => Update();
             }
         }
@@ -87,24 +84,6 @@ namespace AsmrOne.WinUI3.Controls
         {
             _imageBase = GetTemplateChild("PRPA_Image") as Image;
             _border = GetTemplateChild("border") as Border;
-
-            if (_imageBase == null)
-            {
-                Debug.WriteLine("PRPA_Image not found in template.");
-            }
-            else
-            {
-                Debug.WriteLine("PRPA_Image found.");
-            }
-
-            if (_border == null)
-            {
-                Debug.WriteLine("border not found in template.");
-            }
-            else
-            {
-                Debug.WriteLine("border found.");
-            }
 
             base.OnApplyTemplate();
 

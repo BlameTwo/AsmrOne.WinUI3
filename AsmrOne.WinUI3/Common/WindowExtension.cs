@@ -27,10 +27,10 @@ public static class WindowExtension
     public const int GWL_EXSTYLE = (-20);
     public const int LWA_ALPHA = 0;
 
-    public static Window CreateTransparentWindow(CreateType type)
+    public static Window CreateTransparentWindow(Window win, CreateType type)
     {
         var window = new SubtitleWindowBase();
-        var dpi = WindowExtension.GetScaleAdjustment(App.MainWindow);
+        var dpi = WindowExtension.GetScaleAdjustment(win);
         var workArea = WindowExtension.GetWorkarea();
         if (type == CreateType.Subtitle)
         {
@@ -51,17 +51,18 @@ public static class WindowExtension
         return window;
     }
 
-    public static Window CreateMicaWindow(CreateType type)
+    public static SubtitleWindowBase CreateMicaWindow(CreateType type)
     {
-        var window = new Window();
+        var window = new SubtitleWindowBase();
         var dpi = WindowExtension.GetScaleAdjustment(window);
         var workArea = WindowExtension.GetWorkarea();
         //window.SystemBackdrop = new TransparentTintBackdrop();
-        //window.SystemBackdrop = new MicaBackdrop()
-        //{
-        //    Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt,
-        //};
-        window.AppWindow.IsShownInSwitchers = true;
+        window.SystemBackdrop = new MicaBackdrop()
+        {
+            Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt,
+        };
+        window.AppWindow.IsShownInSwitchers = false;
+
         window.AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
         if (window.AppWindow.Presenter is OverlappedPresenter presenter)
         {
@@ -154,6 +155,34 @@ public static class WindowExtension
         MDT_Angular_DPI = 1,
         MDT_Raw_DPI = 2,
         MDT_Default = MDT_Effective_DPI,
+    }
+
+    public struct POINT
+    {
+        public int X;
+        public int Y;
+
+        public POINT(int x, int y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
+    }
+
+    [DllImport("user32.dll")]
+    public static extern bool GetCursorPos(out POINT lpPoint);
+
+    [DllImport("user32.dll")]
+    public static extern int GetSystemMetrics(int nIndex);
+
+    public const int SM_CXSCREEN = 0;
+    public const int SM_CYSCREEN = 1;
+
+    public static POINT GetCursorPosition()
+    {
+        POINT lpPoint;
+        GetCursorPos(out lpPoint);
+        return lpPoint;
     }
 
     public static RECT? GetWorkarea()

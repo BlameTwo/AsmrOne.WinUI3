@@ -12,10 +12,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid
-            Height="5"
-            x:FieldModifier="public"
-            DoubleTapped="titleBar_DoubleTapped">
+        <Grid Height="5" x:FieldModifier="public">
             <Border
                 x:Name="titleBar"
                 Height="5"
@@ -29,6 +26,7 @@
             VerticalAlignment="Center"
             FontSize="15"
             FontWeight="Bold"
+            Foreground="{ThemeResource ToggleButtonForegroundThemeBrush}"
             Text="{x:Bind ViewModel.SubTitle, Mode=OneWay}" />
     </Grid>
 </Page>

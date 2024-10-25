@@ -12,6 +12,7 @@ using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Messagers;
 using AsmrOne.WinUI3.Models.UI;
+using AsmrOne.WinUI3.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.VisualBasic;
 using Windows.Media.Playback;
+using WinUIEx;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
@@ -31,7 +33,8 @@ public sealed partial class ShellViewModel : ViewModelBase
             INavigationViewService shellNavigationViewService,
         [FromKeyedServices(ProgramLife.ShellNavigationKey)]
             INavigationService shellNavigationService,
-        IAudioPlayerService audioPlayerService
+        IAudioPlayerService audioPlayerService,
+        IAppSetup<App> appSetup
     )
     {
         AsmrClient = asmrClient;
@@ -39,11 +42,14 @@ public sealed partial class ShellViewModel : ViewModelBase
         ShellNavigationViewService = shellNavigationViewService;
         ShellNavigationService = shellNavigationService;
         AudioPlayerService = audioPlayerService;
+        AppSetup = appSetup;
         AudioPlayerService.MediaPlayerStatus += AudioPlayerService_MediaPlayerStatus;
         AudioPlayerService.SetDataChanged += AudioPlayerService_SetDataChanged;
         AudioPlayerService.PlayerOpened += AudioPlayerService_PlayerOpened;
         shellNavigationService.Navigated += ShellNavigationService_Navigated;
         RegisterMessager();
+        this.IsAutosubtitle = GlobalUsing.IsAutoSubtitle;
+        this.IsOpensubtitle = GlobalUsing.IsOpenDesktopSubtitle;
     }
 
     private void ShellNavigationService_Navigated(
@@ -53,7 +59,6 @@ public sealed partial class ShellViewModel : ViewModelBase
     {
         this.IsBack = ShellNavigationService.CanGoBack;
         this.NavigtiaonSelectItem = ShellNavigationViewService.GetSelectItem(e.SourcePageType);
-        this.IsAutosubtitle = GlobalUsing.IsAutoSubtitle;
     }
 
     private void RegisterMessager()
@@ -74,35 +79,6 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     string subtitle = "字幕";
-
-    private void LoginoutMethod(object recipient, Loginout message)
-    {
-        if (message.IsRefresh)
-        {
-            ShellNavigationService.NavigationTo<HomeViewModel>(nameof(HomeViewModel));
-            this.ShellNavigationService.ClearHistory();
-            this.IsLogin = AsmrClient.IsLogin;
-            this.IsBack = ShellNavigationService.CanGoBack;
-        }
-    }
-
-    private void RefreshTokenMethod(object recipient, RefreshToken message)
-    {
-        if (message.IsRefresh && AsmrClient.IsLogin)
-        {
-            this.IsLogin = true;
-            this.DisPlayName = "账户：" + AsmrClient.UserName.Substring(0, 1);
-        }
-    }
-
-    private void RefreshAudioMethod(object recipient, RefreshAudio message)
-    {
-        Child = message.Child;
-        Detily = message.Detily;
-        SetSubtitle(message);
-    }
-
-    private void AudioPlayerService_PlayerOpened(object sender, MediaPlaybackSession data) { }
 
     [ObservableProperty]
     double maxDuration;
@@ -148,6 +124,58 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     bool isAutosubtitle;
+
+    [ObservableProperty]
+    bool isOpensubtitle;
+
+    partial void OnIsOpensubtitleChanged(bool value)
+    {
+        GlobalUsing.IsOpenDesktopSubtitle = value;
+        if (value)
+        {
+            if (AppSetup.SubWindow == null)
+            {
+                var win = WindowExtension.CreateMicaWindow(WindowExtension.CreateType.Subtitle);
+                AppSetup.RegisterSubtitleWindow(win);
+            }
+        }
+        else
+        {
+            if (AppSetup.SubWindow != null)
+            {
+                AppSetup.DisponseSubtitle();
+            }
+        }
+    }
+
+    private void LoginoutMethod(object recipient, Loginout message)
+    {
+        if (message.IsRefresh)
+        {
+            ShellNavigationService.NavigationTo<HomeViewModel>(nameof(HomeViewModel));
+            this.ShellNavigationService.ClearHistory();
+            this.IsLogin = AsmrClient.IsLogin;
+            this.IsBack = ShellNavigationService.CanGoBack;
+        }
+    }
+
+    private void RefreshTokenMethod(object recipient, RefreshToken message)
+    {
+        if (message.IsRefresh && AsmrClient.IsLogin)
+        {
+            this.IsLogin = true;
+            this.DisPlayName = "账户：" + AsmrClient.UserName.Substring(0, 1);
+        }
+    }
+
+    private void RefreshAudioMethod(object recipient, RefreshAudio message)
+    {
+        Child = message.Child;
+        Detily = message.Detily;
+        SetSubtitle(message);
+    }
+
+    private void AudioPlayerService_PlayerOpened(object sender, MediaPlaybackSession data) { }
 
     async partial void OnSelectSubtitleChanged(ShellSubtitleItem value)
     {
@@ -220,7 +248,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         Windows.Media.Playback.MediaPlaybackState status
     )
     {
-        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        AppSetup.MainWindow.DispatcherQueue.TryEnqueue(() =>
         {
             this.StartGlyph = status
                 is MediaPlaybackState.None
@@ -247,6 +275,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public IDialogManager DialogManager { get; }
     public INavigationViewService ShellNavigationViewService { get; }
     public INavigationService ShellNavigationService { get; }
+    public IAppSetup<App> AppSetup { get; }
 
     [ObservableProperty]
     public IAudioPlayerService _AudioPlayerService;

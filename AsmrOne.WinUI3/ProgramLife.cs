@@ -30,6 +30,7 @@ namespace AsmrOne.WinUI3
                 .AddKeyedSingleton<INavigationService, ShellNavigationService>(
                     ProgramLife.ShellNavigationKey
                 )
+                .AddSingleton<IAppSetup<App>, AppSetup<App>>()
                 .AddTransient<IPageService, PageService>()
                 .AddSingleton<IDialogManager, DialogManager>()
                 .AddSingleton<IAsmrClient, AsmrClient>()
@@ -41,8 +42,8 @@ namespace AsmrOne.WinUI3
                 #region View And ViewModel
                 .AddSingleton<ShellPage>()
                 .AddSingleton<ShellViewModel>()
-                .AddSingleton<SubtitleWindow>()
-                .AddSingleton<SubtitleViewModel>()
+                .AddTransient<SubtitleWindow>()
+                .AddTransient<SubtitleViewModel>()
                 .AddTransient<HomeViewModel>()
                 .AddTransient<RidDetilyViewModel>()
                 .AddTransient<SettingViewModel>()

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Application
+<cm:AsmrApplication
     x:Class="AsmrOne.WinUI3.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cm="using:AsmrOne.WinUI3.Common"
     xmlns:local="using:AsmrOne.WinUI3">
     <Application.Resources>
         <ResourceDictionary>
@@ -19,4 +20,4 @@
             <!--  Other app resources here  -->
         </ResourceDictionary>
     </Application.Resources>
-</Application>
+</cm:AsmrApplication>
