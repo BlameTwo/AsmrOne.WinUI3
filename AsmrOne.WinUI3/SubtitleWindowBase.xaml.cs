@@ -1,21 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using AsmrOne.WinUI3.Common;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WinUIEx;
 
 namespace AsmrOne.WinUI3;
@@ -31,6 +18,7 @@ public sealed partial class SubtitleWindowBase : Window
         LayerWindowHelper.SetLayerWindow(this);
         var overlappedPresenter = OverlappedPresenter;
         overlappedPresenter.IsResizable = false;
+
         this.AppWindow.IsShownInSwitchers = false;
         overlappedPresenter.IsMaximizable = false;
         overlappedPresenter.IsMinimizable = false;

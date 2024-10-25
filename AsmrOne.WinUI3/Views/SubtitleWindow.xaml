@@ -7,11 +7,28 @@
     xmlns:local="using:AsmrOne.WinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
-    <TextBlock
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        FontSize="15"
-        FontWeight="Bold"
-        Text="{x:Bind ViewModel.SubTitle, Mode=OneWay}" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid
+            Height="5"
+            x:FieldModifier="public"
+            DoubleTapped="titleBar_DoubleTapped">
+            <Border
+                x:Name="titleBar"
+                Height="5"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Stretch"
+                Background="{ThemeResource AccentAAFillColorSecondaryBrush}" />
+        </Grid>
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="15"
+            FontWeight="Bold"
+            Text="{x:Bind ViewModel.SubTitle, Mode=OneWay}" />
+    </Grid>
 </Page>

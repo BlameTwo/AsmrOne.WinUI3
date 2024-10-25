@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using AsmrOne.WinUI3.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -25,7 +27,7 @@ public static class WindowExtension
     public const int GWL_EXSTYLE = (-20);
     public const int LWA_ALPHA = 0;
 
-    public static void CreateTransparentWindow(CreateType type, UIElement content)
+    public static Window CreateTransparentWindow(CreateType type)
     {
         var window = new SubtitleWindowBase();
         var dpi = WindowExtension.GetScaleAdjustment(App.MainWindow);
@@ -41,8 +43,47 @@ public static class WindowExtension
             window.SetWindowSize(width / dpi, height / dpi);
             window.AppWindow.Move(new Windows.Graphics.PointInt32() { X = left, Y = top });
         }
+        var content = ProgramLife.ServiceProvider.GetService<SubtitleWindow>();
         window.Content = content;
+        window.SetTitleBar(content);
+        //window.AppWindow.TitleBar.SetDragRectangles(new Windows.Graphics.RectInt32() { });
         window.Activate();
+        return window;
+    }
+
+    public static Window CreateMicaWindow(CreateType type)
+    {
+        var window = new Window();
+        var dpi = WindowExtension.GetScaleAdjustment(window);
+        var workArea = WindowExtension.GetWorkarea();
+        //window.SystemBackdrop = new TransparentTintBackdrop();
+        //window.SystemBackdrop = new MicaBackdrop()
+        //{
+        //    Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt,
+        //};
+        window.AppWindow.IsShownInSwitchers = true;
+        window.AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+        if (window.AppWindow.Presenter is OverlappedPresenter presenter)
+        {
+            presenter.IsResizable = false;
+            presenter.SetBorderAndTitleBar(true, false);
+        }
+        if (type == CreateType.Subtitle)
+        {
+            double height = 100;
+            int leftMargin = 200;
+            int rightMargin = 200;
+            double width = workArea.Value.Right - workArea.Value.Left - leftMargin - rightMargin;
+            int left = workArea.Value.Left + leftMargin;
+            int top = workArea.Value.Bottom - (int)height;
+            window.SetWindowSize(width / dpi, height / dpi);
+            window.AppWindow.Move(new Windows.Graphics.PointInt32() { X = left, Y = top });
+        }
+        var content = ProgramLife.ServiceProvider.GetService<SubtitleWindow>();
+        window.Content = content;
+        window.SetTitleBar(content);
+        window.Activate();
+        return window;
     }
 
     public static double GetScaleAdjustment(Window window)

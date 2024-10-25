@@ -13,4 +13,14 @@ public sealed partial class SubtitleWindow : Page
     }
 
     public SubtitleViewModel ViewModel { get; }
+
+    private void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) { }
+
+    private void titleBar_DoubleTapped(
+        object sender,
+        Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e
+    )
+    {
+        e.Handled = true;
+    }
 }
