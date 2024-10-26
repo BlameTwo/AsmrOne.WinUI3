@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AsmrOne.WinUI3.Views.FavouritesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:AsmrOne.WinUI3.Controls"
+    xmlns:convert="using:AsmrOne.WinUI3.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:AsmrOne.WinUI3.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uim="using:AsmrOne.WinUI3.Models"
+    xmlns:wrapper="using:AsmrOne.WinUI3.ViewModels.ItemViewModels"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
+    <Grid>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <ProgressBar
+            HorizontalAlignment="Stretch"
+            Background="Transparent"
+            IsIndeterminate="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+        <SelectorBar Grid.Row="1" SelectedItem="{x:Bind ViewModel.SelectTabItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <SelectorBarItem
+                x:Name="commentTab"
+                IsSelected="True"
+                Tag="Comment"
+                Text="Comment">
+                <SelectorBarItem.Icon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE90A;" />
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+            <SelectorBarItem
+                x:Name="progressTab"
+                Tag="Progress"
+                Text="Progress">
+                <SelectorBarItem.Icon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF16A;" />
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+        </SelectorBar>
+        <StackPanel
+            Grid.Row="1"
+            Margin="0,10,10,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition />
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+            <ComboBox ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="uim:QueryOrderFavouritesWrapper">
+                        <TextBlock Text="{x:Bind DisplayName}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox
+                Margin="5,0,0,0"
+                ItemsSource="{x:Bind ViewModel.Sorts, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectSort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="uim:QuerySortFavouritesWrapper">
+                        <TextBlock Text="{x:Bind DisplayName}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox
+                Margin="5,0,0,0"
+                ItemsSource="{x:Bind ViewModel.Fillters, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectFillter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Visibility="{x:Bind ViewModel.FillterVisibility, Mode=OneWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="uim:QueryFillterFavouritesWrapper">
+                        <TextBlock Text="{x:Bind DisplayName}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <controls:AdaptiveView
+            Grid.Row="2"
+            Margin="15,0"
+            AddDataCommand="{x:Bind ViewModel.AddItemsCommand}"
+            ItemsSource="{x:Bind ViewModel.Works, Mode=OneWay}">
+            <controls:AdaptiveView.ItemTemplate>
+                <DataTemplate x:DataType="wrapper:DetilyItemViewModel">
+                    <Grid Margin="5" CornerRadius="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition x:Name="row1" Height="4*" />
+                                <RowDefinition x:Name="row2" Height="6*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition />
+                                </TransitionCollection>
+                            </Grid.ChildrenTransitions>
+                            <controls:ImageControl
+                                x:Name="image"
+                                Grid.RowSpan="2"
+                                VerticalAlignment="Center"
+                                IsHideCover="{x:Bind HideCover}"
+                                Source="{x:Bind Cover}"
+                                Stretch="UniformToFill" />
+                            <Border
+                                Margin="0,5,5,0"
+                                Padding="4"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Background="{ThemeResource AccentTextFillColorTertiaryBrush}"
+                                CornerRadius="5"
+                                Visibility="{x:Bind IsNTFS, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <TextBlock Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Text="R18" />
+                            </Border>
+                            <Grid
+                                x:Name="session"
+                                Grid.Row="1"
+                                Margin="2"
+                                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Opacity="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.ColumnSpan="2"
+                                    Margin="15"
+                                    Text="{x:Bind Title}"
+                                    TextTrimming="CharacterEllipsis" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Margin="15,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="{ThemeResource SystemColorGrayTextBrush}"
+                                    Text="{x:Bind Name}" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="2"
+                                    Margin="15,0,15,15"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom"
+                                    Foreground="{ThemeResource SystemColorGrayTextBrush}">
+                                    <Run Text="ID:" />
+                                    <Run Text="{x:Bind Id}" />
+                                </TextBlock>
+                                <Button
+                                    x:Name="playbth"
+                                    Grid.Row="0"
+                                    Grid.RowSpan="3"
+                                    Grid.Column="1"
+                                    Margin="0,0,15,5"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Command="{x:Bind InvokeCommand}"
+                                    Style="{ThemeResource TransparentButtonStyle}">
+                                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" />
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </controls:AdaptiveView.ItemTemplate>
+            <controls:AdaptiveView.ItemTransitionProvider>
+                <LinedFlowLayoutItemCollectionTransitionProvider />
+            </controls:AdaptiveView.ItemTransitionProvider>
+            <controls:AdaptiveView.Layout>
+                <UniformGridLayout
+                    ItemsJustification="Start"
+                    ItemsStretch="Uniform"
+                    MinColumnSpacing="2"
+                    MinItemHeight="200"
+                    MinItemWidth="300" />
+            </controls:AdaptiveView.Layout>
+        </controls:AdaptiveView>
+    </Grid>
+</Page>

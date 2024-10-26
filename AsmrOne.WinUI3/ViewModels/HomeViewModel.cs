@@ -9,8 +9,6 @@ using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.ViewModels.ItemViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AsmrOne.WinUI3.ViewModels;
 

@@ -172,7 +172,10 @@
 
                 </NavigationViewItem>
                 <NavigationViewItemSeparator />
-                <NavigationViewItem Content="Favourites" IsEnabled="{x:Bind ViewModel.IsLogin, Mode=OneWay}">
+                <NavigationViewItem
+                    p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.FavouritesViewModel"
+                    Content="Favourites"
+                    IsEnabled="{x:Bind ViewModel.IsLogin, Mode=OneWay}">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEB52;" />
                     </NavigationViewItem.Icon>

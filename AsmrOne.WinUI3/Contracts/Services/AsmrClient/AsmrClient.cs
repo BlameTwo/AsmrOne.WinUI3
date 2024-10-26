@@ -15,7 +15,7 @@ using AsmrOne.WinUI3.Models.AsmrOne;
 
 namespace AsmrOne.WinUI3.Contracts.Services;
 
-public class AsmrClient : IAsmrClient
+public sealed partial class AsmrClient : IAsmrClient
 {
     public HttpClient Client { get; set; }
     private string token;
