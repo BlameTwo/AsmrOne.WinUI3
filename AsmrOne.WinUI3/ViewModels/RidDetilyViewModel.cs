@@ -61,9 +61,12 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
 
     public override void Dispose()
     {
-        foreach (var item in AudioDatas)
+        if (AudioDatas != null)
         {
-            item.Dispose();
+            foreach (var item in AudioDatas)
+            {
+                item.Dispose();
+            }
         }
         this.AudioDatas.Clear();
         base.Dispose();

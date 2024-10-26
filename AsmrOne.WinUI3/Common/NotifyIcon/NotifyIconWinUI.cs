@@ -158,8 +158,8 @@ public partial class NotifyIconWinUI : Control
             IntPtr.Zero,
             ico,
             IMAGE_ICON,
-            256,
-            256,
+            48,
+            48,
             LR_LOADFROMFILE | LR_DEFAULTSIZE
         );
 

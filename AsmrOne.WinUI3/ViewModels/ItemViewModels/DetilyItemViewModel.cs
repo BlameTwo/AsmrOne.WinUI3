@@ -31,6 +31,9 @@ public sealed partial class DetilyItemViewModel : ViewModelBase, IItemViewModel<
     [ObservableProperty]
     ObservableCollection<Tag> tags;
 
+    [ObservableProperty]
+    bool isNTFS;
+
     public void Dispose()
     {
         throw new NotImplementedException();
@@ -43,6 +46,7 @@ public sealed partial class DetilyItemViewModel : ViewModelBase, IItemViewModel<
         this.Title = value.Title;
         this.Name = value.Name;
         this.Money = value.Price.ToString();
+        this.IsNTFS = value.Nsfw;
         if (value.Tags.Count < 4)
         {
             this.Tags = value.Tags.ToObservable();

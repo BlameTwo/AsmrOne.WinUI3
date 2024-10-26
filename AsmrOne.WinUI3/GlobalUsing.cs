@@ -23,16 +23,16 @@ public static class GlobalUsing
     /// <summary>
     /// 是否隐藏R18标签
     /// </summary>
-    public static bool IsHideR18Tag
+    public static bool IsHideR18
     {
         get
         {
-            var result = LocalSettings.Values[nameof(IsHideR18Tag)];
+            var result = LocalSettings.Values[nameof(IsHideR18)];
             if (result == null)
-                return false;
+                return true;
             return (bool)result;
         }
-        set => LocalSettings.Values[nameof(IsHideR18Tag)] = value;
+        set => LocalSettings.Values[nameof(IsHideR18)] = value;
     }
 
     public static bool IsAutoSubtitle

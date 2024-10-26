@@ -167,10 +167,6 @@ public class AsmrClient : IAsmrClient
             { "page", page },
             { "subtitle", isSubtitle ? 1 : 0 },
         };
-        if (this.IsLogin)
-        {
-            queryValues.Add("withPlaylistStatus[]", this.CurrentId);
-        }
         foreach (var item in orderDict)
         {
             queryValues.Add(item.Key, item.Value);

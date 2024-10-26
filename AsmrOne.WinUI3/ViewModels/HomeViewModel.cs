@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Models;
@@ -8,6 +10,7 @@ using AsmrOne.WinUI3.ViewModels.ItemViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
@@ -82,7 +85,10 @@ public sealed partial class HomeViewModel : ViewModelBase
             IsSubtitle == null ? false : (bool)IsSubtitle,
             this.CTS.Token
         );
-        foreach (var item in DataFactory.CreateDetilyItemViewModels(result.Works))
+        var works = DataFactory
+            .CreateDetilyItemViewModels(result.Works)
+            .Where(x => x.IsNTFS == GlobalUsing.IsHideR18 == true ? false : true);
+        foreach (var item in works)
         {
             this.Works.Add(item);
         }
@@ -101,10 +107,9 @@ public sealed partial class HomeViewModel : ViewModelBase
             IsSubtitle == null ? false : (bool)IsSubtitle,
             this.CTS.Token
         );
-        foreach (var item in DataFactory.CreateDetilyItemViewModels(result.Works))
-        {
-            this.Works.Add(item);
-        }
+        var data = DataFactory.CreateDetilyItemViewModels(result.Works);
+        this.Works = data.Where(x => x.IsNTFS == GlobalUsing.IsHideR18 == true ? false : true)
+            .ToObservable();
         this.Index++;
         IsLoading = false;
     }

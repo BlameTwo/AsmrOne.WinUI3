@@ -1,9 +1,7 @@
-﻿using System;
-using AsmrOne.WinUI3.Common.Bases;
+﻿using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Windows.Storage;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
@@ -12,14 +10,14 @@ public sealed partial class SettingViewModel : ViewModelBase
     public SettingViewModel()
     {
         this.IsConver = GlobalUsing.IsHideCover;
-        this.IsTag = GlobalUsing.IsHideR18Tag;
+        this.IsHideR18 = GlobalUsing.IsHideR18;
     }
 
     [ObservableProperty]
     bool isConver;
 
     [ObservableProperty]
-    bool isTag;
+    bool isHideR18;
 
     partial void OnIsConverChanged(bool value)
     {
@@ -32,8 +30,8 @@ public sealed partial class SettingViewModel : ViewModelBase
         WeakReferenceMessenger.Default.Send<RefreshSetting>(new() { HideCover = this.IsConver });
     }
 
-    partial void OnIsTagChanged(bool value)
+    partial void OnIsHideR18Changed(bool value)
     {
-        GlobalUsing.IsHideR18Tag = value;
+        GlobalUsing.IsHideR18 = value;
     }
 }
