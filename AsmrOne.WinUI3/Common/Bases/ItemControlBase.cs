@@ -66,6 +66,8 @@ namespace AsmrOne.WinUI3.Common.Bases
 
         private async void _viewer_ViewChanged(ScrollView sender, object args)
         {
+            if (IsRuning)
+                return;
             double verticalOffset = _viewer.VerticalOffset;
             Viewer.ViewChanged -= _viewer_ViewChanged;
             if (sender.VerticalOffset > 10)
@@ -80,10 +82,10 @@ namespace AsmrOne.WinUI3.Common.Bases
                 if (AddDataCommand is AsyncRelayCommand asynccommand)
                 {
                     this.IsRuning = true;
-                    asynccommand.Execute(parameter: this.Paramter);
+                    await asynccommand.ExecuteAsync(parameter: this.Paramter);
                     this.IsRuning = false;
                 }
-                await Task.Delay(1000);
+                await Task.Delay(300);
             }
             Viewer.ViewChanged += _viewer_ViewChanged;
         }

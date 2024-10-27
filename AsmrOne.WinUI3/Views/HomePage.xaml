@@ -9,7 +9,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:itemViews="using:AsmrOne.WinUI3.Views.Items"
+    xmlns:itemStyle="using:AsmrOne.WinUI3.Controls.ItemsBase"
     xmlns:local="using:AsmrOne.WinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:AsmrOne.WinUI3.Models"
@@ -18,6 +18,7 @@
     <Page.Resources>
         <convert:OrderConverter x:Key="OrderConverter" />
         <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
     </Page.Resources>
     <i:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="Loaded">
@@ -37,6 +38,7 @@
         <StackPanel
             Grid.Row="1"
             Margin="25,25,25,0"
+            HorizontalAlignment="Stretch"
             Orientation="Horizontal">
 
             <ComboBox ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -50,8 +52,8 @@
                 Margin="10,0,0,0"
                 Content="字幕"
                 IsChecked="{x:Bind ViewModel.IsSubtitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        </StackPanel>
 
+        </StackPanel>
         <controls:AdaptiveView
             Grid.Row="2"
             Margin="25,0,25,25"
@@ -59,7 +61,10 @@
             ItemsSource="{x:Bind ViewModel.Works, Mode=OneWay}">
             <controls:AdaptiveView.ItemTemplate>
                 <DataTemplate x:DataType="wrapper:DetilyItemViewModel">
-                    <Grid Margin="5" CornerRadius="5">
+                    <Grid
+                        x:Name="mainGrid"
+                        Margin="5"
+                        CornerRadius="5">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition x:Name="row1" Height="4*" />
@@ -97,7 +102,7 @@
                                 CornerRadius="5"
                                 Opacity="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition />
+                                    <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
@@ -107,7 +112,8 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock
                                     Grid.ColumnSpan="2"
-                                    Margin="15"
+                                    Margin="10"
+                                    FontSize="12"
                                     Text="{x:Bind Title}"
                                     TextTrimming="CharacterEllipsis" />
                                 <TextBlock
@@ -115,14 +121,16 @@
                                     Grid.ColumnSpan="2"
                                     Margin="15,0,0,0"
                                     VerticalAlignment="Center"
+                                    FontSize="10"
                                     Foreground="{ThemeResource SystemColorGrayTextBrush}"
                                     Text="{x:Bind Name}" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.ColumnSpan="2"
-                                    Margin="15,0,15,15"
+                                    Margin="15,0,5,5"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Bottom"
+                                    FontSize="10"
                                     Foreground="{ThemeResource SystemColorGrayTextBrush}">
                                     <Run Text="ID:" />
                                     <Run Text="{x:Bind Id}" />
@@ -137,23 +145,26 @@
                                     VerticalAlignment="Bottom"
                                     Command="{x:Bind InvokeCommand}"
                                     Style="{ThemeResource TransparentButtonStyle}">
-                                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" />
+                                    <FontIcon
+                                        FontFamily="Segoe Fluent Icons"
+                                        FontSize="15"
+                                        Glyph="&#xE768;" />
                                 </Button>
                             </Grid>
                         </Grid>
                     </Grid>
                 </DataTemplate>
             </controls:AdaptiveView.ItemTemplate>
-            <controls:AdaptiveView.ItemTransitionProvider>
+            <!--<controls:AdaptiveView.ItemTransitionProvider>
                 <LinedFlowLayoutItemCollectionTransitionProvider />
-            </controls:AdaptiveView.ItemTransitionProvider>
+            </controls:AdaptiveView.ItemTransitionProvider>-->
             <controls:AdaptiveView.Layout>
                 <UniformGridLayout
                     ItemsJustification="Start"
                     ItemsStretch="Uniform"
                     MinColumnSpacing="2"
-                    MinItemHeight="200"
-                    MinItemWidth="300" />
+                    MinItemHeight="150"
+                    MinItemWidth="250" />
             </controls:AdaptiveView.Layout>
         </controls:AdaptiveView>
     </Grid>

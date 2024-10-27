@@ -132,7 +132,7 @@
                                 CornerRadius="5"
                                 Opacity="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition />
+                                    <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
@@ -142,7 +142,8 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock
                                     Grid.ColumnSpan="2"
-                                    Margin="15"
+                                    Margin="10"
+                                    FontSize="12"
                                     Text="{x:Bind Title}"
                                     TextTrimming="CharacterEllipsis" />
                                 <TextBlock
@@ -150,14 +151,16 @@
                                     Grid.ColumnSpan="2"
                                     Margin="15,0,0,0"
                                     VerticalAlignment="Center"
+                                    FontSize="10"
                                     Foreground="{ThemeResource SystemColorGrayTextBrush}"
                                     Text="{x:Bind Name}" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.ColumnSpan="2"
-                                    Margin="15,0,15,15"
+                                    Margin="15,0,5,5"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Bottom"
+                                    FontSize="10"
                                     Foreground="{ThemeResource SystemColorGrayTextBrush}">
                                     <Run Text="ID:" />
                                     <Run Text="{x:Bind Id}" />
@@ -172,7 +175,10 @@
                                     VerticalAlignment="Bottom"
                                     Command="{x:Bind InvokeCommand}"
                                     Style="{ThemeResource TransparentButtonStyle}">
-                                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE768;" />
+                                    <FontIcon
+                                        FontFamily="Segoe Fluent Icons"
+                                        FontSize="15"
+                                        Glyph="&#xE768;" />
                                 </Button>
                             </Grid>
                         </Grid>
@@ -187,8 +193,8 @@
                     ItemsJustification="Start"
                     ItemsStretch="Uniform"
                     MinColumnSpacing="2"
-                    MinItemHeight="200"
-                    MinItemWidth="300" />
+                    MinItemHeight="150"
+                    MinItemWidth="250" />
             </controls:AdaptiveView.Layout>
         </controls:AdaptiveView>
     </Grid>

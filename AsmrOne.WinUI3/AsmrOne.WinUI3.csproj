@@ -36,7 +36,6 @@
     <None Remove="Views\Dialogs\RegisterDialog.xaml" />
     <None Remove="Views\FavouritesPage.xaml" />
     <None Remove="Views\HomePage.xaml" />
-    <None Remove="Views\Items\DetilyItem.xaml" />
     <None Remove="Views\PopularPage.xaml" />
     <None Remove="Views\RidDetilyPage.xaml" />
     <None Remove="Views\SettingPage.xaml" />
@@ -119,10 +118,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controls\DetilyItem\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="Assets\appLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -165,9 +160,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Items\DetilyItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Folder Include="Styles\ItemStyles\" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">

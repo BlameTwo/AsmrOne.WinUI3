@@ -4,7 +4,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cm="using:AsmrOne.WinUI3.Common"
-    xmlns:local="using:AsmrOne.WinUI3">
+    xmlns:controls="using:AsmrOne.WinUI3.Controls"
+    xmlns:local="using:AsmrOne.WinUI3"
+    xmlns:wrapper="using:AsmrOne.WinUI3.ViewModels.ItemViewModels">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -17,7 +19,8 @@
                 <ResourceDictionary Source="Styles/ImageControl.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
-            <!--  Other app resources here  -->
+
+
         </ResourceDictionary>
     </Application.Resources>
 </cm:AsmrApplication>

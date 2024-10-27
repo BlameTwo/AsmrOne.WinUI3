@@ -17,8 +17,8 @@
                 <Grid Padding="7">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="7*" />
+                        <ColumnDefinition Width="3*" />
                     </Grid.ColumnDefinitions>
                     <FontIcon
                         FontFamily="Segoe Fluent Icons"
@@ -29,7 +29,8 @@
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"
                         FontSize="14"
-                        Text="{x:Bind Name, Mode=OneWay}" />
+                        Text="{x:Bind Name, Mode=OneWay}"
+                        TextTrimming="CharacterEllipsis" />
 
                 </Grid>
             </TreeViewItem>
@@ -38,8 +39,8 @@
             <Grid Padding="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
                 <FontIcon
                     FontFamily="Segoe Fluent Icons"
@@ -50,7 +51,8 @@
                     Margin="10,0,0,0"
                     VerticalAlignment="Center"
                     FontSize="14"
-                    Text="{x:Bind FileName, Mode=OneWay}" />
+                    Text="{x:Bind FileName, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis" />
                 <StackPanel
                     Grid.Column="2"
                     HorizontalAlignment="Right"
@@ -68,8 +70,8 @@
             <Grid Padding="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
                 <FontIcon
                     FontFamily="Segoe Fluent Icons"
@@ -80,7 +82,8 @@
                     Margin="10,0,0,0"
                     VerticalAlignment="Center"
                     FontSize="14"
-                    Text="{x:Bind FileName, Mode=OneWay}" />
+                    Text="{x:Bind FileName, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis" />
                 <StackPanel
                     Grid.Column="2"
                     HorizontalAlignment="Right"
@@ -104,8 +107,8 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
                 <FontIcon
                     FontFamily="Segoe Fluent Icons"
@@ -116,7 +119,8 @@
                     Margin="10,0,0,0"
                     VerticalAlignment="Center"
                     FontSize="14"
-                    Text="{x:Bind FileName, Mode=OneWay}" />
+                    Text="{x:Bind FileName, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis" />
                 <StackPanel
                     Grid.Column="2"
                     HorizontalAlignment="Right"
@@ -134,8 +138,8 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
                 <FontIcon
                     FontFamily="Segoe Fluent Icons"
@@ -146,7 +150,8 @@
                     Margin="10,0,0,0"
                     VerticalAlignment="Center"
                     FontSize="14"
-                    Text="{x:Bind FileName, Mode=OneWay}" />
+                    Text="{x:Bind FileName, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis" />
                 <StackPanel
                     Grid.Column="2"
                     HorizontalAlignment="Right"
