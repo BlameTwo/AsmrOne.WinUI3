@@ -143,7 +143,9 @@
             IsSettingsVisible="False"
             OpenPaneLength="150"
             SelectedItem="{x:Bind ViewModel.NavigtiaonSelectItem, Mode=OneWay}">
-
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox />
+            </NavigationView.AutoSuggestBox>
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.HomeViewModel"
@@ -151,6 +153,11 @@
                     Content="Home">
                     <NavigationViewItem.Icon>
                         <SymbolIcon Symbol="Home" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.PopularViewModel" Content="Popular">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xECAD;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem Content="Tag">

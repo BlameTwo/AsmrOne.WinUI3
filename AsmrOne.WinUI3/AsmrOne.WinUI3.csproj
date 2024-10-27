@@ -37,6 +37,7 @@
     <None Remove="Views\FavouritesPage.xaml" />
     <None Remove="Views\HomePage.xaml" />
     <None Remove="Views\Items\DetilyItem.xaml" />
+    <None Remove="Views\PopularPage.xaml" />
     <None Remove="Views\RidDetilyPage.xaml" />
     <None Remove="Views\SettingPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
@@ -131,6 +132,9 @@
     <None Update="Assets\icon_256x256.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\PopularPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\FavouritesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

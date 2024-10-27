@@ -33,7 +33,11 @@ public interface IAsmrClient
     );
 
     Task<(RidDetily, string)> GetWorkAsync(string rj, CancellationToken token = default);
-
+    Task<WorksResponse> GetPopularAsync(
+        bool isSubtitle,
+        int index,
+        CancellationToken token = default
+    );
     Task<(List<Child>, string)> GetWorkAudioAsync(string rj, CancellationToken token = default);
     Task<WorksResponse> GetMyFavouritesAsync(
         FavouritesType type,

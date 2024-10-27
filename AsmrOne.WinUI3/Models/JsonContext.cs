@@ -32,4 +32,7 @@ namespace AsmrOne.WinUI3.Models;
 [JsonSerializable(typeof(TranslationBonusLangs))]
 [JsonSerializable(typeof(List<List<TranslationBonusLangs>>))]
 #endregion
+#region Popular
+[JsonSerializable(typeof(PopularRequest))]
+#endregion
 public partial class JsonContext : JsonSerializerContext { }

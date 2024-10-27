@@ -48,6 +48,7 @@ namespace AsmrOne.WinUI3
                 .AddTransient<RidDetilyViewModel>()
                 .AddTransient<SettingViewModel>()
                 .AddTransient<FavouritesViewModel>()
+                .AddTransient<PopularViewModel>()
                 #endregion
                 #region ItemVM
                 .AddTransient<DetilyItemViewModel>()

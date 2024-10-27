@@ -18,6 +18,7 @@ public sealed partial class PageService : IPageService
         RegisterView<RidDetilyPage, RidDetilyViewModel>();
         RegisterView<FavouritesPage, FavouritesViewModel>();
         RegisterView<SettingPage, SettingViewModel>();
+        RegisterView<PopularPage, PopularViewModel>();
     }
 
     public Type GetPage(string key)
