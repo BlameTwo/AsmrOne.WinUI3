@@ -259,11 +259,41 @@
                     <SplitButton Margin="5,0,0,0" Content="标记为">
                         <SplitButton.Flyout>
                             <MenuFlyout>
-                                <RadioMenuFlyoutItem GroupName="Status" Text="想听" />
-                                <RadioMenuFlyoutItem GroupName="Status" Text="在听" />
-                                <RadioMenuFlyoutItem GroupName="Status" Text="听过" />
-                                <RadioMenuFlyoutItem GroupName="Status" Text="重听" />
-                                <RadioMenuFlyoutItem GroupName="Status" Text="搁置" />
+                                <RadioMenuFlyoutItem
+                                    x:Name="marked"
+                                    Command="{x:Bind ViewModel.SetReviewCommand}"
+                                    CommandParameter="{x:Bind marked.Name, Mode=OneWay}"
+                                    GroupName="Status"
+                                    IsChecked="{x:Bind ViewModel.Marked, Mode=OneWay}"
+                                    Text="想听" />
+                                <RadioMenuFlyoutItem
+                                    Name="listening"
+                                    Command="{x:Bind ViewModel.SetReviewCommand}"
+                                    CommandParameter="{x:Bind listening.Name, Mode=OneWay}"
+                                    GroupName="Status"
+                                    IsChecked="{x:Bind ViewModel.Listening, Mode=OneWay}"
+                                    Text="在听" />
+                                <RadioMenuFlyoutItem
+                                    Name="listened"
+                                    Command="{x:Bind ViewModel.SetReviewCommand}"
+                                    CommandParameter="{x:Bind listened.Name, Mode=OneWay}"
+                                    GroupName="Status"
+                                    IsChecked="{x:Bind ViewModel.Listened, Mode=OneWay}"
+                                    Text="听过" />
+                                <RadioMenuFlyoutItem
+                                    Name="replay"
+                                    Command="{x:Bind ViewModel.SetReviewCommand}"
+                                    CommandParameter="{x:Bind replay.Name, Mode=OneWay}"
+                                    GroupName="Status"
+                                    IsChecked="{x:Bind ViewModel.Replay, Mode=OneWay}"
+                                    Text="重听" />
+                                <RadioMenuFlyoutItem
+                                    Name="postponed"
+                                    Command="{x:Bind ViewModel.SetReviewCommand}"
+                                    CommandParameter="{x:Bind postponed.Name, Mode=OneWay}"
+                                    GroupName="Status"
+                                    IsChecked="{x:Bind ViewModel.Postponed, Mode=OneWay}"
+                                    Text="搁置" />
                             </MenuFlyout>
                         </SplitButton.Flyout>
                     </SplitButton>

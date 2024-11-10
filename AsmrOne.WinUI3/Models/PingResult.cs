@@ -15,6 +15,6 @@ namespace AsmrOne.WinUI3.Models
         string hostName;
 
         [ObservableProperty]
-        long time;
+        bool success;
     }
 }

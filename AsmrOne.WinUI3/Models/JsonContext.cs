@@ -31,6 +31,8 @@ namespace AsmrOne.WinUI3.Models;
 [JsonSerializable(typeof(ZhCn))]
 [JsonSerializable(typeof(TranslationBonusLangs))]
 [JsonSerializable(typeof(List<List<TranslationBonusLangs>>))]
+[JsonSerializable(typeof(ReviewRidRequest))]
+[JsonSerializable(typeof(ReviewRidReponse))]
 #endregion
 #region Popular
 [JsonSerializable(typeof(PopularRequest))]

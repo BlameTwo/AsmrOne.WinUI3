@@ -17,6 +17,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.VisualBasic;
 using Windows.Media.Playback;
@@ -34,7 +36,8 @@ public sealed partial class ShellViewModel : ViewModelBase
         [FromKeyedServices(ProgramLife.ShellNavigationKey)]
             INavigationService shellNavigationService,
         IAudioPlayerService audioPlayerService,
-        IAppSetup<App> appSetup
+        IAppSetup<App> appSetup,
+        IDataAdaptiveService dataAdaptiveService
     )
     {
         AsmrClient = asmrClient;
@@ -43,6 +46,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         ShellNavigationService = shellNavigationService;
         AudioPlayerService = audioPlayerService;
         AppSetup = appSetup;
+        DataAdaptiveService = dataAdaptiveService;
         AudioPlayerService.MediaPlayerStatus += AudioPlayerService_MediaPlayerStatus;
         AudioPlayerService.SetDataChanged += AudioPlayerService_SetDataChanged;
         AudioPlayerService.PlayerOpened += AudioPlayerService_PlayerOpened;
@@ -50,6 +54,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         RegisterMessager();
         this.IsAutosubtitle = GlobalUsing.IsAutoSubtitle;
         this.IsOpensubtitle = GlobalUsing.IsOpenDesktopSubtitle;
+        this.RidPlayerViewModel = DataAdaptiveService.CreateRidPlayerViewModel();
     }
 
     private void ShellNavigationService_Navigated(
@@ -79,6 +84,9 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     string subtitle = "字幕";
+
+    [ObservableProperty]
+    RidPlayerViewModel ridPlayerViewModel;
 
     [ObservableProperty]
     double maxDuration;
@@ -114,7 +122,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     BitmapImage cover;
 
     [ObservableProperty]
-    string _StartGlyph;
+    string _StartGlyph = "\uE102";
 
     [ObservableProperty]
     string maxDurationString;
@@ -127,6 +135,9 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     bool isOpensubtitle;
+
+    [ObservableProperty]
+    Visibility playVisibility = Visibility.Collapsed;
 
     partial void OnIsOpensubtitleChanged(bool value)
     {
@@ -240,6 +251,7 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     private void AudioPlayerService_SetDataChanged(object sender, Models.AsmrOne.RidDetily child)
     {
+        this.PlayVisibility = Visibility.Visible;
         this.Cover = new BitmapImage(new System.Uri(child.ThumbnailCoverUrl));
     }
 
@@ -276,9 +288,13 @@ public sealed partial class ShellViewModel : ViewModelBase
     public INavigationViewService ShellNavigationViewService { get; }
     public INavigationService ShellNavigationService { get; }
     public IAppSetup<App> AppSetup { get; }
+    public IDataAdaptiveService DataAdaptiveService { get; }
 
     [ObservableProperty]
     public IAudioPlayerService _AudioPlayerService;
+
+    [ObservableProperty]
+    bool isLoading;
 
     partial void OnSelectPingChanged(PingResult value)
     {
@@ -305,6 +321,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     [RelayCommand]
     async Task Loaded()
     {
+        IsLoading = true;
         var token = TokenInstance.GetToken();
         if (token != null)
         {
@@ -313,13 +330,14 @@ public sealed partial class ShellViewModel : ViewModelBase
             this.DisPlayName = "账户：" + token.User.Name.Substring(0, 1);
             this.IsLogin = true;
         }
-        this.Ips = await AsmrOne.WinUI3.Contracts.Services.AsmrClient.GetPingAsync();
-        this.SelectPing = Ips.Where(x => x.Time > 0).First();
+        this.Ips = await AsmrClient.GetPingAsync();
+        this.SelectPing = Ips.Where(x => x.Success).First();
         if (SelectPing == null) { }
         else
         {
             this.ShellNavigationService.NavigationTo<HomeViewModel>(nameof(HomeViewModel));
         }
+        IsLoading = false;
     }
 
     [RelayCommand]

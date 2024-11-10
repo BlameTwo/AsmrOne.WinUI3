@@ -245,7 +245,7 @@ namespace AsmrOne.WinUI3.Models.AsmrOne
         public string Name { get; set; }
     }
 
-    public class RidDetily : ObservableObject
+    public class RidDetily
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
@@ -284,7 +284,7 @@ namespace AsmrOne.WinUI3.Models.AsmrOne
         public List<RateCountDetail> RateCountDetail { get; set; }
 
         [JsonPropertyName("rank")]
-        public List<Rank> Rank { get; set; }
+        public object Rank { get; set; }
 
         [JsonPropertyName("has_subtitle")]
         public bool HasSubtitle { get; set; }
@@ -299,13 +299,13 @@ namespace AsmrOne.WinUI3.Models.AsmrOne
         public List<Tag> Tags { get; set; }
 
         [JsonPropertyName("language_editions")]
-        public List<LanguageEdition> LanguageEditions { get; set; }
+        public List<object> LanguageEditions { get; set; }
 
         [JsonPropertyName("original_workno")]
-        public string OriginalWorkno { get; set; }
+        public object OriginalWorkno { get; set; }
 
         [JsonPropertyName("other_language_editions_in_db")]
-        public List<OtherLanguageEditionsInDb> OtherLanguageEditionsInDb { get; set; }
+        public List<object> OtherLanguageEditionsInDb { get; set; }
 
         [JsonPropertyName("translation_info")]
         public TranslationInfo TranslationInfo { get; set; }
@@ -317,7 +317,7 @@ namespace AsmrOne.WinUI3.Models.AsmrOne
         public string AgeCategoryString { get; set; }
 
         [JsonPropertyName("duration")]
-        public double Duration { get; set; }
+        public int Duration { get; set; }
 
         [JsonPropertyName("source_type")]
         public string SourceType { get; set; }
@@ -331,8 +331,17 @@ namespace AsmrOne.WinUI3.Models.AsmrOne
         [JsonPropertyName("userRating")]
         public object UserRating { get; set; }
 
-        [JsonPropertyName("playlistStatus")]
-        public PlaylistStatus PlaylistStatus { get; set; }
+        [JsonPropertyName("review_text")]
+        public object ReviewText { get; set; }
+
+        [JsonPropertyName("progress")]
+        public string Progress { get; set; }
+
+        [JsonPropertyName("updated_at")]
+        public string UpdatedAt { get; set; }
+
+        [JsonPropertyName("user_name")]
+        public string UserName { get; set; }
 
         [JsonPropertyName("circle")]
         public Circle Circle { get; set; }
@@ -354,8 +363,5 @@ namespace AsmrOne.WinUI3.Models.AsmrOne
 
         [JsonPropertyName("history")]
         public List<History> History { get; set; }
-
-        [JsonPropertyName("censored")]
-        public string Censored { get; set; }
     }
 }

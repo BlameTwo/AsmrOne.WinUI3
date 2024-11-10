@@ -11,6 +11,7 @@ public interface IAudioPlayerService
 
     public void RegisterElement(MediaPlayerPresenter element);
 
+    public IAudioManager AudioManager { get; }
     public ISubtitleService SubtitleService { get; }
     public bool IsDrag { get; set; }
     public MediaPlayerPresenter Element { get; }
@@ -23,8 +24,6 @@ public interface IAudioPlayerService
 
     event MediaPlayerPostionChanged PlayerPostionChanged;
     #endregion
-
-    public RidDetily RidDetily { get; }
 
     public Child ChildData { get; }
     public string NowFileName { get; }

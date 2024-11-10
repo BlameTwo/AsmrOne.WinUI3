@@ -31,6 +31,7 @@
     <None Remove="Styles\Button.xaml" />
     <None Remove="Styles\HeaderTileStyle.xaml" />
     <None Remove="Styles\ImageControl.xaml" />
+    <None Remove="Styles\MainNavigationViewStyle.xaml" />
     <None Remove="Styles\Titlebar.xaml" />
     <None Remove="SubtitleWindowBase.xaml" />
     <None Remove="Views\Dialogs\RegisterDialog.xaml" />
@@ -38,9 +39,11 @@
     <None Remove="Views\HomePage.xaml" />
     <None Remove="Views\PopularPage.xaml" />
     <None Remove="Views\RidDetilyPage.xaml" />
+    <None Remove="Views\RidPlayerControl.xaml" />
     <None Remove="Views\SettingPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
     <None Remove="Views\SubtitleWindow.xaml" />
+    <None Remove="Views\TestPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -127,6 +130,15 @@
     <None Update="Assets\icon_256x256.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\TestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\RidPlayerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Styles\MainNavigationViewStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\PopularPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

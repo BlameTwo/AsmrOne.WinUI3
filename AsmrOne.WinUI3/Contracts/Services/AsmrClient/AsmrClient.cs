@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.NetworkInformation;
@@ -39,23 +40,37 @@ public sealed partial class AsmrClient : IAsmrClient
         set => userName = value;
     }
 
-    private static async Task<long> Ping(string host)
+    public async Task<bool> ApiHealth(string hostName)
     {
-        Ping ping = new();
-        PingReply reply = await ping.SendPingAsync(host);
-        if (reply.Status == IPStatus.Success)
+        try
         {
-            return reply.RoundtripTime;
+            this.Client = new HttpClient();
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                $"https://api.{hostName}/api/health"
+            );
+            //var request = new HttpRequestMessage(HttpMethod.Get, $"{hostName}/api/health");
+            var result = await Client.SendAsync(request);
+            if (result.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
         }
-        return -1;
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
-    public static async Task<ObservableCollection<PingResult>> GetPingAsync()
+    public async Task<ObservableCollection<PingResult>> GetPingAsync()
     {
         ObservableCollection<PingResult> result = new();
         foreach (var item in IpHost)
         {
-            result.Add(new Models.PingResult() { HostName = item, Time = await Ping(item) });
+            result.Add(
+                new Models.PingResult() { HostName = item, Success = await ApiHealth(item) }
+            );
         }
         return result;
     }
@@ -198,7 +213,21 @@ public sealed partial class AsmrClient : IAsmrClient
     {
         try
         {
-            var request = this.BuildRequest($"{HostName}/api/workInfo/{rj}", HttpMethod.Get);
+            HttpRequestMessage request = null;
+            if (this.IsLogin)
+            {
+                request = this.BuildRequest(
+                    $"{HostName}/api/work/{rj}",
+                    HttpMethod.Get,
+                    null,
+                    null,
+                    true
+                );
+            }
+            else
+            {
+                request = this.BuildRequest($"{HostName}/api/workInfo/{rj}", HttpMethod.Get);
+            }
             var response = await Client.SendAsync(request);
             var result = await CheckDataAsync<RidDetily>(
                 response,
@@ -254,7 +283,7 @@ public sealed partial class AsmrClient : IAsmrClient
         var request = new HttpRequestMessage();
         request.Method = method;
         var resultPath = path;
-        if (method == HttpMethod.Post)
+        if (method == HttpMethod.Post || method == HttpMethod.Put)
         {
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
         }
@@ -311,5 +340,35 @@ public sealed partial class AsmrClient : IAsmrClient
         this.Token = null;
         this.IsLogin = false;
         GlobalUsing.Token = null;
+    }
+
+    public async Task<bool> ReviewRidAsync(
+        long rj,
+        string review,
+        CancellationToken token = default
+    )
+    {
+        try
+        {
+            var reviewReuqest = new ReviewRidRequest() { Progress = review, WorkId = rj };
+            var request = this.BuildRequest(
+                $"{HostName}/api/review",
+                HttpMethod.Put,
+                null,
+                JsonSerializer.Serialize(reviewReuqest, JsonContext.Default.ReviewRidRequest),
+                true
+            );
+            var response = await Client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                var str = await response.Content.ReadAsStringAsync();
+                return true;
+            }
+            return false;
+        }
+        catch (TaskCanceledException)
+        {
+            return false;
+        }
     }
 }

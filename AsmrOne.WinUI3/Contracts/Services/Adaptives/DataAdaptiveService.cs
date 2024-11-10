@@ -4,6 +4,7 @@ using System.IO;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
+using AsmrOne.WinUI3.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Devices.Radios;
 
@@ -194,5 +195,10 @@ public class DataAdaptiveService : IDataAdaptiveService
         }
         var result = new FolderWrapper() { Name = rid.Title, Datas = wrappers.ToObservable() };
         return result;
+    }
+
+    public RidPlayerViewModel CreateRidPlayerViewModel()
+    {
+        return new RidPlayerViewModel();
     }
 }

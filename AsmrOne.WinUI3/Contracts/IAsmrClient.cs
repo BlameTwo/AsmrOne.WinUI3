@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Enums;
 
@@ -24,7 +26,9 @@ public interface IAsmrClient
         string password,
         CancellationToken token = default
     );
+    Task<bool> ApiHealth(string hostName);
 
+    Task<ObservableCollection<PingResult>> GetPingAsync();
     Task<WorksResponse> GetWorksAsync(
         WorkOrder order,
         int page,
@@ -47,6 +51,9 @@ public interface IAsmrClient
         int page = 1,
         CancellationToken token = default
     );
+
+    Task<bool> ReviewRidAsync(long rj, string review, CancellationToken token = default);
+
     void RegisterClient(string hostName);
     void SetToken(RegisterReponse token);
     void Loginout();

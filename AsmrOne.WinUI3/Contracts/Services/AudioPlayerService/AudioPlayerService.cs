@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
 using System.Timers;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Messagers;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
-using Windows.AI.MachineLearning;
-using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
 
@@ -19,9 +13,14 @@ namespace AsmrOne.WinUI3.Contracts.Services;
 
 public partial class AudioPlayerService : IAudioPlayerService
 {
-    public AudioPlayerService(ISubtitleService subtitleService, IAppSetup<App> appSetup)
+    public AudioPlayerService(
+        ISubtitleService subtitleService,
+        IAudioManager audioManager,
+        IAppSetup<App> appSetup
+    )
     {
         SubtitleService = subtitleService;
+        AudioManager = audioManager;
         AppSetup = appSetup;
         timer = new Timer();
         timer.Interval = 100;
@@ -62,13 +61,13 @@ public partial class AudioPlayerService : IAudioPlayerService
 
     public bool IsDrag { get; set; }
 
-    public RidDetily RidDetily { get; private set; }
     public Child ChildData { get; private set; }
     public string NowFileName { get; private set; }
     public MediaPlayerPresenter Element { get; private set; }
 
     private AdaptiveMediaSource msource;
     public ISubtitleService SubtitleService { get; }
+    public IAudioManager AudioManager { get; }
     public IAppSetup<App> AppSetup { get; }
 
     public void Pause()
@@ -90,7 +89,7 @@ public partial class AudioPlayerService : IAudioPlayerService
         if (url.Child.Title == NowFileName)
             return;
         this.NowFileName = url.Child.Title;
-        this.RidDetily = data;
+        this.AudioManager.SetDetily(data);
         this.ChildData = url.Child;
         UnRegister();
         Stop();

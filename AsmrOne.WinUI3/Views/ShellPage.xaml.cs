@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Media.Playback;
 
 namespace AsmrOne.WinUI3.Views
@@ -105,6 +106,17 @@ namespace AsmrOne.WinUI3.Views
         private void ToggleMenu_Click(object sender, RoutedEventArgs e)
         {
             view.IsPaneOpen = !view.IsPaneOpen;
+        }
+
+        private async void converButton_Click(object sender, RoutedEventArgs e)
+        {
+            (this.Resources["ShowRidBar"] as Storyboard).Begin();
+            await this.ViewModel.RidPlayerViewModel.RefreshAsync();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            (this.Resources["CloseRidBar"] as Storyboard).Begin();
         }
     }
 }

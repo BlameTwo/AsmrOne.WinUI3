@@ -35,6 +35,7 @@ namespace AsmrOne.WinUI3
                 .AddSingleton<IDialogManager, DialogManager>()
                 .AddSingleton<IAsmrClient, AsmrClient>()
                 .AddTransient<IDataFactory, DataFactory>()
+                .AddTransient<IAudioManager, AudioManager>()
                 .AddTransient<IDataAdaptiveService, DataAdaptiveService>()
                 .AddSingleton<IAudioPlayerService, AudioPlayerService>()
                 .AddSingleton<ISubtitleService, SubtitleService>()
@@ -49,6 +50,7 @@ namespace AsmrOne.WinUI3
                 .AddTransient<SettingViewModel>()
                 .AddTransient<FavouritesViewModel>()
                 .AddTransient<PopularViewModel>()
+                .AddTransient<TestViewModel>()
                 #endregion
                 #region ItemVM
                 .AddTransient<DetilyItemViewModel>()

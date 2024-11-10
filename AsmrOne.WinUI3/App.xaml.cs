@@ -1,13 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using AsmrOne.WinUI3.Common;
-using AsmrOne.WinUI3.Common.NotifyIcon;
+﻿using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Contracts;
-using AsmrOne.WinUI3.Views;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
 
 namespace AsmrOne.WinUI3;
 
