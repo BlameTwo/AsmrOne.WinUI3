@@ -7,7 +7,7 @@
 	  <ApplicationManifest>app.manifest</ApplicationManifest>
 	  <Platforms>x86;x64</Platforms>
 	  <UseWinUI>true</UseWinUI>
-	  <PublishAot>true</PublishAot>
+	  <PublishAot>false</PublishAot>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x64</RuntimeIdentifier>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x64</RuntimeIdentifier>
 	  <WindowsSdkPackageVersion>10.0.26100.53</WindowsSdkPackageVersion>
@@ -57,6 +57,7 @@
 
    <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.2.241112-preview1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-rc.1.24431.7" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
@@ -130,6 +131,9 @@
     <None Update="Assets\icon_256x256.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\SearchPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\TestPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

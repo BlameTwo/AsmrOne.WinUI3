@@ -51,6 +51,7 @@ namespace AsmrOne.WinUI3
                 .AddTransient<FavouritesViewModel>()
                 .AddTransient<PopularViewModel>()
                 .AddTransient<TestViewModel>()
+                .AddTransient<SearchViewModel>()
                 #endregion
                 #region ItemVM
                 .AddTransient<DetilyItemViewModel>()

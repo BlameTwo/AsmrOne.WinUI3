@@ -61,12 +61,22 @@
         </core:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid x:Name="Main">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition />
                 <RowDefinition Height="120" />
             </Grid.RowDefinitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <ProgressBar
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
@@ -92,6 +102,11 @@
                         Margin="10,10,0,0"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">
+                        <StackPanel.ChildrenTransitions>
+                            <TransitionCollection>
+                                <RepositionThemeTransition />
+                            </TransitionCollection>
+                        </StackPanel.ChildrenTransitions>
                         <Button
                             x:Name="BackButton"
                             Width="35"
@@ -201,11 +216,10 @@
                             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xECAD;" />
                         </NavigationViewItem.Icon>
                     </NavigationViewItem>
-                    <NavigationViewItem Content="Tag">
+                    <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.SearchViewModel" Content="Search">
                         <NavigationViewItem.Icon>
-                            <SymbolIcon Symbol="Tag" />
+                            <SymbolIcon Symbol="Find" />
                         </NavigationViewItem.Icon>
-
                     </NavigationViewItem>
                     <NavigationViewItem Content="Circles">
                         <NavigationViewItem.Icon>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AsmrOne.WinUI3.Views.SearchPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:cui="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:AsmrOne.WinUI3.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:AsmrOne.WinUI3.Models.ItemWrapper"
+    Margin="25"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Loaded">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+        </core:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <cui:TokenizingTextBox
+                x:Name="suggestBox"
+                Margin="0,-8,0,0"
+                VerticalAlignment="Center"
+                ItemsSource="{x:Bind ViewModel.Tag, Mode=TwoWay}"
+                SuggestedItemsSource="{x:Bind ViewModel.CacheTag, Mode=OneWay}"
+                TextChanged="suggestBox_TextChanged"
+                TextMemberPath="DisplayName"
+                TokenDelimiter=","
+                TokenItemAdding="suggestBox_TokenItemAdding">
+                <cui:TokenizingTextBox.SuggestedItemTemplate>
+                    <DataTemplate x:DataType="model:SearchTagWrapper">
+                        <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}" />
+                    </DataTemplate>
+                </cui:TokenizingTextBox.SuggestedItemTemplate>
+                <cui:TokenizingTextBox.TokenItemTemplate>
+                    <DataTemplate x:DataType="model:SearchTagWrapper">
+                        <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}" />
+                    </DataTemplate>
+                </cui:TokenizingTextBox.TokenItemTemplate>
+            </cui:TokenizingTextBox>
+            <Button
+                Grid.Column="1"
+                Margin="5,0,0,0"
+                Padding="10"
+                Command="{x:Bind ViewModel.SearchCommand, Mode=OneWay}"
+                CommandParameter="{x:Bind suggestBox.Text, Mode=OneWay}"
+                Style="{ThemeResource TransparentButtonStyle}">
+                <FontIcon
+                    FontFamily="Segoe Fluent Icons"
+                    FontSize="12"
+                    Glyph="&#xE721;" />
+            </Button>
+        </Grid>
+    </Grid>
+</Page>

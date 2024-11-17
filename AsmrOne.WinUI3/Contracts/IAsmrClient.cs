@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Enums;
+using AsmrOne.WinUI3.Models.ItemWrapper;
 
 namespace AsmrOne.WinUI3.Contracts;
 
@@ -54,7 +55,15 @@ public interface IAsmrClient
 
     Task<bool> ReviewRidAsync(long rj, string review, CancellationToken token = default);
 
+    Task<List<TagList>> GetTagAsync(CancellationToken token = default);
+
     void RegisterClient(string hostName);
     void SetToken(RegisterReponse token);
     void Loginout();
+    Task<List<TagList>> GetCirclesAsync(CancellationToken token);
+
+    Task<List<VasList>> GetVasAsync(CancellationToken token = default);
+
+
+    Task<WorksResponse> SearchAsync(string keyword, IEnumerable<SearchTagWrapper> query, bool isSubtitle, CancellationToken token = default);
 }
