@@ -5,7 +5,6 @@
     xmlns:common="using:AsmrOne.WinUI3.Common"
     xmlns:control="using:AsmrOne.WinUI3.Controls"
     xmlns:convert="using:AsmrOne.WinUI3.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:AsmrOne.WinUI3.Views"
@@ -18,11 +17,6 @@
     Loaded="ShellPage_Loaded"
     mc:Ignorable="d">
     <Page.Resources>
-        <common:ActivityFeedLayout
-            x:Key="MyFeedLayout"
-            ColumnSpacing="12"
-            MinItemSize="80, 108"
-            RowSpacing="12" />
         <convert:ProgressConverter x:Key="ProgressConverter" />
         <convert:BoolToBrushConverter
             x:Key="BoolToBrushConverter"
@@ -56,9 +50,9 @@
         </Storyboard>
     </Page.Resources>
     <i:Interaction.Behaviors>
-        <core:EventTriggerBehavior EventName="Loaded">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
-        </core:EventTriggerBehavior>
+        <i:EventTriggerBehavior EventName="Loaded">
+            <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+        </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid x:Name="Main">
         <Grid.ChildrenTransitions>
@@ -123,8 +117,8 @@
                         </Button>
                         <Button
                             x:Name="ToggleMenu"
-                            Width="35"
-                            Height="35"
+                            Width="40"
+                            Height="40"
                             Padding="12"
                             Click="ToggleMenu_Click"
                             Style="{ThemeResource TransparentButtonStyle}"
@@ -138,7 +132,7 @@
                         <Button
                             Width="35"
                             Height="35"
-                            Margin="10,0,0,0"
+                            Margin="25,0,0,0"
                             Padding="0"
                             CornerRadius="35">
                             <FontIcon
@@ -199,8 +193,9 @@
                 IsBackButtonVisible="Collapsed"
                 IsPaneToggleButtonVisible="False"
                 IsSettingsVisible="False"
-                OpenPaneLength="150"
-                SelectedItem="{x:Bind ViewModel.NavigtiaonSelectItem, Mode=OneWay}">
+                OpenPaneLength="70"
+                SelectedItem="{x:Bind ViewModel.NavigtiaonSelectItem, Mode=OneWay}"
+                Style="{ThemeResource MainNavigationViewStyle}">
 
                 <NavigationView.MenuItems>
                     <NavigationViewItem
@@ -233,7 +228,6 @@
                         </NavigationViewItem.Icon>
 
                     </NavigationViewItem>
-                    <NavigationViewItemSeparator />
                     <NavigationViewItem
                         p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.FavouritesViewModel"
                         Content="Favourites"
@@ -243,14 +237,6 @@
                         </NavigationViewItem.Icon>
 
                     </NavigationViewItem>
-                    <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.TestViewModel" Content="Favourites">
-                        <NavigationViewItem.Icon>
-                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEB52;" />
-                        </NavigationViewItem.Icon>
-
-                    </NavigationViewItem>
-                </NavigationView.MenuItems>
-                <NavigationView.FooterMenuItems>
                     <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.SettingViewModel" Content="Settings">
                         <NavigationViewItem.Icon>
                             <AnimatedIcon>
@@ -260,7 +246,7 @@
                             </AnimatedIcon>
                         </NavigationViewItem.Icon>
                     </NavigationViewItem>
-                </NavigationView.FooterMenuItems>
+                </NavigationView.MenuItems>
                 <Frame x:Name="frame" />
             </NavigationView>
             <Grid

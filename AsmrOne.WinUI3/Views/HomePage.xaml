@@ -6,7 +6,6 @@
     xmlns:aModel="using:AsmrOne.WinUI3.Models.AsmrOne"
     xmlns:controls="using:AsmrOne.WinUI3.Controls"
     xmlns:convert="using:AsmrOne.WinUI3.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:itemStyle="using:AsmrOne.WinUI3.Controls.ItemsBase"
@@ -21,9 +20,9 @@
 
     </Page.Resources>
     <i:Interaction.Behaviors>
-        <core:EventTriggerBehavior EventName="Loaded">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
-        </core:EventTriggerBehavior>
+        <i:EventTriggerBehavior EventName="Loaded">
+            <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+        </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid>
         <Grid.RowDefinitions>

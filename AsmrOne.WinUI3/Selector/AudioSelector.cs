@@ -6,7 +6,7 @@ namespace AsmrOne.WinUI3.Selector;
 
 public partial class AudioSelector : DataTemplateSelector
 {
-    //protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+    //protected override DataTemplate SelectTemplatei(object item, DependencyObject container)
     //{
     //    if (item is FolderWrapper)
     //    {
@@ -28,7 +28,7 @@ public partial class AudioSelector : DataTemplateSelector
     //    {
     //        return SubTextTemplate;
     //    }
-    //    return base.SelectTemplateCore(item, container);
+    //    return base.SelectTemplatei(item, container);
     //}
 
     protected override DataTemplate SelectTemplateCore(object item)

@@ -17,7 +17,7 @@ public sealed partial class SubtitleWindowBase : Window, IDisposable
     {
         this.InitializeComponent();
         //SystemBackdrop = new TransparentTintBackdrop();
-        //LayerWindowHelper.SetLayerWindow(this);
+        LayerWindowHelper.SetLayerWindow(this);
         //var overlappedPresenter = OverlappedPresenter;
         //overlappedPresenter.IsResizable = false;
 

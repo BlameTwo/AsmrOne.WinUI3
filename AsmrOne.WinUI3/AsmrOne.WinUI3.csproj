@@ -7,7 +7,7 @@
 	  <ApplicationManifest>app.manifest</ApplicationManifest>
 	  <Platforms>x86;x64</Platforms>
 	  <UseWinUI>true</UseWinUI>
-	  <PublishAot>false</PublishAot>
+	  <PublishAot>true</PublishAot>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x64</RuntimeIdentifier>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x64</RuntimeIdentifier>
 	  <WindowsSdkPackageVersion>10.0.26100.53</WindowsSdkPackageVersion>
@@ -32,6 +32,7 @@
     <None Remove="Styles\HeaderTileStyle.xaml" />
     <None Remove="Styles\ImageControl.xaml" />
     <None Remove="Styles\MainNavigationViewStyle.xaml" />
+    <None Remove="Styles\NavigationView.xaml" />
     <None Remove="Styles\Titlebar.xaml" />
     <None Remove="SubtitleWindowBase.xaml" />
     <None Remove="Views\Dialogs\RegisterDialog.xaml" />
@@ -56,14 +57,15 @@
   </ItemGroup>
 
    <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.2.241112-preview1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-rc.1.24431.7" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.2.250129-preview2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
-    <PackageReference Include="WinUIEx" Version="2.4.2" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
+    <PackageReference Include="WinUIEx" Version="2.5.1" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -131,6 +133,9 @@
     <None Update="Assets\icon_256x256.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Styles\NavigationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\SearchPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,7 +6,6 @@ using AsmrOne.WinUI3.Contracts;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.ApplicationModel.Core;
 using Windows.Graphics;
 using WinRT.Interop;
 using WinUIEx;
@@ -214,7 +213,6 @@ public partial class NotifyIconWinUI : Control
                     Debug.WriteLine("右键");
                     this.rightClickDelegate?.Invoke(this, new());
                     ShowContextMenu();
-
                     break;
                 case WM_RBUTTONDBLCLK:
                     break;

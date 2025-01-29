@@ -50,6 +50,12 @@ partial class AsmrClient
     public async Task<WorksResponse> SearchAsync(string keyword,IEnumerable<SearchTagWrapper> query,bool isSubtitle,CancellationToken token = default)
     {
         var queryString = BuildSearchQuery(query,keyword);
+        var request = this.BuildRequest($"{HostName}/api/search/{queryString}",HttpMethod.Get,new Dictionary<string, object>()
+        {
+            {"order","create_date" },
+            {"sort","desc" },
+        },null,true);
+
         return new WorksResponse();
     }
 

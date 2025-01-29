@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:AsmrOne.WinUI3.Controls"
     xmlns:convert="using:AsmrOne.WinUI3.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:AsmrOne.WinUI3.Views"
@@ -16,9 +15,9 @@
         <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Page.Resources>
     <i:Interaction.Behaviors>
-        <core:EventTriggerBehavior EventName="Loaded">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
-        </core:EventTriggerBehavior>
+        <i:EventTriggerBehavior EventName="Loaded">
+            <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+        </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid>
         <Grid.RowDefinitions>

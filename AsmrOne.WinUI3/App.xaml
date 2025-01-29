@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="Styles/HeaderTileStyle.xaml" />
                 <ResourceDictionary Source="Styles/AdaptiveView.xaml" />
                 <ResourceDictionary Source="Styles/ImageControl.xaml" />
+                <ResourceDictionary Source="Styles/NavigationView.xaml" />
                 <ResourceDictionary Source="Styles/MainNavigationViewStyle.xaml" />
                 <!--  Other merged dictionaries here  -->
             </ResourceDictionary.MergedDictionaries>
