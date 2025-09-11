@@ -291,6 +291,7 @@
                 <Button
                     x:Name="converButton"
                     Grid.Row="1"
+                    Width="200"
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
                     Click="converButton_Click"
