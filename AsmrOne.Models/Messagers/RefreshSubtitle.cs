@@ -1,4 +1,6 @@
-﻿using static AsmrOne.WinUI3.Common.WebVTTParse;
+﻿
+
+using AsmrOne.Models;
 
 namespace AsmrOne.WinUI3.Models.Messagers
 {

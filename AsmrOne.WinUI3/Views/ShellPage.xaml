@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:p="using:AsmrOne.WinUI3.Controls.Propertys"
     xmlns:uim="using:AsmrOne.WinUI3.Models"
-    xmlns:um="using:AsmrOne.WinUI3.Models.UI"
+    xmlns:um="using:AsmrOne.Models.UI"
     xmlns:view="using:AsmrOne.WinUI3.Views"
     xmlns:visual="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     Loaded="ShellPage_Loaded"
@@ -258,7 +258,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MaxWidth="400" />
+                    <ColumnDefinition Width="auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
@@ -302,7 +302,12 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Border CornerRadius="5">
-                            <control:ImageControl IsHideCover="{x:Bind ViewModel.HideCover, Mode=OneWay}" Source="{x:Bind ViewModel.Cover, Mode=OneWay}" />
+                            <control:ImageControl
+                                Width="100"
+                                CornerRadius="5"
+                                IsHideCover="{x:Bind ViewModel.HideCover, Mode=OneWay}"
+                                Source="{x:Bind ViewModel.Cover, Mode=OneWay}"
+                                Stretch="UniformToFill" />
                         </Border>
                         <StackPanel
                             Grid.Column="1"

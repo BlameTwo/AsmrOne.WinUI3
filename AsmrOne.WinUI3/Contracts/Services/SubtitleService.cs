@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AsmrOne.Models;
 using AsmrOne.WinUI3.Common;
 using static AsmrOne.WinUI3.Common.WebVTTParse;
 
@@ -8,7 +9,7 @@ namespace AsmrOne.WinUI3.Contracts.Services;
 
 public class SubtitleService : ISubtitleService
 {
-    public List<WebVTTParse.SubtitleItem> SubTitles { get; private set; }
+    public List<SubtitleItem> SubTitles { get; private set; }
 
     public SubtitleItem GetSubtitle(TimeSpan time)
     {
@@ -20,7 +21,7 @@ public class SubtitleService : ISubtitleService
             .FirstOrDefault();
     }
 
-    public void SetSubtitle(List<WebVTTParse.SubtitleItem> time)
+    public void SetSubtitle(List<SubtitleItem> time)
     {
         this.SubTitles = time;
     }

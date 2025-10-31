@@ -1,13 +1,13 @@
-﻿using System;
+﻿using AsmrOne.WinUI3.Models;
+using AsmrOne.WinUI3.Models.AsmrOne;
+using AsmrOne.WinUI3.Models.ItemWrapper;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AsmrOne.WinUI3.Models;
-using AsmrOne.WinUI3.Models.AsmrOne;
-using AsmrOne.WinUI3.Models.ItemWrapper;
 
-namespace AsmrOne.WinUI3.Contracts.Services;
+namespace AsmrOne.Core;
 
 partial class AsmrClient
 {
@@ -49,7 +49,6 @@ partial class AsmrClient
             throw new Exception("错误！");
         }
         return result.Item1;
-        return new WorksResponse();
     }
 
     private string BuildSearchQuery(IEnumerable<SearchTagWrapper> query)

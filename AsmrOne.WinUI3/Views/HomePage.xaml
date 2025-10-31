@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="AsmrOne.WinUI3.Views.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -29,6 +29,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <ProgressBar
             HorizontalAlignment="Stretch"
@@ -40,7 +41,10 @@
             HorizontalAlignment="Stretch"
             Orientation="Horizontal">
 
-            <ComboBox ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ComboBox
+                IsEnabled="{x:Bind ViewModel.LoadingEnable, Mode=OneWay}"
+                ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate x:DataType="model:QueryWorkOrderWrapper">
                         <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}" />
@@ -50,121 +54,130 @@
             <CheckBox
                 Margin="10,0,0,0"
                 Content="字幕"
-                IsChecked="{x:Bind ViewModel.IsSubtitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
+                IsChecked="{x:Bind ViewModel.IsSubtitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsEnabled="{x:Bind ViewModel.LoadingEnable, Mode=OneWay}" />
         </StackPanel>
-        <controls:AdaptiveView
+        <ItemsView
             Grid.Row="2"
             Margin="25,0,25,25"
-            AddDataCommand="{x:Bind ViewModel.AddItemsCommand}"
+            IsEnabled="{x:Bind ViewModel.LoadingEnable, Mode=OneWay}"
             ItemsSource="{x:Bind ViewModel.Works, Mode=OneWay}">
-            <controls:AdaptiveView.ItemTemplate>
+            <ItemsView.ItemTemplate>
                 <DataTemplate x:DataType="wrapper:DetilyItemViewModel">
-                    <Grid
-                        x:Name="mainGrid"
-                        Margin="5"
-                        CornerRadius="5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition x:Name="row1" Height="4*" />
-                                <RowDefinition x:Name="row2" Height="6*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ChildrenTransitions>
-                                <TransitionCollection>
-                                    <RepositionThemeTransition />
-                                </TransitionCollection>
-                            </Grid.ChildrenTransitions>
-                            <controls:ImageControl
-                                x:Name="image"
-                                Grid.RowSpan="2"
-                                VerticalAlignment="Center"
-                                IsHideCover="{x:Bind HideCover}"
-                                Source="{x:Bind Cover}"
-                                Stretch="UniformToFill" />
-                            <Border
-                                Margin="0,5,5,0"
-                                Padding="4"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Top"
-                                Background="{ThemeResource AccentTextFillColorTertiaryBrush}"
-                                CornerRadius="5"
-                                Visibility="{x:Bind IsNTFS, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <TextBlock Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Text="R18" />
-                            </Border>
-                            <Grid
-                                x:Name="session"
-                                Grid.Row="1"
-                                Margin="2"
-                                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                Opacity="1">
+                    <ItemContainer>
+                        <i:Interaction.Behaviors>
+                            <i:EventTriggerBehavior EventName="ItemInvoked">
+                                <i:InvokeCommandAction Command="{x:Bind InvokeCommand}" />
+                            </i:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                        <Grid
+                            x:Name="mainGrid"
+                            Margin="5"
+                            CornerRadius="5">
+                            <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition />
+                                    <RowDefinition x:Name="row1" Height="4*" />
+                                    <RowDefinition x:Name="row2" Height="6*" />
                                 </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Grid.ColumnSpan="2"
-                                    Margin="10"
-                                    FontSize="12"
-                                    Text="{x:Bind Title}"
-                                    TextTrimming="CharacterEllipsis" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Grid.ColumnSpan="2"
-                                    Margin="15,0,0,0"
+
+                                <controls:ImageControl
+                                    x:Name="image"
+                                    Grid.RowSpan="2"
                                     VerticalAlignment="Center"
-                                    FontSize="10"
-                                    Foreground="{ThemeResource SystemColorGrayTextBrush}"
-                                    Text="{x:Bind Name}" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.ColumnSpan="2"
-                                    Margin="15,0,5,5"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Bottom"
-                                    FontSize="10"
-                                    Foreground="{ThemeResource SystemColorGrayTextBrush}">
-                                    <Run Text="ID:" />
-                                    <Run Text="{x:Bind Id}" />
-                                </TextBlock>
-                                <Button
-                                    x:Name="playbth"
-                                    Grid.Row="0"
-                                    Grid.RowSpan="3"
-                                    Grid.Column="1"
-                                    Margin="0,0,15,5"
+                                    IsHideCover="{x:Bind HideCover}"
+                                    Source="{x:Bind Cover}"
+                                    Stretch="UniformToFill" />
+                                <Border
+                                    Margin="0,5,5,0"
+                                    Padding="5"
                                     HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Command="{x:Bind InvokeCommand}"
-                                    Style="{ThemeResource TransparentButtonStyle}">
-                                    <FontIcon
-                                        FontFamily="Segoe Fluent Icons"
-                                        FontSize="15"
-                                        Glyph="&#xE768;" />
-                                </Button>
+                                    VerticalAlignment="Top"
+                                    Background="{ThemeResource AccentAAFillColorDefaultBrush}"
+                                    CornerRadius="5"
+                                    Visibility="{x:Bind IsNTFS, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                        Text="R18" />
+                                </Border>
+                                <Grid
+                                    x:Name="session"
+                                    Grid.Row="1"
+                                    Margin="2"
+                                    Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="5"
+                                    Opacity="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.ColumnSpan="2"
+                                        Margin="10"
+                                        FontSize="12"
+                                        Text="{x:Bind Title}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.ColumnSpan="2"
+                                        Margin="15,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Foreground="{ThemeResource SystemColorGrayTextBrush}"
+                                        Text="{x:Bind Name}" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.ColumnSpan="2"
+                                        Margin="15,0,5,5"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        FontSize="10"
+                                        Foreground="{ThemeResource SystemColorGrayTextBrush}">
+                                        <Run Text="ID:" />
+                                        <Run Text="{x:Bind Id}" />
+                                    </TextBlock>
+
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
+                    </ItemContainer>
                 </DataTemplate>
-            </controls:AdaptiveView.ItemTemplate>
-            <!--<controls:AdaptiveView.ItemTransitionProvider>
-                <LinedFlowLayoutItemCollectionTransitionProvider />
-            </controls:AdaptiveView.ItemTransitionProvider>-->
-            <controls:AdaptiveView.Layout>
+            </ItemsView.ItemTemplate>
+            <ItemsView.Layout>
                 <UniformGridLayout
                     ItemsJustification="Start"
                     ItemsStretch="Uniform"
                     MinColumnSpacing="2"
                     MinItemHeight="150"
                     MinItemWidth="250" />
-            </controls:AdaptiveView.Layout>
-        </controls:AdaptiveView>
+            </ItemsView.Layout>
+        </ItemsView>
+        <PagerControl
+            Grid.Row="3"
+            Margin="0,0,0,15"
+            HorizontalAlignment="Center"
+            HorizontalContentAlignment="Center"
+            ButtonPanelAlwaysShowFirstLastPageIndex="True"
+            CornerRadius="5"
+            DisplayMode="ButtonPanel"
+            IsEnabled="{x:Bind ViewModel.LoadingEnable, Mode=OneWay}"
+            NextButtonCommand="{x:Bind ViewModel.NextItemCommand}"
+            NumberOfPages="{x:Bind ViewModel.MaxPageSize, Mode=OneWay}"
+            PrefixText=""
+            PreviousButtonCommand="{x:Bind ViewModel.ForwardItemCommand}"
+            SuffixText="">
+            <i:Interaction.Behaviors>
+                <i:EventTriggerBehavior EventName="SelectedIndexChanged">
+                    <i:InvokeCommandAction Command="{x:Bind ViewModel.JumpToPageCommand}" />
+                </i:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </PagerControl>
     </Grid>
 </Page>

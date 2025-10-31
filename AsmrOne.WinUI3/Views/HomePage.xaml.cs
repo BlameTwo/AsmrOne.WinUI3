@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,4 +30,5 @@ public sealed partial class HomePage : Page, IPage
         this.ViewModel = null;
         GC.Collect();
     }
+
 }

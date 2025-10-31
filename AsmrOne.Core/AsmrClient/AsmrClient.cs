@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AsmrOne.WinUI3.Models;
+using AsmrOne.WinUI3.Models.AsmrOne;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -11,10 +13,8 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
-using AsmrOne.WinUI3.Models;
-using AsmrOne.WinUI3.Models.AsmrOne;
 
-namespace AsmrOne.WinUI3.Contracts.Services;
+namespace AsmrOne.Core;
 
 public sealed partial class AsmrClient : IAsmrClient
 {
@@ -69,7 +69,7 @@ public sealed partial class AsmrClient : IAsmrClient
         foreach (var item in IpHost)
         {
             result.Add(
-                new Models.PingResult() { HostName = item, Success = await ApiHealth(item) }
+                new PingResult() { HostName = item, Success = await ApiHealth(item) }
             );
         }
         return result;
@@ -341,7 +341,6 @@ public sealed partial class AsmrClient : IAsmrClient
     {
         this.Token = null;
         this.IsLogin = false;
-        GlobalUsing.Token = null;
     }
 
     public async Task<bool> ReviewRidAsync(

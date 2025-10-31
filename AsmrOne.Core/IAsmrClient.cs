@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using AsmrOne.WinUI3.Models;
+using AsmrOne.WinUI3.Models.AsmrOne;
+using AsmrOne.WinUI3.Models.Enums;
+using AsmrOne.WinUI3.Models.ItemWrapper;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AsmrOne.WinUI3.Models;
-using AsmrOne.WinUI3.Models.AsmrOne;
-using AsmrOne.WinUI3.Models.Enums;
-using AsmrOne.WinUI3.Models.ItemWrapper;
 
-namespace AsmrOne.WinUI3.Contracts;
+namespace AsmrOne.Core;
 
 public interface IAsmrClient
 {

@@ -1,4 +1,4 @@
-﻿namespace AsmrOne.WinUI3.Models.UI
+﻿namespace AsmrOne.Models.UI
 {
     public class ShellSubtitleItem
     {

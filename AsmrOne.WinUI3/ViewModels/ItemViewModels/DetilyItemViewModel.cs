@@ -36,7 +36,6 @@ public sealed partial class DetilyItemViewModel : ViewModelBase, IItemViewModel<
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 
     public void SetData(RidDetily value)

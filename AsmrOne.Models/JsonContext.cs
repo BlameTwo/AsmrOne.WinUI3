@@ -38,7 +38,5 @@ namespace AsmrOne.WinUI3.Models;
 [JsonSerializable(typeof(PopularRequest))]
 [JsonSerializable(typeof(TagList))]
 [JsonSerializable(typeof(List<TagList>))]
-[JsonSerializable(typeof(List<VasList>))]
-[JsonSerializable(typeof(VasList))]
 #endregion
 public partial class JsonContext : JsonSerializerContext { }

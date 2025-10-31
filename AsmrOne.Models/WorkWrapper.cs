@@ -1,6 +1,4 @@
-﻿using AsmrOne.WinUI3.Contracts;
-using AsmrOne.WinUI3.Models.AsmrOne;
-using AsmrOne.WinUI3.ViewModels;
+﻿using AsmrOne.WinUI3.Models.AsmrOne;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,8 +13,8 @@ public partial class WorkWrapper : ObservableObject
     [RelayCommand]
     void Invoke()
     {
-        ProgramLife
-            .ServiceProvider.GetKeyedService<INavigationService>(ProgramLife.ShellNavigationKey)
-            .NavigationTo<RidDetilyViewModel>(this.Data.Id.ToString());
+        //ProgramLife
+        //    .ServiceProvider.GetKeyedService<INavigationService>(ProgramLife.ShellNavigationKey)
+        //    .NavigationTo<RidDetilyViewModel>(this.Data.Id.ToString());
     }
 }

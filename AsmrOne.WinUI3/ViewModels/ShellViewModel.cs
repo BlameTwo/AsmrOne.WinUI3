@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ABI.System;
+using AsmrOne.Models.UI;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
@@ -11,7 +12,6 @@ using AsmrOne.WinUI3.Contracts.Services;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.Models.Messagers;
-using AsmrOne.WinUI3.Models.UI;
 using AsmrOne.WinUI3.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -305,6 +305,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     void Loginout()
     {
         AsmrClient.Loginout();
+        GlobalUsing.Token = null;
         this.LoginoutMethod(this, new(true));
         this.DisPlayName = "Login";
     }
@@ -331,8 +332,12 @@ public sealed partial class ShellViewModel : ViewModelBase
             this.IsLogin = true;
         }
         this.Ips = await AsmrClient.GetPingAsync();
-        this.SelectPing = Ips.Where(x => x.Success).First();
-        if (SelectPing == null) { }
+        this.SelectPing = Ips.Where(x => x.Success).FirstOrDefault();
+        if (SelectPing == null)
+        {
+            IsLoading = false;
+            return;
+        }
         else
         {
             this.ShellNavigationService.NavigationTo<HomeViewModel>(nameof(HomeViewModel));
