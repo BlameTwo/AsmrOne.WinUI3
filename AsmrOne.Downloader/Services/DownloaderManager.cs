@@ -35,8 +35,8 @@ public class DownloaderManager : IDownloaderManager
         RJDownload rj = new RJDownload()
         {
             DownloadKey = Guid.NewGuid().ToString("N"),
-                
         };
+        rj.DownloadBase = this.DownloadBasePath;
         await rj.DownloadAsync(downloadValue,this.AsmrClient);
         return rj.DownloadKey;
     }

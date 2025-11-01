@@ -50,6 +50,7 @@ namespace CoreTest
             IAsmrClient client = new AsmrClient();
             IDownloaderManager manager = new DownloaderManager(client);
             client.RegisterClient("asmr.one");
+            manager.DownloadBasePath = "D:\\ASMRDownload";
             var rjId = await client.GetWorksAsync(AsmrOne.WinUI3.Models.AsmrOne.WorkOrder.CreateNew, 1, 1, true);
             var createResult = manager.CreateDownloaderAsync(rjId.Works.First().Id.ToString(), AsmrOne.Models.Enums.DownloadType.RJ);
         }
