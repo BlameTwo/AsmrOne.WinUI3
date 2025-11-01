@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-using Windows.Storage;
+﻿
+global using AsmrOne.Core;
 
+using System.Collections.Generic;
+using Windows.Storage;
 namespace AsmrOne.WinUI3;
 
 public static class GlobalUsing

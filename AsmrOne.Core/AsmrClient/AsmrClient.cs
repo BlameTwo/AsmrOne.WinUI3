@@ -169,6 +169,11 @@ public sealed partial class AsmrClient : IAsmrClient
         this.UserName = item1.User.Name;
     }
 
+    public string GetToken()
+    {
+        return Token;
+    }
+
     public async Task<WorksResponse> GetWorksAsync(
         WorkOrder order,
         int page,

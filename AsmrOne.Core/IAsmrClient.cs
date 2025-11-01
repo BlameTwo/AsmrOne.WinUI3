@@ -60,6 +60,8 @@ public interface IAsmrClient
 
     void RegisterClient(string hostName);
     void SetToken(RegisterReponse token);
+
+    public string GetToken();
     void Loginout();
 
 
