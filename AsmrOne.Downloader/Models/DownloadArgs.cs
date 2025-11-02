@@ -1,11 +1,13 @@
 ﻿using AsmrOne.Models.Enums;
 
-namespace AsmrOne.Downloader;
+namespace AsmrOne.Downloader.Models;
+
+public delegate Task DownloadChangedDelegate(object sender, DownloadArgs args);
 
 /// <summary>
-/// 
+/// 下载事件
 /// </summary>
-public class Handler
+public class DownloadArgs
 {
     /// <summary>
     /// 下载标题
@@ -27,10 +29,17 @@ public class Handler
     /// </summary>
     public bool IsAction { get; set; }
 
-    /// <summary>
-    /// 进度
-    /// </summary>
-    public double Progress { get; set; }
+    public long FileTotal { get; set; } 
+
+    public long FileIndex { get; set; }
+
+    public long FileSize { get; set; }
+
+    public long FileIndexSize { get; set; }
+
+    public long TotalSize { get; set; } 
+
+    public long CurrentSize { get; set; }
 
     /// <summary>
     /// 下载速度

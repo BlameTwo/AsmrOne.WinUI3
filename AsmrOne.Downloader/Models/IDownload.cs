@@ -5,15 +5,22 @@ namespace AsmrOne.Downloader.Models;
 
 public interface IDownload
 {
+    public event DownloadChangedDelegate DownloadChanged;
 
     public string DownloadKey { get;}
 
+    public Task<bool> StartDownloadAsync();
+    
+    public Task<DownloadArgs> GetDownloadStatus();
+
     public DownloadType Type { get; }
 
-    public Task<bool> DownloadAsync(string rjId, IAsmrClient asmrClient);
+    internal Task<bool> DownloadAsync(string rjId, IAsmrClient asmrClient);
 
-    public Task<bool> StopAsync();
+    internal Task<bool> StopAsync();
 
-    public Task<bool> PauseAsync();
+    internal Task<bool> ResumeAsync();
+
+    internal Task<bool> PauseAsync();
 
 }

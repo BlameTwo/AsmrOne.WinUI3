@@ -31,6 +31,7 @@ namespace CoreTest
     public partial class UnitTestApp : Application
     {
         private Window? _window;
+        public static UnitTestAppWindow Window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -45,14 +46,10 @@ namespace CoreTest
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected async override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            IAsmrClient client = new AsmrClient();
-            IDownloaderManager manager = new DownloaderManager(client);
-            client.RegisterClient("asmr.one");
-            manager.DownloadBasePath = "D:\\ASMRDownload";
-            var rjId = await client.GetWorksAsync(AsmrOne.WinUI3.Models.AsmrOne.WorkOrder.CreateNew, 1, 1, true);
-            var createResult = manager.CreateDownloaderAsync(rjId.Works.First().Id.ToString(), AsmrOne.Models.Enums.DownloadType.RJ);
+            Window = new UnitTestAppWindow();
+            Window.Activate();
         }
     }
 }

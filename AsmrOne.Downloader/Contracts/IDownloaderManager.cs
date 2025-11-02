@@ -10,7 +10,7 @@ public interface IDownloaderManager
     /// <summary>
     /// 下载所有源，不要用于UI界面
     /// </summary>
-    public IList<IDownload> DownloadSource { get; }
+    public Dictionary<string,IDownload> DownloadSource { get; }
 
 
     /// <summary>

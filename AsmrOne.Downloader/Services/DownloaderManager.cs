@@ -13,7 +13,7 @@ public class DownloaderManager : IDownloaderManager
         AsmrClient = asmrClient;
         DownloadSource = [];
     }
-    public IList<IDownload> DownloadSource { get; private set; }
+    public Dictionary<string,IDownload> DownloadSource { get; private set; }
     public IAsmrClient AsmrClient { get; }
 
     public string DownloadBasePath { get; set; }
@@ -38,6 +38,7 @@ public class DownloaderManager : IDownloaderManager
         };
         rj.DownloadBase = this.DownloadBasePath;
         await rj.DownloadAsync(downloadValue,this.AsmrClient);
+        this.DownloadSource.Add(rj.DownloadKey,rj);
         return rj.DownloadKey;
     }
 

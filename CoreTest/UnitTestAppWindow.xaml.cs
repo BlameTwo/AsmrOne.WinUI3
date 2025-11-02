@@ -1,4 +1,4 @@
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -23,6 +23,9 @@ namespace CoreTest
         public UnitTestAppWindow()
         {
             InitializeComponent();
+            this.ViewModel = new UnitTestAppViewModel();
         }
+
+        public UnitTestAppViewModel ViewModel { get; }
     }
 }
