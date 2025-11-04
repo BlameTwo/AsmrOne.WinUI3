@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.ViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -29,6 +29,7 @@ namespace AsmrOne.WinUI3.Views
                 new PointerEventHandler(Progress_OnPointerReleased),
                 true
             );
+            this.ViewModel.TipShow.Owner = this.Main;
         }
 
         private void PlaybackSession_PositionChanged(MediaPlaybackSession sender, object args)

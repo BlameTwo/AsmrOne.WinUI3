@@ -235,6 +235,11 @@
                         </NavigationViewItem.Icon>
 
                     </NavigationViewItem>
+                    <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.DownloadViewModel" Content="Downloads">
+                        <NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE896;" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
                     <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.SettingViewModel" Content="Settings">
                         <NavigationViewItem.Icon>
                             <AnimatedIcon>

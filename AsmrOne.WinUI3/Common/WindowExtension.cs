@@ -194,6 +194,18 @@ public static class WindowExtension
         }
         return null;
     }
+
+    public const int SW_SHOWNORMAL = 1;
+
+    [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+    public static extern IntPtr ShellExecute(
+        IntPtr hwnd,
+        string verb,
+        string file,
+        string parameters,
+        string directory,
+        int showCmd
+    );
 }
 
 public static partial class LayerWindowHelper

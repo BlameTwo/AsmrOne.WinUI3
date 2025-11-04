@@ -61,7 +61,6 @@ namespace AsmrOne.WinUI3.Controls
         {
             if (d is ImageControl control)
             {
-                Debug.WriteLine($"IsHideCover changed from {e.OldValue} to {e.NewValue}.");
                 control.Update();
             }
         }

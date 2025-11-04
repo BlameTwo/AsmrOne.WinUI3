@@ -37,7 +37,7 @@ public sealed partial class ShellViewModel : ViewModelBase
             INavigationService shellNavigationService,
         IAudioPlayerService audioPlayerService,
         IAppSetup<App> appSetup,
-        IDataAdaptiveService dataAdaptiveService
+        IDataAdaptiveService dataAdaptiveService,ITipShow tipShow
     )
     {
         AsmrClient = asmrClient;
@@ -47,6 +47,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         AudioPlayerService = audioPlayerService;
         AppSetup = appSetup;
         DataAdaptiveService = dataAdaptiveService;
+        TipShow = tipShow;
         AudioPlayerService.MediaPlayerStatus += AudioPlayerService_MediaPlayerStatus;
         AudioPlayerService.SetDataChanged += AudioPlayerService_SetDataChanged;
         AudioPlayerService.PlayerOpened += AudioPlayerService_PlayerOpened;
@@ -289,6 +290,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public INavigationService ShellNavigationService { get; }
     public IAppSetup<App> AppSetup { get; }
     public IDataAdaptiveService DataAdaptiveService { get; }
+    public ITipShow TipShow { get; }
 
     [ObservableProperty]
     public IAudioPlayerService _AudioPlayerService;

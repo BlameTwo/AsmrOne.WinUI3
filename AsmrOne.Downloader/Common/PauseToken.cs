@@ -30,10 +30,10 @@ public sealed class DownloadState
     public volatile bool _isPaused;
 
     private long _currentBytes;
+    private bool isActive;
 
     public SpeedLimiter SpeedLimiter { get; private set; }
-    public bool IsActive { get; set; }
-    public CancellationToken CancelToken { get; set; }
+    public bool IsActive => isActive;
     public PauseToken PauseToken => new PauseToken(this);
 
     public DownloadState()
@@ -46,6 +46,7 @@ public sealed class DownloadState
     public bool IsPaused => _isPaused;
 
     public bool IsStop { get; internal set; }
+    public CancellationToken CancelToken { get; internal set; }
 
     public async Task SetSpeedLimitAsync(long bytesPerSecond)
     {
@@ -57,12 +58,14 @@ public sealed class DownloadState
     public Task<bool> PauseAsync()
     {
         Volatile.Write(ref _isPaused, true);
+        Volatile.Write(ref isActive, false);
         return Task.FromResult(true);
     }
 
     public Task<bool> ResumeAsync()
     {
         Volatile.Write(ref _isPaused, false);
+        Volatile.Write(ref isActive, true);
         return Task.FromResult(true);
     }
 }

@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Controls\DetiyItem.xaml" />
+    <None Remove="Controls\PopupMessage.xaml" />
     <None Remove="Styles\AdaptiveView.xaml" />
     <None Remove="Styles\Button.xaml" />
     <None Remove="Styles\HeaderTileStyle.xaml" />
@@ -37,6 +38,7 @@
     <None Remove="Styles\Titlebar.xaml" />
     <None Remove="SubtitleWindowBase.xaml" />
     <None Remove="Views\Dialogs\RegisterDialog.xaml" />
+    <None Remove="Views\DownloadPage.xaml" />
     <None Remove="Views\FavouritesPage.xaml" />
     <None Remove="Views\HomePage.xaml" />
     <None Remove="Views\PopularPage.xaml" />
@@ -134,6 +136,12 @@
     <None Update="Assets\icon_256x256.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\DownloadPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Controls\PopupMessage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Styles\NavigationView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

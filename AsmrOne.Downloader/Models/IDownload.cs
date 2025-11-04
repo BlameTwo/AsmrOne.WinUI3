@@ -3,9 +3,22 @@ using AsmrOne.Models.Enums;
 
 namespace AsmrOne.Downloader.Models;
 
-public interface IDownload
+public interface IDownload:IAsyncDisposable
 {
     public event DownloadChangedDelegate DownloadChanged;
+    public event DownloadCompletedDelegate DownloadCompleted;
+    public string TaskName { get; }
+
+    public string DownloadFolder { get; }
+    public string Cover { get; }
+
+    public string DownloadBase { get;  }
+    public string ErrorMessage { get; }
+
+    public bool IsCompleted { get; }
+    public bool IsError { get; }
+    public object Description { get; }
+
 
     public string DownloadKey { get;}
 
@@ -15,12 +28,11 @@ public interface IDownload
 
     public DownloadType Type { get; }
 
-    internal Task<bool> DownloadAsync(string rjId, IAsmrClient asmrClient);
+    public Task<bool> DownloadAsync(object rjId, IAsmrClient asmrClient);
 
-    internal Task<bool> StopAsync();
+    public Task<bool> StopAsync();
 
-    internal Task<bool> ResumeAsync();
+    public Task<bool> ResumeAsync();
 
-    internal Task<bool> PauseAsync();
-
+    public Task<bool> PauseAsync();
 }

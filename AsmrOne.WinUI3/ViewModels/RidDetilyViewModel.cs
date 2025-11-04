@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using AsmrOne.Downloader.Contracts;
+using AsmrOne.Downloader.Models;
 using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Models;
@@ -17,16 +19,22 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
     public IAsmrClient AsmrClient { get; }
     public IDataAdaptiveService DataAdaptiveService { get; }
     public IAudioPlayerService AudioPlayerService { get; }
+    public IDownloaderManager DownloaderManager { get; }
+    public ITipShow TipShow { get; }
 
     public RidDetilyViewModel(
         IAsmrClient asmrClient,
         IDataAdaptiveService dataAdaptiveService,
-        IAudioPlayerService audioPlayerService
+        IAudioPlayerService audioPlayerService,
+        IDownloaderManager downloaderManager,ITipShow tipShow
+        
     )
     {
         AsmrClient = asmrClient;
         DataAdaptiveService = dataAdaptiveService;
         AudioPlayerService = audioPlayerService;
+        DownloaderManager = downloaderManager;
+        TipShow = tipShow;
         RegisterMessager();
     }
 
@@ -56,6 +64,24 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
     private void RegisterMessager()
     {
         this.Messenger.Register<RidDetilySendPlayAudio>(this, RidDetilySendPlayAudioMethod);
+        this.Messenger.Register<DownloadSingleFile>(this, DownloadSingleFileMethod);
+    }
+
+    private async void DownloadSingleFileMethod(object recipient, DownloadSingleFile message)
+    {
+        var downloadKey =  await DownloaderManager.CreateDownloaderAsync(message.DownloadFile, AsmrOne.Models.Enums.DownloadType.File);
+        switch (downloadKey)
+        {
+            case DownloadErrorCode.Success:
+                TipShow.ShowMessage($"任务创建成功，请在下载页面查看", Microsoft.UI.Xaml.Controls.Symbol.Accept);
+                break;
+            case DownloadErrorCode.MaxTaskError:
+                TipShow.ShowMessage("最多可以创建2个同时下载任务", Microsoft.UI.Xaml.Controls.Symbol.Clear);
+                break;
+            case DownloadErrorCode.OwnerError:
+                TipShow.ShowMessage("其他错误", Microsoft.UI.Xaml.Controls.Symbol.Clear);
+                break;
+        }
     }
 
     private void RidDetilySendPlayAudioMethod(object recipient, RidDetilySendPlayAudio message)
@@ -140,5 +166,23 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
         }
         this.AudioDatas.Clear();
         base.Dispose();
+    }
+
+    [RelayCommand]
+    public async Task CreateDownload()
+    {
+        var downloadKey =  await DownloaderManager.CreateDownloaderAsync(this.Detily.Id.ToString(), AsmrOne.Models.Enums.DownloadType.RJ);
+        switch (downloadKey)
+        {
+            case DownloadErrorCode.Success:
+                TipShow.ShowMessage($"任务创建成功，请在下载页面查看", Microsoft.UI.Xaml.Controls.Symbol.Accept);
+                break;
+            case DownloadErrorCode.MaxTaskError:
+                TipShow.ShowMessage("最多可以创建2个同时下载任务", Microsoft.UI.Xaml.Controls.Symbol.Clear);
+                break;
+            case DownloadErrorCode.OwnerError:
+                TipShow.ShowMessage("其他错误", Microsoft.UI.Xaml.Controls.Symbol.Clear);
+                break;
+        }
     }
 }

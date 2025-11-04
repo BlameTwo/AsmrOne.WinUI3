@@ -1,18 +1,20 @@
-﻿using System;
+﻿using AsmrOne.WinUI3.Common;
+using AsmrOne.WinUI3.Common.NotifyIcon;
+using AsmrOne.WinUI3.Controls;
+using AsmrOne.WinUI3.Views;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AsmrOne.WinUI3.Common;
-using AsmrOne.WinUI3.Common.NotifyIcon;
-using AsmrOne.WinUI3.Controls;
-using AsmrOne.WinUI3.Views;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
 using WinUIEx;
 
 namespace AsmrOne.WinUI3.Contracts.Services
@@ -102,6 +104,39 @@ namespace AsmrOne.WinUI3.Contracts.Services
         {
             args.Cancel = true;
             this.MainWindow.Hide();
+        }
+
+        public async Task TryInvokeAsync(Func<Task> func)
+        {
+            await SafeInvokeAsync(
+                this.App.Window.DispatcherQueue,
+                func,
+                priority: Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal
+            )
+            .ConfigureAwait(false);
+        }
+
+        async Task SafeInvokeAsync(
+        DispatcherQueue dispatcher,
+        Func<Task> action,
+        DispatcherQueuePriority priority = DispatcherQueuePriority.Normal
+        )
+        {
+            try
+            {
+                if (dispatcher.HasThreadAccess)
+                {
+                    await action().ConfigureAwait(false);
+                }
+                else
+                {
+                    await dispatcher.EnqueueAsync(action, priority).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"UI操作失败: {ex.Message}");
+            }
         }
     }
 }

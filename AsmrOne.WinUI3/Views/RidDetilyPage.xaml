@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="AsmrOne.WinUI3.Views.RidDetilyPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -57,7 +57,7 @@
                     Grid.Column="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-                    <Button Style="{ThemeResource TransparentButtonStyle}">
+                    <Button Command="{x:Bind SendDownloadSingleCommand}" Style="{ThemeResource TransparentButtonStyle}">
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="15"
@@ -88,7 +88,7 @@
                     Grid.Column="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-                    <Button Style="{ThemeResource TransparentButtonStyle}">
+                    <Button Command="{x:Bind SendDownloadSingleCommand}" Style="{ThemeResource TransparentButtonStyle}">
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="15"
@@ -125,7 +125,7 @@
                     Grid.Column="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-                    <Button Style="{ThemeResource TransparentButtonStyle}">
+                    <Button Command="{x:Bind SendDownloadSingleCommand}" Style="{ThemeResource TransparentButtonStyle}">
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="15"
@@ -156,7 +156,7 @@
                     Grid.Column="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-                    <Button Style="{ThemeResource TransparentButtonStyle}">
+                    <Button Command="{x:Bind SendDownloadSingleCommand}" Style="{ThemeResource TransparentButtonStyle}">
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="15"
@@ -304,6 +304,15 @@
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE712;" />
                         </StackPanel>
+                        <Button.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{x:Bind ViewModel.CreateDownloadCommand}" Text="下载">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="Download" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Button.Flyout>
                     </Button>
                 </StackPanel>
             </StackPanel>

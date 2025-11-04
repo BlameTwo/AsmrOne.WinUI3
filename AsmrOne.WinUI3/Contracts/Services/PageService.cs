@@ -21,6 +21,7 @@ public sealed partial class PageService : IPageService
         RegisterView<PopularPage, PopularViewModel>();
         RegisterView<TestPage, TestViewModel>();
         RegisterView<SearchPage, SearchViewModel>();
+        RegisterView<DownloadPage, DownloadViewModel>();
     }
 
     public Type GetPage(string key)

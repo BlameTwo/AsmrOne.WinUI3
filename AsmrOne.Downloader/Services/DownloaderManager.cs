@@ -1,5 +1,4 @@
 ﻿using AsmrOne.Core;
-using AsmrOne.Downloader.Common;
 using AsmrOne.Downloader.Contracts;
 using AsmrOne.Downloader.Models;
 using AsmrOne.Models.Enums;
@@ -18,19 +17,31 @@ public class DownloaderManager : IDownloaderManager
 
     public string DownloadBasePath { get; set; }
 
-    public async Task<string> CreateDownloaderAsync(string downloadValue, DownloadType downloadType)
+    public async Task<int> CreateDownloaderAsync(object downloadValue, DownloadType downloadType)
     {
-        if(downloadType == DownloadType.File)
+        try
         {
-            return await CreateFileAsync(downloadValue);
+            if (this.DownloadSource.Where(x=>x.Value.IsCompleted == false).Count() >= 2)
+            {
+                return DownloadErrorCode.MaxTaskError;
+            }
+            if (downloadType == DownloadType.File)
+            {
+                await CreateFileAsync(downloadValue);
+            }
+            else
+            {
+                await CreateRJAsync(downloadValue);
+            }
+            return DownloadErrorCode.Success;
         }
-        else
+        catch (Exception)
         {
-            return await CreateRJAsync(downloadValue);
+            return DownloadErrorCode.OwnerError;
         }
     }
 
-    private async Task<string> CreateRJAsync(string downloadValue)
+    private async Task<string> CreateRJAsync(object downloadValue)
     {
         RJDownload rj = new RJDownload()
         {
@@ -42,9 +53,16 @@ public class DownloaderManager : IDownloaderManager
         return rj.DownloadKey;
     }
 
-    private async Task<string> CreateFileAsync(string downloadValue)
+    private async Task<string> CreateFileAsync(object downloadValue)
     {
-        throw new NotImplementedException();
+        FileDownload fj = new FileDownload()
+        {
+            DownloadKey = Guid.NewGuid().ToString("N")
+        };
+        fj.DownloadBase = this.DownloadBasePath;
+        await fj.DownloadAsync(downloadValue, this.AsmrClient);
+        this.DownloadSource.Add(fj.DownloadKey, fj);
+        return fj.DownloadKey;
     }
 
     public Task PauseDownloadAsync(string downloadKey, CancellationToken token = default)
@@ -60,5 +78,16 @@ public class DownloaderManager : IDownloaderManager
     public Task StopDownloadAsync(string downloadKey, CancellationToken token = default)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task DeleteTaskAsync(string downloadKey)
+    {
+        if(DownloadSource.TryGetValue(downloadKey, out var task))
+        {
+            await task.StopAsync();
+            await task.DisposeAsync();
+            DownloadSource.Remove(downloadKey);
+        }
+        
     }
 }

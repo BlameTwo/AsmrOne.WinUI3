@@ -1,6 +1,8 @@
 ﻿using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Common.NotifyIcon;
 using Microsoft.UI.Xaml;
+using System;
+using System.Threading.Tasks;
 
 namespace AsmrOne.WinUI3.Contracts
 {
@@ -16,5 +18,7 @@ namespace AsmrOne.WinUI3.Contracts
 
         public void RegisterSubtitleWindow(SubtitleWindowBase window);
         void DisponseSubtitle();
+
+        public Task TryInvokeAsync(Func<Task> func);
     }
 }

@@ -19,7 +19,7 @@ public interface IDownloaderManager
     /// <param name="downloadValue">下载参数</param>
     /// <param name="downloadType">下载类型</param>
     /// <returns></returns>
-    public Task<string> CreateDownloaderAsync(string downloadValue, DownloadType downloadType);
+    public Task<int> CreateDownloaderAsync(object downloadValue, DownloadType downloadType);
 
     public Task StartDownloadAsync(string downloadKey, CancellationToken token = default);
 
@@ -27,4 +27,5 @@ public interface IDownloaderManager
 
 
     public Task StopDownloadAsync(string downloadKey,CancellationToken token = default);
+    Task DeleteTaskAsync(string downloadKey);
 }

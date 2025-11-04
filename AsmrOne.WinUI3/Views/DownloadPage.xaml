@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AsmrOne.WinUI3.Views.DownloadPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:it="using:AsmrOne.WinUI3.ViewModels.ItemViewModels"
+    xmlns:local="using:AsmrOne.WinUI3.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:AsmrOne.WinUI3.Controls"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <i:EventTriggerBehavior EventName="Loaded">
+            <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+        </i:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+            <Button Command="{x:Bind ViewModel.RefreshDataCommand}">
+                <FontIcon
+                    FontFamily="Segoe Fluent Icons"
+                    FontSize="12"
+                    Glyph="&#xE72C;" />
+            </Button>
+            <Button Margin="5,0,0,0" Command="{x:Bind ViewModel.DeleteSelectCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="12"
+                        Glyph="&#xE74D;" />
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Text="移除选中任务" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <ScrollView Grid.Row="1">
+            <ItemsControl ItemsSource="{x:Bind ViewModel.Downloads, Mode=OneWay}">
+                <ItemsControl.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition />
+                        <AddDeleteThemeTransition />
+                    </TransitionCollection>
+                </ItemsControl.ItemContainerTransitions>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="it:DownloadIItemViewModel">
+                        <Grid
+                            Margin="0,5,0,0"
+                            Padding="10"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <i:Interaction.Behaviors>
+                                <i:EventTriggerBehavior EventName="Loaded">
+                                    <i:InvokeCommandAction Command="{x:Bind LoadedCommand}" />
+                                </i:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox IsChecked="{x:Bind IsSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                MaxWidth="600"
+                                Margin="30,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{x:Bind Title, Mode=OneWay}"
+                                TextTrimming="WordEllipsis" />
+                            <StackPanel
+                                Grid.Column="2"
+                                HorizontalAlignment="Right"
+                                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource AccentAAFillColorDisabled}"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Orientation="Horizontal">
+                                <Button
+                                    Command="{x:Bind StartDownloadCommand}"
+                                    Style="{ThemeResource TransparentButtonStyle}"
+                                    Visibility="{x:Bind DownloadingVisibility, Mode=OneWay}">
+                                    <FontIcon
+                                        FontFamily="Segoe Fluent Icons"
+                                        FontSize="12"
+                                        Glyph="{x:Bind ActionIcon, Mode=OneWay}" />
+                                </Button>
+                                <Button
+                                    Command="{x:Bind StopCommand}"
+                                    Style="{ThemeResource TransparentButtonStyle}"
+                                    Visibility="{x:Bind DownloadingVisibility, Mode=OneWay}">
+                                    <FontIcon
+                                        FontFamily="Segoe Fluent Icons"
+                                        FontSize="12"
+                                        Glyph="&#xE71A;" />
+                                </Button>
+                                <Button
+                                    Command="{x:Bind ShowFolderCommand}"
+                                    Style="{ThemeResource TransparentButtonStyle}"
+                                    Visibility="{x:Bind CompletedVisibility, Mode=OneWay}">
+                                    <FontIcon
+                                        FontFamily="Segoe Fluent Icons"
+                                        FontSize="12"
+                                        Glyph="&#xE8D5;" />
+                                </Button>
+                            </StackPanel>
+                            <TextBlock
+                                Grid.Row="1"
+                                Margin="0,10,0,0"
+                                FontSize="10">
+                                <Run Text="文件下载进度:" />
+                                <Run Text="[" />
+                                <Run Text="{x:Bind CurrentIndex, Mode=OneWay}" />
+                                <Run Text="/" />
+                                <Run Text="{x:Bind TotalCount, Mode=OneWay}" />
+                                <Run Text="]" />
+                            </TextBlock>
+                            <ProgressBar
+                                Grid.Row="2"
+                                Grid.ColumnSpan="2"
+                                Maximum="{x:Bind DownloadFileTotalSize, Mode=OneWay}"
+                                Value="{x:Bind CurrentFileTotalSize, Mode=OneWay}" />
+                            <TextBlock
+                                Grid.Row="3"
+                                FontSize="10"
+                                Text="总体下载进度" />
+                            <ProgressBar
+                                Grid.Row="4"
+                                Grid.ColumnSpan="2"
+                                Maximum="{x:Bind DownloadTotalSize, Mode=OneWay}"
+                                Value="{x:Bind CurrentTotalSize, Mode=OneWay}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Right"
+                                FontSize="18"
+                                FontWeight="Bold">
+                                <Run Text="{x:Bind Progress, Mode=OneWay}" />
+                                <Run Text="%" />
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollView>
+    </Grid>
+</Page>

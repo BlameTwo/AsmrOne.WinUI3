@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AsmrOne.Downloader.Contracts;
+using AsmrOne.Downloader.Services;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Contracts.Services;
 using AsmrOne.WinUI3.Contracts.Services.Adaptives;
@@ -19,6 +21,8 @@ namespace AsmrOne.WinUI3
     {
         public const string ShellNavigationKey = "ShellNavigationKey";
         public static IServiceProvider ServiceProvider { get; private set; }
+
+        public static string DownloadPath => Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic) + "\\AsmrDownload";
 
         public static void InitService()
         {
@@ -52,6 +56,7 @@ namespace AsmrOne.WinUI3
                 .AddTransient<PopularViewModel>()
                 .AddTransient<TestViewModel>()
                 .AddTransient<SearchViewModel>()
+                .AddTransient<DownloadViewModel>()
                 #endregion
                 #region ItemVM
                 .AddTransient<DetilyItemViewModel>()
@@ -60,7 +65,11 @@ namespace AsmrOne.WinUI3
                 .AddTransient<RegisterDialog>()
                 .AddTransient<RegisterViewModel>()
                 #endregion
+                .AddSingleton<IDownloaderManager,DownloaderManager>()
+                .AddSingleton<ITipShow,TipShow>()
                 .BuildServiceProvider();
+            System.IO.Directory.CreateDirectory(DownloadPath);
+            ServiceProvider.GetService<IDownloaderManager>().DownloadBasePath = DownloadPath;
         }
 
         public static T GetService<T>()

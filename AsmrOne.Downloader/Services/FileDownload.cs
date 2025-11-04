@@ -1,20 +1,13 @@
-﻿using System.Buffers;
-using System.Diagnostics;
-using System.Formats.Asn1;
-using System.IO;
-using System.IO.Pipes;
-using System.Net.Http.Headers;
-using AsmrOne.Core;
-using AsmrOne.Core.Common;
+﻿using AsmrOne.Core;
 using AsmrOne.Downloader.Common;
 using AsmrOne.Downloader.Models;
 using AsmrOne.Models.Enums;
 using AsmrOne.WinUI3.Models.AsmrOne;
-using CommunityToolkit.Mvvm.Input;
+using System.Buffers;
+using System.Web;
 
 namespace AsmrOne.Downloader.Services;
-
-internal partial class RJDownload : IDownload
+internal partial class FileDownload : IDownload
 {
     const long UpdateThreshold = 1048576; // 1MB进度更新阈值
 
@@ -87,40 +80,47 @@ internal partial class RJDownload : IDownload
 
     public async Task<bool> DownloadAsync(object rjId, IAsmrClient asmrClient)
     {
-        if(rjId is not string str)
-        {
-            return false;
-        }
         try
         {
+            if (rjId is not Child child)
+            {
+                return false;
+            }
             if (_cts != null)
             {
                 _cts.Cancel();
                 _cts.Dispose();
             }
             _downloadState = new DownloadState();
-            RJID = str;
+            this.RJID = child.Title;
             var httpClientHandler = new HttpClientHandler();
             httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-
+            
             _httpClient = new HttpClient(httpClientHandler);
-            var work = await asmrClient.GetWorkAsync(RJID);
-            var audios = await asmrClient.GetWorkAudioAsync(RJID);
-            if (audios.Item1 == null || work.Item1 == null)
+            var downloadBase = child.MediaDownloadUrl;
+            var downloadPath = HttpUtility.UrlDecode((DownloadBase + "\\" + RJID));
+            var uri = new Uri(downloadBase);
+            var fileName = Path.GetFileName(HttpUtility.UrlDecode(downloadPath));
+            var item =  new DownloadItemSource()
             {
-                return false;
-            }
-            AudioSource = audios.Item1.GetDownloadItemSource(DownloadBase);
-            TotalCount = AudioSource.Count;
-            TaskName = work.Item1.Title;
-            Cover = work.Item1.SamCoverUrl;
-            TaskName = work.Item1.Title;
-            Description = work.Item1.ReviewText;
-            DownloadTotalSize = AudioSource.Sum(x => x.Size);
-            _token = asmrClient.GetToken();
-            DownloadFolder = DownloadBase + $"\\{work.Item1.SourceId}";
-            Status = DownloadStatus.Create;
-            await _downloadState.PauseAsync();
+                ClientPath = downloadPath,
+                DownloadUrl = downloadBase,
+                DisplayName = fileName,
+                Size = child.Size,
+                MD5 = child.Hash,
+                FileType = child.Type,
+            };
+            this.AudioSource = [item];
+            this.TotalCount = 1;
+            this.TaskName = child.MediaDownloadUrl;
+            this.Cover = child.MediaDownloadUrl;
+            this.TaskName = child.Title;
+            this.Description = child.MediaDownloadUrl;
+            this.DownloadTotalSize = AudioSource.Sum(x => x.Size);
+            this._token = asmrClient.GetToken();
+            this.DownloadFolder = DownloadBase;
+            this.Status = DownloadStatus.Create;
+            await this._downloadState.PauseAsync();
             await StartDownloadAsync();
             return true;
         }
@@ -141,7 +141,7 @@ internal partial class RJDownload : IDownload
             CurrentFileTotalSize += bytesRead;
             CurrentTotalSize += bytesRead;
         }
-        if (downloadChanged != null)
+        if (this.downloadChanged != null)
         {
             await downloadChanged
                 .Invoke(
@@ -149,14 +149,14 @@ internal partial class RJDownload : IDownload
                     new DownloadArgs()
                     {
                         Title = TaskName,
-                        Status = Status,
-                        DownloadTotalSize = DownloadTotalSize,
-                        CurrentTotalSize = CurrentTotalSize,
-                        CurrentIndex = CurrentIndex,
-                        TotalCount = TotalCount,
-                        DownloadKey = DownloadKey,
-                        CurrentFileTotalSize = CurrentFileTotalSize,
-                        DownloadFileTotalSize = DownloadFileTotalSize,
+                        Status = this.Status,
+                        DownloadTotalSize = this.DownloadTotalSize,
+                        CurrentTotalSize = this.CurrentTotalSize,
+                        CurrentIndex = this.CurrentIndex,
+                        TotalCount = this.TotalCount,
+                        DownloadKey = this.DownloadKey,
+                        CurrentFileTotalSize = this.CurrentFileTotalSize,
+                        DownloadFileTotalSize = this.DownloadFileTotalSize,
                     }
                 )
                 .ConfigureAwait(false);
@@ -181,8 +181,8 @@ internal partial class RJDownload : IDownload
         {
             await _cts.CancelAsync();
             _downloadState = new DownloadState();
-            DownloadTotalSize = 0;
-            CurrentTotalSize = 0;
+            this.DownloadTotalSize = 0;
+            this.CurrentTotalSize = 0;
             DownloadFileTotalSize = 0;
             CurrentFileTotalSize = 0;
             TotalCount = 0;
@@ -204,21 +204,21 @@ internal partial class RJDownload : IDownload
         {
             try
             {
-                DownloadTotalSize = AudioSource.Sum(x => x.Size);
+                this.DownloadTotalSize = AudioSource.Sum(x => x.Size);
                 CurrentTotalSize = 0;
                 CurrentIndex = 0;
                 await _downloadState.ResumeAsync();
                 TotalCount = AudioSource.Count;
                 DownloadFileTotalSize = 0;
                 var memoryPool = ArrayPool<byte>.Shared;
-                for (int i = 0; i < AudioSource.Count; i++)
+                for (int i = 0; i < this.AudioSource.Count; i++)
                 {
                     CurrentFileTotalSize = 0;
                     DownloadFileTotalSize = AudioSource[i].Size;
                     CurrentIndex = i + 1;
                     var baseFolder = Path.GetDirectoryName(AudioSource[i].ClientPath);
                     Directory.CreateDirectory(baseFolder);
-                    if (_cts.IsCancellationRequested)
+                    if (this._cts.IsCancellationRequested)
                         throw new OperationCanceledException();
                     if (File.Exists(AudioSource[i].ClientPath))
                     {
@@ -232,7 +232,7 @@ internal partial class RJDownload : IDownload
                         262144,
                         true
                     );
-                    await _downloadState.PauseToken.WaitIfPausedAsync();
+                    await this._downloadState.PauseToken.WaitIfPausedAsync();
                     var request = new HttpRequestMessage(
                         HttpMethod.Get,
                         AudioSource[i].DownloadUrl
@@ -292,7 +292,7 @@ internal partial class RJDownload : IDownload
                     await fs.FlushAsync();
                 }
                 IsCompleted = true;
-                if (downloadCompleted != null)
+                if (this.downloadCompleted != null)
                 {
                     await downloadCompleted
                         .Invoke(this, await GetDownloadStatus())
@@ -303,10 +303,10 @@ internal partial class RJDownload : IDownload
             catch (Exception ex)
             {
                 IsCompleted = false;
-                IsError = true;
-                ErrorMessage = ex.Message;
+                this.IsError = true;
+                this.ErrorMessage = ex.Message;
                 await StopAsync();
-                if(downloadCompleted != null)
+                if (downloadCompleted != null)
                 {
                     await downloadCompleted
                         .Invoke(this, await GetDownloadStatus())
@@ -329,20 +329,20 @@ internal partial class RJDownload : IDownload
             {
                 Title = TaskName,
                 Description = "",
-                Status = Status,
-                DownloadTotalSize = DownloadTotalSize,
-                CurrentTotalSize = CurrentTotalSize,
-                CurrentIndex = CurrentIndex,
-                TotalCount = TotalCount,
-                DownloadKey = DownloadKey,
-                
-                CurrentFileTotalSize = CurrentFileTotalSize,
-                DownloadFileTotalSize = DownloadFileTotalSize,
-                IsPause = _downloadState?.IsPaused,
-                IsAction = _downloadState?.IsActive,
-                IsCompleted = IsCompleted,
-                IsError = IsError,
-                ErrorMessage = ErrorMessage,
+                Status = this.Status,
+                DownloadTotalSize = this.DownloadTotalSize,
+                CurrentTotalSize = this.CurrentTotalSize,
+                CurrentIndex = this.CurrentIndex,
+                TotalCount = this.TotalCount,
+                DownloadKey = this.DownloadKey,
+
+                CurrentFileTotalSize = this.CurrentFileTotalSize,
+                DownloadFileTotalSize = this.DownloadFileTotalSize,
+                IsPause = this._downloadState?.IsPaused,
+                IsAction = this._downloadState?.IsActive,
+                IsCompleted = this.IsCompleted,
+                IsError = this.IsError,
+                ErrorMessage = this.ErrorMessage,
             }
         );
     }
@@ -354,3 +354,4 @@ internal partial class RJDownload : IDownload
         AudioSource.Clear();
     }
 }
+

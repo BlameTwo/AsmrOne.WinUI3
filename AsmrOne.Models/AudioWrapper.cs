@@ -28,6 +28,12 @@ namespace AsmrOne.WinUI3.Models
 
         [ObservableProperty]
         Child child;
+
+        [RelayCommand]
+        public void SendDownloadSingle()
+        {
+            WeakReferenceMessenger.Default.Send<DownloadSingleFile>(new(Child));
+        }
     }
 
     public sealed partial class ImageWrapper : FileWrapper, IAudioDataWrapper

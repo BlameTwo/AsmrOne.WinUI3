@@ -1,4 +1,6 @@
-﻿namespace AsmrOne.WinUI3.Models.Messagers.ItemMessangers;
+﻿using AsmrOne.WinUI3.Models.AsmrOne;
+
+namespace AsmrOne.WinUI3.Models.Messagers.ItemMessangers;
 
 public class RidDetilySendPlayAudio
 {
@@ -8,4 +10,14 @@ public class RidDetilySendPlayAudio
     {
         Audio = audio;
     }
+}
+
+public class DownloadSingleFile
+{
+    public DownloadSingleFile(Child downloadFile)
+    {
+        DownloadFile = downloadFile;
+    }
+
+    public Child DownloadFile { get; }
 }
