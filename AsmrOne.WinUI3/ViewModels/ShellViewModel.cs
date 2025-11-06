@@ -35,7 +35,6 @@ public sealed partial class ShellViewModel : ViewModelBase
             INavigationViewService shellNavigationViewService,
         [FromKeyedServices(ProgramLife.ShellNavigationKey)]
             INavigationService shellNavigationService,
-        IAudioPlayerService audioPlayerService,
         IAppSetup<App> appSetup,
         IDataAdaptiveService dataAdaptiveService,ITipShow tipShow
     )
@@ -44,13 +43,9 @@ public sealed partial class ShellViewModel : ViewModelBase
         DialogManager = dialogManager;
         ShellNavigationViewService = shellNavigationViewService;
         ShellNavigationService = shellNavigationService;
-        AudioPlayerService = audioPlayerService;
         AppSetup = appSetup;
         DataAdaptiveService = dataAdaptiveService;
         TipShow = tipShow;
-        AudioPlayerService.MediaPlayerStatus += AudioPlayerService_MediaPlayerStatus;
-        AudioPlayerService.SetDataChanged += AudioPlayerService_SetDataChanged;
-        AudioPlayerService.PlayerOpened += AudioPlayerService_PlayerOpened;
         shellNavigationService.Navigated += ShellNavigationService_Navigated;
         RegisterMessager();
         this.IsAutosubtitle = GlobalUsing.IsAutoSubtitle;
@@ -187,7 +182,6 @@ public sealed partial class ShellViewModel : ViewModelBase
         SetSubtitle(message);
     }
 
-    private void AudioPlayerService_PlayerOpened(object sender, MediaPlaybackSession data) { }
 
     async partial void OnSelectSubtitleChanged(ShellSubtitleItem value)
     {
@@ -196,7 +190,6 @@ public sealed partial class ShellViewModel : ViewModelBase
             return;
         }
         var subTitle = await AsmrClient.Client.GetStringAsync(value.DownloadUrl);
-        AudioPlayerService.SubtitleService.SetSubtitle(subTitle);
     }
 
     partial void OnIsAutosubtitleChanged(bool value)
@@ -250,30 +243,6 @@ public sealed partial class ShellViewModel : ViewModelBase
         }
     }
 
-    private void AudioPlayerService_SetDataChanged(object sender, Models.AsmrOne.RidDetily child)
-    {
-        this.PlayVisibility = Visibility.Visible;
-        this.Cover = new BitmapImage(new System.Uri(child.ThumbnailCoverUrl));
-    }
-
-    private void AudioPlayerService_MediaPlayerStatus(
-        Windows.Media.Playback.MediaPlayer player,
-        Windows.Media.Playback.MediaPlaybackState status
-    )
-    {
-        AppSetup.MainWindow.DispatcherQueue.TryEnqueue(() =>
-        {
-            this.StartGlyph = status
-                is MediaPlaybackState.None
-                    or MediaPlaybackState.Opening
-                    or MediaPlaybackState.Paused
-                ? "\uE102"
-                : "\uE103";
-            this.Loading = status == MediaPlaybackState.Buffering ? true : false;
-            MaxDuration = player.NaturalDuration.TotalSeconds;
-            MaxDurationString = player.NaturalDuration.ToString("hh\\:mm\\:ss");
-        });
-    }
 
     [ObservableProperty]
     ObservableCollection<PingResult> ips;
@@ -292,8 +261,6 @@ public sealed partial class ShellViewModel : ViewModelBase
     public IDataAdaptiveService DataAdaptiveService { get; }
     public ITipShow TipShow { get; }
 
-    [ObservableProperty]
-    public IAudioPlayerService _AudioPlayerService;
 
     [ObservableProperty]
     bool isLoading;
@@ -350,6 +317,5 @@ public sealed partial class ShellViewModel : ViewModelBase
     [RelayCommand]
     void Switch()
     {
-        AudioPlayerService.Switch();
     }
 }

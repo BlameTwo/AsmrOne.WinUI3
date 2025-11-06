@@ -39,9 +39,7 @@ namespace AsmrOne.WinUI3
                 .AddSingleton<IDialogManager, DialogManager>()
                 .AddSingleton<IAsmrClient, AsmrClient>()
                 .AddTransient<IDataFactory, DataFactory>()
-                .AddTransient<IAudioManager, AudioManager>()
                 .AddTransient<IDataAdaptiveService, DataAdaptiveService>()
-                .AddSingleton<IAudioPlayerService, AudioPlayerService>()
                 .AddSingleton<ISubtitleService, SubtitleService>()
                 #endregion
                 #region View And ViewModel

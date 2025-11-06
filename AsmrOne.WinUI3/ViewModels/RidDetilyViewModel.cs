@@ -18,21 +18,18 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
 {
     public IAsmrClient AsmrClient { get; }
     public IDataAdaptiveService DataAdaptiveService { get; }
-    public IAudioPlayerService AudioPlayerService { get; }
     public IDownloaderManager DownloaderManager { get; }
     public ITipShow TipShow { get; }
 
     public RidDetilyViewModel(
         IAsmrClient asmrClient,
         IDataAdaptiveService dataAdaptiveService,
-        IAudioPlayerService audioPlayerService,
         IDownloaderManager downloaderManager,ITipShow tipShow
         
     )
     {
         AsmrClient = asmrClient;
         DataAdaptiveService = dataAdaptiveService;
-        AudioPlayerService = audioPlayerService;
         DownloaderManager = downloaderManager;
         TipShow = tipShow;
         RegisterMessager();
@@ -86,7 +83,6 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
 
     private void RidDetilySendPlayAudioMethod(object recipient, RidDetilySendPlayAudio message)
     {
-        AudioPlayerService.Player(message.Audio, this.Detily);
     }
 
     [ObservableProperty]

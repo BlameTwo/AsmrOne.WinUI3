@@ -11,7 +11,6 @@ namespace AsmrOne.WinUI3.ViewModels;
 
 public sealed partial class RidPlayerViewModel : ViewModelBase
 {
-    public IAudioPlayerService AudioPlayerService => ProgramLife.GetService<IAudioPlayerService>();
 
     public IAsmrClient AsmrClient => ProgramLife.GetService<IAsmrClient>();
 
@@ -28,14 +27,6 @@ public sealed partial class RidPlayerViewModel : ViewModelBase
 
     public async Task RefreshAsync()
     {
-        if (AudioPlayerService.AudioManager.Detily == null)
-        {
-            return;
-        }
-        this.Detily = AudioPlayerService.AudioManager.Detily;
-        this.Tracks = DataAdaptiveService.GetAudioData(
-            (await AsmrClient.GetWorkAudioAsync(Detily.Id.ToString(), this.CTS.Token)).Item1,
-            Detily
-        );
+        
     }
 }

@@ -34,41 +34,20 @@ namespace AsmrOne.WinUI3.Views
 
         private void PlaybackSession_PositionChanged(MediaPlaybackSession sender, object args)
         {
-            if (this.DispatcherQueue == null)
-                return;
-            this.DispatcherQueue.TryEnqueue(() =>
-            {
-                if (ViewModel.AudioPlayerService.IsDrag)
-                    return;
-                _progressSlider.Value = sender.Position.TotalSeconds;
-                this.nowDuration.Text = sender.Position.ToString("hh\\:mm\\:ss");
-            });
+            
         }
 
         private void Progress_OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            ViewModel.AudioPlayerService.IsDrag = false;
-            if (ViewModel.AudioPlayerService.Element.MediaPlayer == null)
-                return;
-            ViewModel.AudioPlayerService.Element.MediaPlayer.Position = new TimeSpan(
-                0,
-                0,
-                (int)(sender as Slider).Value
-            );
         }
 
         private void Progress_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            ViewModel.AudioPlayerService.IsDrag = true;
         }
 
         private void ShellPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             ProgramLife.ServiceProvider.GetService<IDialogManager>().SetRoot(this.XamlRoot);
-            this.ViewModel.AudioPlayerService.RegisterElement(this.element);
-
-            this.ViewModel.AudioPlayerService.Element.MediaPlayer.PlaybackSession.PositionChanged +=
-                PlaybackSession_PositionChanged;
         }
 
         public ShellViewModel ViewModel { get; }
@@ -86,7 +65,7 @@ namespace AsmrOne.WinUI3.Views
             double mappedValue =
                 mappedMinValue
                 + (mappedMaxValue - mappedMinValue) * (newValue - minValue) / (maxValue - minValue);
-            ViewModel.AudioPlayerService.Element.MediaPlayer.Volume = (double)mappedValue;
+            //ViewModel.AudioPlayerService.Element.MediaPlayer.Volume = (double)mappedValue;
         }
 
         private void view_DisplayModeChanged(
@@ -109,15 +88,5 @@ namespace AsmrOne.WinUI3.Views
             view.IsPaneOpen = !view.IsPaneOpen;
         }
 
-        private async void converButton_Click(object sender, RoutedEventArgs e)
-        {
-            (this.Resources["ShowRidBar"] as Storyboard).Begin();
-            await this.ViewModel.RidPlayerViewModel.RefreshAsync();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            (this.Resources["CloseRidBar"] as Storyboard).Begin();
-        }
     }
 }

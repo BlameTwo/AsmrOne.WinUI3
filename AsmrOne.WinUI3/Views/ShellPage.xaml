@@ -299,7 +299,6 @@
                     Width="200"
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
-                    Click="converButton_Click"
                     Style="{ThemeResource TransparentButtonStyle}">
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -388,6 +387,19 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
+                    <Button Style="{ThemeResource TransparentButtonStyle}">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="15"
+                            Glyph="&#xEA37;" />
+                        <Button.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <RadioMenuFlyoutItem Text="单曲循环" />
+                                <RadioMenuFlyoutItem Text="列表循环" />
+                                <RadioMenuFlyoutItem Text="随机播放" />
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
                     <Button VerticalAlignment="Center" Style="{ThemeResource TransparentButtonStyle}">
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
@@ -458,25 +470,6 @@
                 Visibility="Collapsed"
                 Visibility="Visible"
             -->
-            <Grid
-                x:Name="ridPlayerControl"
-                Grid.RowSpan="2"
-                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                Opacity="0"
-                Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Button
-                    Margin="10,10,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Click="Button_Click">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE76B;" />
-                </Button>
-                <view:RidPlayerControl Grid.Row="1" ViewModel="{x:Bind ViewModel.RidPlayerViewModel}" />
-            </Grid>
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="ShellWindowStatus">
                     <VisualState x:Name="ShellMaxStatus">
