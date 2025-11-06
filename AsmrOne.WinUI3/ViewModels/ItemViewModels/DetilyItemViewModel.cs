@@ -13,26 +13,29 @@ namespace AsmrOne.WinUI3.ViewModels.ItemViewModels;
 
 public sealed partial class DetilyItemViewModel : ViewModelBase, IItemViewModel<RidDetily>
 {
-    [ObservableProperty]
-    string cover;
+    [ObservableProperty] 
+    public partial string Cover { get; set; }
+
+    [ObservableProperty] 
+    public partial long Id { get; set; }
+
+    [ObservableProperty] 
+    public partial string Title { get; set; }
+
+    [ObservableProperty] 
+    public partial string Name { get; set; }
 
     [ObservableProperty]
-    long id;
+    public partial string Money { get; set; }
 
     [ObservableProperty]
-    string title;
+    public partial ObservableCollection<Tag> Tags { get; set; }
 
     [ObservableProperty]
-    string _name;
+    public partial bool IsNTFS { get; set; }
 
     [ObservableProperty]
-    string money;
-
-    [ObservableProperty]
-    ObservableCollection<Tag> tags;
-
-    [ObservableProperty]
-    bool isNTFS;
+    public partial string Duration { get; set; }
 
     public void Dispose()
     {
@@ -46,6 +49,8 @@ public sealed partial class DetilyItemViewModel : ViewModelBase, IItemViewModel<
         this.Name = value.Name;
         this.Money = value.Price.ToString();
         this.IsNTFS = value.Nsfw;
+        var dur = TimeSpan.FromSeconds(value.Duration);
+        this.Duration = dur.ToString("c");
         if (value.Tags.Count < 4)
         {
             this.Tags = value.Tags.ToObservable();

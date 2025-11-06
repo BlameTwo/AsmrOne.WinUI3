@@ -27,13 +27,18 @@ partial class AsmrClient
     public async Task<WorksResponse> SearchAsync(IEnumerable<SearchTagWrapper> query, WorkOrder order,int page, int pageSize,bool isSubtitle,CancellationToken token = default)
     {
         var queryString = BuildSearchQuery(query);
-        var request = this.BuildRequest($"{HostName}/api/search/{queryString}",HttpMethod.Get,new Dictionary<string, object>()
+        var orderDict = order.GetValue();
+        var queryValues = new Dictionary<string, object>()
         {
-            {"order","create_date" },
-            {"pageSize",pageSize },
-            {"page",page },
-            {"sort","desc" },
-        },null,true);
+            { "page", page },
+            { "pageSize",pageSize },
+            { "subtitle", isSubtitle ? 1 : 0 },
+        };
+        foreach (var item in orderDict)
+        {
+            queryValues.Add(item.Key, item.Value);
+        }
+        var request = this.BuildRequest($"{HostName}/api/search/{queryString}",HttpMethod.Get,queryValues,null,true);
         var response = await Client.SendAsync(request, token);
         var result = await CheckDataAsync<WorksResponse>(
             response,
@@ -50,12 +55,16 @@ partial class AsmrClient
         }
         return result.Item1;
     }
-
     private string BuildSearchQuery(IEnumerable<SearchTagWrapper> query)
     {
         string value = " ";
         foreach (var item in query)
         {
+            if(item.Type == "keyword")
+            {
+                value += $"{item.Name}";
+                continue;
+            }
             value += $"${item.Type}:{item.Name}$ ";
         }
         return value;

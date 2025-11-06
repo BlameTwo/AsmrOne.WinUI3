@@ -1,85 +1,96 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using AsmrOne.WinUI3.Common;
+﻿using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
+using AsmrOne.WinUI3.Models;
+using AsmrOne.WinUI3.Models.AsmrOne;
 using AsmrOne.WinUI3.ViewModels.ItemViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Controls;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
-public sealed partial class PopularViewModel : ViewModelBase
+public sealed partial class PopularViewModel : PageDetilyViewModelBase
 {
-    public PopularViewModel(IAsmrClient asmrClient, IDataFactory dataFactory)
+    public PopularViewModel(
+        IDataAdaptiveService dataAdaptiveService,
+        IDataFactory dataFactory,
+        IAsmrClient asmrClient
+    )
     {
-        AsmrClient = asmrClient;
+        DataAdaptiveService = dataAdaptiveService;
         DataFactory = dataFactory;
-        Index = 1;
-        this.IsSubtitle = false;
+        AsmrClient = asmrClient;
     }
 
     [ObservableProperty]
-    int index;
-    public IAsmrClient AsmrClient { get; }
+    public partial ObservableCollection<QueryWorkOrderWrapper> Orders { get; set; }
+
+    [ObservableProperty]
+    public partial QueryWorkOrderWrapper SelectOrder { get; set; }
+
+    [ObservableProperty]
+    public partial bool? IsSubtitle { get; set; } = false;
+
+    async partial void OnIsSubtitleChanged(bool? value)
+    {
+        if (value == null)
+            return;
+        await this.RefreshAsync();
+    }
+
+    public IDataAdaptiveService DataAdaptiveService { get; }
     public IDataFactory DataFactory { get; }
+    public IAsmrClient AsmrClient { get; }
 
     [ObservableProperty]
-    bool isLoading;
-
-    [ObservableProperty]
-    ObservableCollection<DetilyItemViewModel> works = new();
-
-    [ObservableProperty]
-    bool isSubtitle;
+    public partial ObservableCollection<DetilyItemViewModel> Works { get; set; } = [];
 
     [RelayCommand]
     async Task Loaded()
     {
+        Index = 1;
         await RefreshAsync();
     }
 
     [RelayCommand]
-    async Task AddItems()
+    async Task JumpToPageAsync(PagerControlSelectedIndexChangedEventArgs args)
     {
-        IsLoading = true;
-        var result = await AsmrClient.GetPopularAsync(
-            this.IsSubtitle,
-            this.Index,
-            token: this.CTS.Token
-        );
-        var data = DataFactory
-            .CreateDetilyItemViewModels(result.Works)
-            .Where(x => x.IsNTFS == GlobalUsing.IsHideR18 == true ? false : true)
-            .ToObservable();
-        foreach (var item in data)
-        {
-            this.Works.Add(item);
-        }
-        this.Index++;
-        IsLoading = false;
-    }
-
-    async partial void OnIsSubtitleChanged(bool value)
-    {
+        this.Index = args.NewPageIndex + 1;
         await RefreshAsync();
     }
 
-    async Task RefreshAsync()
+    internal void Disponse()
     {
+        this.IsLoading = true;
+        this.Works.Clear();
+        this.Orders.Clear();
+        this.IsLoading = false;
+    }
+
+    public override async Task Refreshing()
+    {
+        if (IsLoading)
+            return;
         IsLoading = true;
-        Index = 1;
+        LoadingEnable = false;
         Works.Clear();
         var result = await AsmrClient.GetPopularAsync(
-            this.IsSubtitle,
-            this.Index,
-            token: this.CTS.Token
+            IsSubtitle == null ? false : (bool)IsSubtitle,
+            Index,
+            PageSize,
+            CTS.Token
         );
-        var data = DataFactory.CreateDetilyItemViewModels(result.Works);
-        this.Works = data.Where(x => x.IsNTFS == GlobalUsing.IsHideR18 == true ? false : true)
-            .ToObservable();
-        this.Index++;
+        if (result != null)
+        {
+            this.MaxPageSize = result.Pagination.TotalCount / PageSize;
+            var data = DataFactory.CreateDetilyItemViewModels(result.Works);
+            this.Works = data.ToObservable();
+        }
         IsLoading = false;
+        LoadingEnable = true;
     }
 }

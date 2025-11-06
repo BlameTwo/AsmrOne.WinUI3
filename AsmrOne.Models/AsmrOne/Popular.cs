@@ -11,6 +11,9 @@ public class PopularRequest
     [JsonPropertyName("page")]
     public int Page { get; set; }
 
+    [JsonPropertyName("pageSize")]
+    public int PageSize { get; set; }
+
     [JsonPropertyName("subtitle")]
     public int Subtitle { get; set; }
 

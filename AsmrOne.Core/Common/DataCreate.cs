@@ -36,6 +36,8 @@ public static class DataCreate
                 return "circle";
             default:
                 return "";
+            case "durations":
+                return "duration";
         }
     }
 }

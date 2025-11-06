@@ -66,6 +66,8 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
+            BorderThickness="1"
             CornerRadius="5"
             Opacity="0">
             <Border.RenderTransform>

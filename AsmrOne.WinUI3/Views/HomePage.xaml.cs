@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,4 +32,9 @@ public sealed partial class HomePage : Page, IPage
         GC.Collect();
     }
 
+    private async void PagerControl_SelectedIndexChanged(PagerControl sender, PagerControlSelectedIndexChangedEventArgs args)
+    {
+        await ViewModel.JumpToPageCommand.ExecuteAsync(args);
+    }
 }
+                             

@@ -27,4 +27,9 @@ public sealed partial class SearchPage : Page,IPage
     {
         this.ViewModel.Dispose();
     }
+
+    private async void PagerControl_SelectedIndexChanged(PagerControl sender, PagerControlSelectedIndexChangedEventArgs args)
+    {
+        await ViewModel.JumpToPageCommand.ExecuteAsync(args);
+    }
 }

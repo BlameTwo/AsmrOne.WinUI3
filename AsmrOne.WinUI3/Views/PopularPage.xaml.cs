@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.ViewModels;
 using Microsoft.UI.Xaml.Controls;
@@ -20,5 +20,10 @@ public sealed partial class PopularPage : Page, IPage
     public void Dispose()
     {
         this.ViewModel.Dispose();
+    }
+
+    private async void PagerControl_SelectedIndexChanged(PagerControl sender, PagerControlSelectedIndexChangedEventArgs args)
+    {
+        await this.ViewModel.JumpToPageCommand.ExecuteAsync(args);
     }
 }

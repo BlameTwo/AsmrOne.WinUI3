@@ -14,6 +14,7 @@ partial class AsmrClient
     public async Task<WorksResponse> GetPopularAsync(
         bool isSubtitle,
         int index,
+        int pageSize,
         CancellationToken token = default
     )
     {
@@ -21,6 +22,7 @@ partial class AsmrClient
         {
             Keyword = "",
             Page = index,
+            PageSize = pageSize,
             Subtitle = isSubtitle == true ? 1 : 0,
             LocalSubtitledWorks = new(),
         };

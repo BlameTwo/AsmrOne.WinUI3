@@ -42,6 +42,7 @@ public interface IAsmrClient
     Task<WorksResponse> GetPopularAsync(
         bool isSubtitle,
         int index,
+        int pageSize,
         CancellationToken token = default
     );
     Task<(List<Child>, string)> GetWorkAudioAsync(string rj, CancellationToken token = default);

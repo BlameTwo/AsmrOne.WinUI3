@@ -6,12 +6,15 @@
     <RootNamespace>AsmrOne.WinUI3</RootNamespace>
 	  <ApplicationManifest>app.manifest</ApplicationManifest>
 	  <Platforms>x64</Platforms>
+	  <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+	  <PublishProfile>win-$(Platform).pubxml</PublishProfile>
 	  <UseWinUI>true</UseWinUI>
 	  <PublishAot>true</PublishAot>
 	  <LangVersion>preview</LangVersion>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x64</RuntimeIdentifier>
 	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x64</RuntimeIdentifier>
-	  <WindowsSdkPackageVersion>10.0.26100.53</WindowsSdkPackageVersion>
+
+	  <WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
 	  <EnableMsixTooling>true</EnableMsixTooling>
 	  <PackageCertificateKeyFile>AsmrOne.WinUI3_TemporaryKey.pfx</PackageCertificateKeyFile>
 	  <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>

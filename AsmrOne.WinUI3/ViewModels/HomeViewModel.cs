@@ -1,4 +1,6 @@
-﻿
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
@@ -8,9 +10,6 @@ using AsmrOne.WinUI3.ViewModels.ItemViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AsmrOne.WinUI3.ViewModels;
 
@@ -37,7 +36,6 @@ public sealed partial class HomeViewModel : PageDetilyViewModelBase
     [ObservableProperty]
     public partial bool? IsSubtitle { get; set; } = false;
 
-
     async partial void OnIsSubtitleChanged(bool? value)
     {
         if (value == null)
@@ -52,14 +50,12 @@ public sealed partial class HomeViewModel : PageDetilyViewModelBase
         await this.RefreshAsync();
     }
 
-
     public IDataAdaptiveService DataAdaptiveService { get; }
     public IDataFactory DataFactory { get; }
     public IAsmrClient AsmrClient { get; }
 
     [ObservableProperty]
     public partial ObservableCollection<DetilyItemViewModel> Works { get; set; } = [];
-
 
     [RelayCommand]
     void Loaded()
@@ -85,7 +81,7 @@ public sealed partial class HomeViewModel : PageDetilyViewModelBase
         this.IsLoading = false;
     }
 
-    public async override Task Refreshing()
+    public override async Task Refreshing()
     {
         if (IsLoading)
             return;
@@ -103,8 +99,7 @@ public sealed partial class HomeViewModel : PageDetilyViewModelBase
         {
             this.MaxPageSize = result.Pagination.TotalCount / PageSize;
             var data = DataFactory.CreateDetilyItemViewModels(result.Works);
-            this.Works = data.Where(x => x.IsNTFS == GlobalUsing.IsHideR18 == true ? false : true)
-                .ToObservable();
+            this.Works = data.ToObservable();
         }
         IsLoading = false;
         LoadingEnable = true;
