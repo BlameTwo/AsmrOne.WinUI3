@@ -73,6 +73,18 @@ public static class GlobalUsing
         set => LocalSettings.Values[nameof(Token)] = value;
     }
 
+    public static uint PlayerType
+    {
+        get
+        {
+            var result = LocalSettings.Values[nameof(PlayerType)];
+            if (result == null)
+                return 0;
+            return (uint)result;
+        }
+        set => LocalSettings.Values[nameof(PlayerType)] = value;
+    }
+
     public static ApplicationDataContainer LocalSettings =>
         Windows.Storage.ApplicationData.Current.LocalSettings;
 }

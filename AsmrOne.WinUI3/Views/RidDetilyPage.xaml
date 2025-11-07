@@ -314,6 +314,7 @@
                             </MenuFlyout>
                         </Button.Flyout>
                     </Button>
+                    <Button Command="{x:Bind ViewModel.SetPlayerListCommand}" Content="添加到播放列表" />
                 </StackPanel>
             </StackPanel>
         </Grid>

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using AsmrOne.Downloader.Contracts;
 using AsmrOne.Downloader.Models;
+using AsmrOne.WinUI3.Common;
 using AsmrOne.WinUI3.Common.Bases;
 using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Models;
@@ -20,36 +23,39 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
     public IDataAdaptiveService DataAdaptiveService { get; }
     public IDownloaderManager DownloaderManager { get; }
     public ITipShow TipShow { get; }
+    public IAudioPlayerService AudioPlayerService { get; }
 
     public RidDetilyViewModel(
         IAsmrClient asmrClient,
         IDataAdaptiveService dataAdaptiveService,
-        IDownloaderManager downloaderManager,ITipShow tipShow
-        
+        IDownloaderManager downloaderManager,
+        ITipShow tipShow,
+        IAudioPlayerService audioPlayerService
     )
     {
         AsmrClient = asmrClient;
         DataAdaptiveService = dataAdaptiveService;
         DownloaderManager = downloaderManager;
         TipShow = tipShow;
+        AudioPlayerService = audioPlayerService;
         RegisterMessager();
     }
 
     #region Progress
     [ObservableProperty]
-    bool marked;
+    public partial bool Marked { get; set; }
 
     [ObservableProperty]
-    bool listening;
+    public partial bool Listening { get; set; }
 
     [ObservableProperty]
-    bool listened;
+    public partial bool Listened { get; set; }
 
     [ObservableProperty]
-    bool replay;
+    public partial bool Replay { get; set; }
 
     [ObservableProperty]
-    bool postponed;
+    public partial bool Postponed { get; set; }
     #endregion
 
     [RelayCommand]
@@ -66,14 +72,23 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
 
     private async void DownloadSingleFileMethod(object recipient, DownloadSingleFile message)
     {
-        var downloadKey =  await DownloaderManager.CreateDownloaderAsync(message.DownloadFile, AsmrOne.Models.Enums.DownloadType.File);
+        var downloadKey = await DownloaderManager.CreateDownloaderAsync(
+            message.DownloadFile,
+            AsmrOne.Models.Enums.DownloadType.File
+        );
         switch (downloadKey)
         {
             case DownloadErrorCode.Success:
-                TipShow.ShowMessage($"任务创建成功，请在下载页面查看", Microsoft.UI.Xaml.Controls.Symbol.Accept);
+                TipShow.ShowMessage(
+                    $"任务创建成功，请在下载页面查看",
+                    Microsoft.UI.Xaml.Controls.Symbol.Accept
+                );
                 break;
             case DownloadErrorCode.MaxTaskError:
-                TipShow.ShowMessage("最多可以创建2个同时下载任务", Microsoft.UI.Xaml.Controls.Symbol.Clear);
+                TipShow.ShowMessage(
+                    "最多可以创建2个同时下载任务",
+                    Microsoft.UI.Xaml.Controls.Symbol.Clear
+                );
                 break;
             case DownloadErrorCode.OwnerError:
                 TipShow.ShowMessage("其他错误", Microsoft.UI.Xaml.Controls.Symbol.Clear);
@@ -81,18 +96,16 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
         }
     }
 
-    private void RidDetilySendPlayAudioMethod(object recipient, RidDetilySendPlayAudio message)
-    {
-    }
+    private void RidDetilySendPlayAudioMethod(object recipient, RidDetilySendPlayAudio message) { }
 
     [ObservableProperty]
     RidDetily detily;
 
     [ObservableProperty]
-    string duration;
+    public partial string Duration { get; set; }
 
     [ObservableProperty]
-    ObservableCollection<IAudioDataWrapper> audioDatas;
+    public partial ObservableCollection<IAudioDataWrapper> AudioDatas { get; set; }
 
     internal async Task SetDataAsync(string str)
     {
@@ -103,6 +116,54 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
         var result = DataAdaptiveService.GetAudioData(track.Item1, data.Item1);
         this.AudioDatas = result;
         this.Duration = TimeSpan.FromSeconds(Detily.Duration).ToString();
+    }
+
+    [RelayCommand]
+    void SetPlayerList()
+    {
+        AudioPlayerService.SetDetily(this.Detily,GetAudios());
+        AudioPlayerService.OnPlayerInit();
+    }
+
+    public List<AudioWrapper> GetAudios()
+    {
+        var audios = new List<AudioWrapper>();
+        foreach (var item in this.AudioDatas)
+        {
+            if (item.Type == "Folder")
+            {
+                audios.AddRange(FindFolder(item));
+            }
+            if (item.Type == "Audio")
+            {
+                audios.Add((AudioWrapper)item);
+            }
+        }
+        return audios;
+    }
+
+    public List<AudioWrapper> FindFolder(IAudioDataWrapper child)
+    {
+        List<AudioWrapper> audios = new List<AudioWrapper>();
+        if (child is FolderWrapper folder) 
+        {
+            foreach (var item in folder.Datas)
+            {
+                if(child.Type == "Folder")
+                {
+                    audios.AddRange(FindFolder(item));
+                }
+                if(child.Type == "Audio")
+                {
+                    audios.Add((AudioWrapper)item);
+                }
+            }
+        }
+        else if (child is AudioWrapper audioWrapper)
+        {
+            audios.Add(audioWrapper);
+        }
+        return audios;
     }
 
     private void SetProgress()
@@ -153,7 +214,7 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
 
     public override void Dispose()
     {
-        if (AudioDatas!= null && AudioDatas.Count > 0)
+        if (AudioDatas != null && AudioDatas.Count > 0)
         {
             foreach (var item in AudioDatas)
             {
@@ -167,14 +228,23 @@ public sealed partial class RidDetilyViewModel : ViewModelBase
     [RelayCommand]
     public async Task CreateDownload()
     {
-        var downloadKey =  await DownloaderManager.CreateDownloaderAsync(this.Detily.Id.ToString(), AsmrOne.Models.Enums.DownloadType.RJ);
+        var downloadKey = await DownloaderManager.CreateDownloaderAsync(
+            this.Detily.Id.ToString(),
+            AsmrOne.Models.Enums.DownloadType.RJ
+        );
         switch (downloadKey)
         {
             case DownloadErrorCode.Success:
-                TipShow.ShowMessage($"任务创建成功，请在下载页面查看", Microsoft.UI.Xaml.Controls.Symbol.Accept);
+                TipShow.ShowMessage(
+                    $"任务创建成功，请在下载页面查看",
+                    Microsoft.UI.Xaml.Controls.Symbol.Accept
+                );
                 break;
             case DownloadErrorCode.MaxTaskError:
-                TipShow.ShowMessage("最多可以创建2个同时下载任务", Microsoft.UI.Xaml.Controls.Symbol.Clear);
+                TipShow.ShowMessage(
+                    "最多可以创建2个同时下载任务",
+                    Microsoft.UI.Xaml.Controls.Symbol.Clear
+                );
                 break;
             case DownloadErrorCode.OwnerError:
                 TipShow.ShowMessage("其他错误", Microsoft.UI.Xaml.Controls.Symbol.Clear);

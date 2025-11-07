@@ -11,6 +11,7 @@ using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.Contracts.Services;
 using AsmrOne.WinUI3.Models;
 using AsmrOne.WinUI3.Models.AsmrOne;
+using AsmrOne.WinUI3.Models.Enums;
 using AsmrOne.WinUI3.Models.Messagers;
 using AsmrOne.WinUI3.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -36,7 +37,9 @@ public sealed partial class ShellViewModel : ViewModelBase
         [FromKeyedServices(ProgramLife.ShellNavigationKey)]
             INavigationService shellNavigationService,
         IAppSetup<App> appSetup,
-        IDataAdaptiveService dataAdaptiveService,ITipShow tipShow
+        IDataAdaptiveService dataAdaptiveService,
+        ITipShow tipShow,
+        IAudioPlayerService audioPlayerService
     )
     {
         AsmrClient = asmrClient;
@@ -46,11 +49,26 @@ public sealed partial class ShellViewModel : ViewModelBase
         AppSetup = appSetup;
         DataAdaptiveService = dataAdaptiveService;
         TipShow = tipShow;
+        AudioPlayerService = audioPlayerService;
         shellNavigationService.Navigated += ShellNavigationService_Navigated;
         RegisterMessager();
         this.IsAutosubtitle = GlobalUsing.IsAutoSubtitle;
         this.IsOpensubtitle = GlobalUsing.IsOpenDesktopSubtitle;
         this.RidPlayerViewModel = DataAdaptiveService.CreateRidPlayerViewModel();
+        AudioPlayerService.MediaPlayerIndexChanged += AudioPlayerService_MediaPlayerIndexChanged;
+        audioPlayerService.MediaPlayerSetDataChanged += AudioPlayerService_MediaPlayerSetDataChanged;
+    }
+
+    private void AudioPlayerService_MediaPlayerSetDataChanged(object sender, RidDetily child)
+    {
+        this.PlayVisibility = Visibility.Visible;
+        this.Cover = new BitmapImage(new System.Uri(child.ThumbnailCoverUrl));
+        this.Detily = child;
+    }
+
+    private void AudioPlayerService_MediaPlayerIndexChanged(object sender, int index)
+    {
+        var a =  AudioPlayerService.Audios[index].FileName;
     }
 
     private void ShellNavigationService_Navigated(
@@ -135,6 +153,39 @@ public sealed partial class ShellViewModel : ViewModelBase
     [ObservableProperty]
     Visibility playVisibility = Visibility.Collapsed;
 
+    [ObservableProperty]
+    public partial bool SingleTypeEnable { get; set; }
+
+    partial void OnSingleTypeEnableChanged(bool value)
+    {
+        if (!value)
+            return;
+        this.AudioPlayerService.PlayerType = PlayerType.Single;
+        GlobalUsing.PlayerType = (uint)PlayerType.Single;
+    }
+
+    [ObservableProperty]
+    public partial bool LoopListEnable { get; set; }
+
+    partial void OnLoopListEnableChanged(bool value)
+    {
+        if (!value)
+            return;
+        this.AudioPlayerService.PlayerType = PlayerType.ListLoop;
+        GlobalUsing.PlayerType = (uint)PlayerType.ListLoop;
+    }
+
+    [ObservableProperty]
+    public partial bool RandomEnable { get; set; }
+
+    partial void OnRandomEnableChanged(bool value)
+    {
+        if (!value)
+            return;
+        this.AudioPlayerService.PlayerType = PlayerType.Random;
+        GlobalUsing.PlayerType = (uint)PlayerType.Random;
+    }
+
     partial void OnIsOpensubtitleChanged(bool value)
     {
         GlobalUsing.IsOpenDesktopSubtitle = value;
@@ -178,10 +229,8 @@ public sealed partial class ShellViewModel : ViewModelBase
     private void RefreshAudioMethod(object recipient, RefreshAudio message)
     {
         Child = message.Child;
-        Detily = message.Detily;
         SetSubtitle(message);
     }
-
 
     async partial void OnSelectSubtitleChanged(ShellSubtitleItem value)
     {
@@ -243,7 +292,6 @@ public sealed partial class ShellViewModel : ViewModelBase
         }
     }
 
-
     [ObservableProperty]
     ObservableCollection<PingResult> ips;
 
@@ -260,7 +308,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public IAppSetup<App> AppSetup { get; }
     public IDataAdaptiveService DataAdaptiveService { get; }
     public ITipShow TipShow { get; }
-
+    public IAudioPlayerService AudioPlayerService { get; }
 
     [ObservableProperty]
     bool isLoading;
@@ -311,11 +359,22 @@ public sealed partial class ShellViewModel : ViewModelBase
         {
             this.ShellNavigationService.NavigationTo<HomeViewModel>(nameof(HomeViewModel));
         }
+        switch (GlobalUsing.PlayerType)
+        {
+            case 0:
+                SingleTypeEnable = true;
+                break;
+            case 1:
+                LoopListEnable = true;
+                break;
+            case 2:
+                RandomEnable = true;
+                break;
+        }
         IsLoading = false;
     }
 
     [RelayCommand]
-    void Switch()
-    {
-    }
+    void Switch() { }
+
 }

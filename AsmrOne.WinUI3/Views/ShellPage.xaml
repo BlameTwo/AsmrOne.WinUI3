@@ -6,6 +6,7 @@
     xmlns:control="using:AsmrOne.WinUI3.Controls"
     xmlns:convert="using:AsmrOne.WinUI3.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="using:AsmrOne.WinUI3.Models.Enums"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:AsmrOne.WinUI3.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -209,7 +210,7 @@
                             <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xECAD;" />
                         </NavigationViewItem.Icon>
                     </NavigationViewItem>
-                    <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.SearchViewModel" Content="查询">
+                    <NavigationViewItem p:NavigationItemClickHelper.NavigationKey="AsmrOne.WinUI3.ViewModels.SearchViewModel" Content="搜索">
                         <NavigationViewItem.Icon>
                             <SymbolIcon Symbol="Find" />
                         </NavigationViewItem.Icon>
@@ -292,7 +293,6 @@
                         VerticalAlignment="Center"
                         Text="{x:Bind ViewModel.MaxDurationString, Mode=OneWay}" />
                 </Grid>
-                <MediaPlayerPresenter x:Name="element" Visibility="Collapsed" />
                 <Button
                     x:Name="converButton"
                     Grid.Row="1"
@@ -394,9 +394,18 @@
                             Glyph="&#xEA37;" />
                         <Button.Flyout>
                             <MenuFlyout Placement="Bottom">
-                                <RadioMenuFlyoutItem Text="单曲循环" />
-                                <RadioMenuFlyoutItem Text="列表循环" />
-                                <RadioMenuFlyoutItem Text="随机播放" />
+                                <RadioMenuFlyoutItem
+                                    GroupName="PlayerType"
+                                    IsChecked="{x:Bind ViewModel.SingleTypeEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Text="单曲循环" />
+                                <RadioMenuFlyoutItem
+                                    GroupName="PlayerType"
+                                    IsChecked="{x:Bind ViewModel.LoopListEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Text="列表循环" />
+                                <RadioMenuFlyoutItem
+                                    GroupName="PlayerType"
+                                    IsChecked="{x:Bind ViewModel.RandomEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Text="随机播放" />
                             </MenuFlyout>
                         </Button.Flyout>
                     </Button>

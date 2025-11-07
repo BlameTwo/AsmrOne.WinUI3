@@ -1,12 +1,10 @@
-﻿using System;
-using AsmrOne.WinUI3.Contracts;
+﻿using AsmrOne.WinUI3.Contracts;
 using AsmrOne.WinUI3.ViewModels;
-using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Media.Playback;
 
 namespace AsmrOne.WinUI3.Views
@@ -39,10 +37,12 @@ namespace AsmrOne.WinUI3.Views
 
         private void Progress_OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
+
         }
 
         private void Progress_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+
         }
 
         private void ShellPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -88,5 +88,7 @@ namespace AsmrOne.WinUI3.Views
             view.IsPaneOpen = !view.IsPaneOpen;
         }
 
+
+        
     }
 }
